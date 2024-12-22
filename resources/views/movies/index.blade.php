@@ -67,6 +67,7 @@
             <tr>
                <th>ID</th> 
                <th>Name</th> 
+               <th>Poster</th>
                <th>trailer_link</th> 
                <th>duration</th> 
                <th>release_date</th> 
@@ -80,10 +81,11 @@
                 <tr>
                     <td>{{$movie->id}}</td> 
                     <td>{{$movie->name}}</td>
-                    <td>{{$movie->trailer_link}}</td>
-                    <td>{{$movie->duration}}</td>
+                    <td><img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" style="max-width: 100px; height: auto;" /></td>
+                    <td><a href="{{ $movie->trailer_link }}" target="_blank">Watch Trailer</a></td>
+                    <td>{{ $movie->duration }} minutes</td>
                     <td>{{$movie->release_date}}</td>
-                    <td>{{$movie->imdb_link}}</td>
+                    <td><a href="{{ $movie->imdb_link }}" target="_blank">IMDB Link</a></td>
                     <td>{{$movie->active}}</td>
                     <td>
                         <form method="GET" action="{{ route('movie.edit', ['movie' => $movie]) }}">

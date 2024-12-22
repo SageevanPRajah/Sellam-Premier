@@ -71,12 +71,17 @@
         </ul>
         @endif
     </div>
-    <form method="post" action="{{route('movie.update', ['movie' => $movie])}}">
+    <form method="post" action="{{route('movie.update', ['movie' => $movie])}}" enctype="multipart/form-data">
     @csrf
     @method('put')    
     <div>
             <label>Name</label>
             <input type="text" name="name" placeholder="Enter New Name" value="{{$movie->name}}" />
+        </div>
+        <div>
+            <label for="poster">Poster</label>
+            <input type="file" name="poster" id="poster" accept="image/*" />
+            <p>Current Poster: <img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" style="max-width: 100px;" /></p>
         </div>
         <div>
             <label>trailer_link</label>

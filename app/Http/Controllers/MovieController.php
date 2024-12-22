@@ -20,15 +20,22 @@ class MovieController extends Controller
     public function store(Request $request){
         $data = $request->validate([
             'name' => 'required',
+            'poster' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'trailer_link' => 'required',
             'duration' => 'required|numeric',
             'release_date' => 'required',
             'imdb_link' => 'required'
         ]);
 
-        $newMovie = Movie::create($data);
+        // Handle file upload
+    if ($request->hasFile('poster')) {
+        $data['poster'] = $request->file('poster')->store('posters', 'public');
+    }
 
-        return redirect(route('movie.index'));
+    // Create a new movie with the validated data, including the poster path
+    Movie::create($data);
+
+    return redirect(route('movie.index'))->with('success', 'Movie added successfully!');
     }
 
     public function edit(Movie $movie){
@@ -38,6 +45,7 @@ class MovieController extends Controller
     public function update(Movie $movie, Request $request){
         $data = $request->validate([
             'name' => 'required',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'trailer_link' => 'required',
             'duration' => 'required|numeric',
             'release_date' => 'required',
@@ -45,9 +53,21 @@ class MovieController extends Controller
             'active' => 'required'
         ]);
 
-        $movie->update($data);
+        // Check if a new poster is uploaded
+    if ($request->hasFile('poster')) {
+        // Delete the old poster file, if it exists
+        if ($movie->poster && file_exists(storage_path('app/public/' . $movie->poster))) {
+            unlink(storage_path('app/public/' . $movie->poster));
+        }
 
-        return redirect(route('movie.index'))->with('success', 'Movie Updated Successfully');
+        // Store the new poster and update the poster path
+        $data['poster'] = $request->file('poster')->store('posters', 'public');
+    }
+
+    // Update the movie with the new data
+    $movie->update($data);
+
+    return redirect(route('movie.index'))->with('success', 'Movie updated successfully!');
     }
 
     public function destroy(Movie $movie){
