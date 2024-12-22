@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <h1>Show</h1>
+    <div>Kru Edit this like theatre worker can inspect., but cleat view</div>
 </body>
 </html>
