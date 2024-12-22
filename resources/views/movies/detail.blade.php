@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Product</h1>
+    <h1>Movie</h1>
     <div>Kru Edit this like the theatre custumer can view generally like IMDB., without login view</div>
 </body>
 </html>
