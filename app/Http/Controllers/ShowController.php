@@ -56,7 +56,7 @@ class ShowController extends Controller
         return redirect(route('show.index'))->with('success', 'Show Deleted Successfully');
     }
 
-    public function detail(Movie $movie){
+    public function detail(Show $show){
         return view('shows.detail', ['show' => $show]);
     }
 }
