@@ -71,12 +71,16 @@
         </ul>
         @endif
     </div>
-    <form method="post" action="{{route('movie.store')}}">
+    <form method="post" action="{{route('movie.store')}}" enctype="multipart/form-data">
     @csrf
     @method('post')    
         <div>
             <label>Name</label>
             <input type="text" name="name" placeholder="Enter Name" />
+        </div>
+        <div>
+            <label for="poster">Poster</label>
+            <input type="file" name="poster" id="poster" accept="image/*" />
         </div>
         <div>
             <label>trailer_link</label>
