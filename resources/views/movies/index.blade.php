@@ -81,7 +81,7 @@
                 <tr>
                     <td>{{$movie->id}}</td> 
                     <td>{{$movie->name}}</td>
-                    <td><img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" style="max-width: 100px; height: auto;" /></td>
+                    <td><img src="{{ asset('storage' . $movie->poster) }}" alt="Poster" style="max-width: 100px; height: auto;" /></td>
                     <td><a href="{{ $movie->trailer_link }}" target="_blank">Watch Trailer</a></td>
                     <td>{{ $movie->duration }} minutes</td>
                     <td>{{$movie->release_date}}</td>
