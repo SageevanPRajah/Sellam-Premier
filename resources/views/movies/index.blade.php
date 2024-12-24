@@ -54,6 +54,7 @@
             transition: transform 0.5s ease;
             margin: 0; 
             padding: 0;
+            justify-content: center;
         }
         .slider-item {
             flex: 0 0 auto;
@@ -113,8 +114,8 @@
             color: #333;
             text-decoration: none;
             border-radius: 4px;
-            margin-left: 1360px;
             transition: background-color 0.3s, color 0.3s;
+            margin-left: 1450px;
         }
         .add-link a:hover {
             background-color: rgb(35, 86, 60);
@@ -122,6 +123,7 @@
         }
         .add-link a i {
             margin-right: 5px;
+            
         }
 
         /* Search Bar with Status and Date Range Filter */
@@ -410,29 +412,27 @@
 
     <!-- Search Bar with Status and Date Range Filter -->
     <div class="search-bar">
-    <!-- Search by Name with Icon -->
-    <div class="filter-group search-group">
-        <i class="fas fa-search search-icon" aria-hidden="true"></i>
-        <input type="text" id="searchInput" placeholder="Search by name..." aria-label="Search Movies by Name">
+        <!-- Search by Name -->
+        <div class="filter-group">
+            <input type="text" id="searchInput" placeholder="Search by name..." aria-label="Search Movies by Name">
+        </div>
+        <!-- Status Filter -->
+        <div class="filter-group">
+            <select id="statusFilter" aria-label="Filter Movies by Status">
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Not Active</option>
+            </select>
+        </div>
+        <!-- Date Range Filter -->
+        <div class="filter-group">
+            <label for="startDate">From:</label>
+            <input type="date" id="startDate" aria-label="Filter Movies From Date">
+            <label for="endDate">To:</label>
+            <input type="date" id="endDate" aria-label="Filter Movies To Date">
+        </div>
     </div>
-    
-    <!-- Status Filter -->
-    <div class="filter-group">
-        <select id="statusFilter" aria-label="Filter Movies by Status">
-            <option value="all">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Not Active</option>
-        </select>
-    </div>
-    
-    <!-- Date Range Filter -->
-    <div class="filter-group">
-        <label for="startDate">From:</label>
-        <input type="date" id="startDate" aria-label="Filter Movies From Date">
-        <label for="endDate">To:</label>
-        <input type="date" id="endDate" aria-label="Filter Movies To Date">
-    </div>
-</div>
+
     <!-- Movie Table -->
     <table id="movieTable">
         <thead>
@@ -452,7 +452,7 @@
         </thead>
         <tbody>
             @foreach($movies as $movie)
-                <tr>
+                <tr data-status="{{ $movie->active ? 'active' : 'inactive' }}">
                     <td>{{ $movie->id }}</td>
                     <td class="movie-name">{{ $movie->name }}</td>
                     <td>
@@ -617,7 +617,7 @@
 
             // Function to filter movies based on search, status, and date range
             function filterMovies() {
-                const searchTerm = searchInput.value.toLowerCase();
+                const searchTerm = searchInput.value.trim().toLowerCase();
                 const selectedStatus = statusFilter.value;
                 const startDate = startDateInput.value;
                 const endDate = endDateInput.value;
@@ -625,11 +625,14 @@
                 // Filter rows based on criteria
                 const filteredRows = rows.filter(row => {
                     const nameCell = row.querySelector('.movie-name');
-                    const statusCell = row.cells[7]; // 8th column: Status
                     const releaseDateCell = row.cells[5]; // 6th column: Release Date
 
-                    const nameText = nameCell.textContent.toLowerCase();
-                    const statusText = statusCell.textContent.toLowerCase();
+                    const nameText = nameCell.textContent.trim().toLowerCase();
+
+                    // Retrieve status from data attribute
+                    const status = row.getAttribute('data-status');
+
+                    // Retrieve and parse release date
                     const releaseDateText = releaseDateCell.textContent.trim();
                     const releaseDate = new Date(releaseDateText);
 
@@ -640,9 +643,9 @@
                     let matchesStatus = false;
                     if (selectedStatus === 'all') {
                         matchesStatus = true;
-                    } else if (selectedStatus === 'active' && statusText === 'active') {
+                    } else if (selectedStatus === 'active' && status === 'active') {
                         matchesStatus = true;
-                    } else if (selectedStatus === 'inactive' && statusText === 'not active') {
+                    } else if (selectedStatus === 'inactive' && status === 'inactive') {
                         matchesStatus = true;
                     }
 
@@ -670,7 +673,7 @@
             // Function to paginate rows
             function paginateRows(filteredRows) {
                 // Calculate total pages
-                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
 
                 // Adjust currentPage if out of bounds
                 if (currentPage > totalPages) {
