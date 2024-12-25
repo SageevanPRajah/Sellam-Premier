@@ -71,7 +71,7 @@
         </ul>
         @endif
     </div>
-    <form method="post" action="{{route('movie.store')}}" enctype="multipart/form-data">
+    <form method="post" action="{{route('movie.store')}}" onsubmit="convertDuration()" enctype="multipart/form-data">
     @csrf
     @method('post')    
         <div>
@@ -86,9 +86,18 @@
             <label>trailer_link</label>
             <input type="text" name="trailer_link" placeholder="Enter trailer_link" />
         </div>
-        <div>
+        {{-- <div>
             <label>duration</label>
             <input type="text" name="duration" placeholder="Enter duration" />
+        </div> --}}
+        <div class="form-group">
+            <label>Quantity</label>
+            <div class="row">
+                <input type="number" id="hours" placeholder="Hours" min="0" />
+                <input type="number" id="minutes" placeholder="Minutes" min="0" max="59" />
+            </div>
+            <!-- Hidden input field to store duration in minutes -->
+            <input type="hidden" name="duration" id="duration" />
         </div>
         <div>
             <label>release_date</label>
@@ -101,6 +110,20 @@
         <div>
             <input type="submit" value="Save a new Movie"/>
         </div>
+    </form>
+    <script>
+        function convertDuration() {
+            // Get the values of hours and minutes
+            const hours = parseInt(document.getElementById('hours').value) || 0;
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+
+            // Convert to total minutes
+            const totalMinutes = (hours * 60) + minutes;
+
+            // Set the total minutes in the hidden input field
+            document.getElementById('duration').value = totalMinutes;
+        }
+    </script>
 
 </body>
 </html>
