@@ -495,7 +495,7 @@
                         </form>
                     </td>
                     <td>
-                        <form method="GET" action="{{ route('movie.detail', ['movie' => $movie]) }}">
+                        <form method="GET" action="{{ route('movie.inspect', ['movie' => $movie]) }}">
                             <button type="submit" class="btn-view" aria-label="View Movie">
                                 <img src="icons/icons8-eye-32.png" alt="View" style="width: 17px; height: 17px; margin-right: 5px;" /> View
                             </button>

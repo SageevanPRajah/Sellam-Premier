@@ -168,48 +168,35 @@
                 </ul>
             @endif
         </div>
-        <form method="post" action="{{ route('movie.update', ['movie' => $movie]) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('price.update', ['price' => $price]) }}" enctype="multipart/form-data">
             @csrf
             @method('put')    
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" placeholder="Enter New Name" value="{{ $movie->name }}" required />
+                <label for="name">Seat Type</label>
+                <input type="text" name="seat_type" id="seat_type" placeholder="Enter New Name" value="{{ $price->seat_type }}" readonly />
             </div>
             <div class="form-group">
-                <label for="poster">Poster</label>
-                <input type="file" name="poster" id="poster" accept="image/*" />
+                <label for="seat_logo">Seat Logo</label>
+                {{-- <input type="file" name="seat_logo" id="seat_logo" accept="image/*" /> --}}
                 <div class="current-poster">
-                    <p>Current Poster:</p>
-                    <img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" style="max-width: 100px; border-radius: 4px;" />
+                    {{-- <p>Current Poster:</p> --}}
+                    <img src="{{ asset('storage/' . $price->seat_logo) }}" alt="SeatLogo" style="max-width: 100px; border-radius: 4px;" />
                 </div>
             </div>
-            <div class="form-group">
-                <label for="trailer_link">Trailer Link</label>
-                <input type="text" name="trailer_link" id="trailer_link" placeholder="Enter New Trailer Link" value="{{ $movie->trailer_link }}" required />
+            
+            <div class="form-group"> 
+                <label>Full Price</label>
+                <input type="text" name="full_price" placeholder="Enter new full_price" value="{{ $price->full_price }}" required/>
             </div>
             <div class="form-group">
-                <label for="duration">Duration (in minutes)</label>
-                <input type="text" name="duration" id="duration" placeholder="Enter New Duration" value="{{ $movie->duration }}" required />
+                <label>Half Price</label>
+                <input type="text" name="half_price" placeholder="Enter new half_price" value="{{ $price->half_price }}" required/>
             </div>
+            
+            
+            
             <div class="form-group">
-                <label for="release_date">Release Date</label>
-                <input type="date" name="release_date" id="release_date" placeholder="Enter New Release Date" value="{{ $movie->release_date }}" required />
-            </div>
-            <div class="form-group">
-                <label for="imdb_link">IMDB Link</label>
-                <input type="text" name="imdb_link" id="imdb_link" placeholder="Enter New IMDB Link" value="{{ $movie->imdb_link }}" required />
-            </div>
-            <div class="form-group">
-                <label for="active">Active</label>
-                <label class="toggle-switch">
-                    <!-- Hidden field to handle unchecked state -->
-                    <input type="hidden" name="active" value="0">
-                    <input type="checkbox" name="active" id="active" value="1" {{ $movie->active ? 'checked' : '' }}>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Update the Movie"/>
+                <input type="submit" value="Update the Seat Price"/>
             </div>
         </form>
     </div>
