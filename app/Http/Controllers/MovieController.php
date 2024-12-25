@@ -78,4 +78,22 @@ class MovieController extends Controller
     public function detail(Movie $movie){
         return view('movies.detail', ['movie' => $movie]);
     }
+
+    public function inspect(Movie $movie){
+        // Fetch all movies
+        $movies = Movie::all();
+
+        // Find the current movie's index
+        $currentIndex = $movies->search(function ($m) use ($movie) {
+            return $m->id === $movie->id;
+        });
+
+        // Pass all movies and the current index to the view
+        return view('movies.inspect', [
+            'movie' => $movie,
+            'movies' => $movies,
+            'currentIndex' => $currentIndex,
+        ]);
+    }
 }
+

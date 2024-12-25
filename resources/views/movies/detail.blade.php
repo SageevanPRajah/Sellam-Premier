@@ -133,19 +133,14 @@
             </div>
 
            
-            <div class="form-group">
-    <label for="trailer_link">Trailer Link</label>
-    <p id="trailer_link">
-        <a href="{{ $movie->trailer_link }}" target="_blank">{{ $movie->trailer_link }}</a>
-    </p>
-</div>
-
-<div class="form-group">
-    <label for="imdb_link">IMDB Link</label>
-    <p id="imdb_link">
-        <a href="{{ $movie->imdb_link }}" target="_blank">{{ $movie->imdb_link }}</a>
-    </p>
-</div>
+            <div class="form-group" style="display: flex; justify-content: space-between;">
+                <p id="trailer_link" style="margin: 0;">
+                    <a href="{{ $movie->trailer_link }}" target="_blank">Trailer Link</a>
+                </p>
+                <p id="imdb_link" style="margin: 0;">
+                    <a href="{{ $movie->imdb_link }}" target="_blank">IMDB Link</a>
+                </p>
+            </div>
            
 
             
