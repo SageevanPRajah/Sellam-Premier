@@ -530,7 +530,7 @@
                 @foreach($movies as $movie)
                     <div class="slider-item">
                         <img src="{{ $movie->poster ? asset('storage/' . $movie->poster) : asset('images/default-poster.jpg') }}" alt="Poster">
-                        <a href="{{ route('movie.detail', ['movie' => $movie]) }}">More...</a>
+                        <a href="{{ route('movie.inspect', ['movie' => $movie]) }}">More...</a>
                     </div>
                 @endforeach
             </div>
