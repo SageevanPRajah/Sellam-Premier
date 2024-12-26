@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show Table</title>
+    <title>Movie</title>
 
     <!-- Font Awesome for icons -->
     <link 
@@ -15,24 +15,6 @@
     />
 
     <style>
-        /* CSS Variables for Neumorphic Black and Gray Theme */
-        :root {
-            --background-color: #121212;
-            --primary-color: #1e1e1e;
-            --secondary-color: #2e2e2e;
-            --text-color: #e0e0e0;
-            --accent-color: #4CAF50;
-            --button-color: #2e2e2e;
-            --button-hover-color: #3e3e3e;
-            --border-color: #555;
-            --success-color: #4CAF50;
-            --danger-color: #FF5555;
-            --info-color: #2196F3;
-            --muted-color: #777;
-            --shadow-light: #2b2b2b;
-            --shadow-dark: #0c0c0c;
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -177,7 +159,7 @@
 
         /* Table */
         table {
-            width: 100%;
+            margin: 0 auto;
             border-collapse: collapse;
             width: 80%;
             font-size: 16px;
@@ -381,159 +363,65 @@
     </style>
 </head>
 <body>
-    <h1>Show Table</h1>
-    <div class="container">
-        <!-- Success Message -->
-        @if(session()->has('success'))
-            <div class="success-message">
-                {{ session('success') }}
-            </div>
-        @endif
+    <h1>Ticket Price</h1>
 
-        <!-- Add New Show Button -->
-        <div class="add-link">
-            <a href="{{ route('show.create') }}">
-                <img src="icons/icons8-add-24.png" alt="Add" /> Add New Show
-            </a>
+    <div class="add-link">
+        <a href="{{route('price.create')}}">Add New Price</a>
+    </div>
+
+    @if(session()->has('success'))
+        <div class="success-message">
+            {{ session('success') }}
         </div>
-        <table id="movieTable">
-            <thead>
+    @endif
+
+    <!-- price Table -->
+    <table id="movieTable">
+        <thead>
             <tr>
-               <th>ID</th> 
-               <th>Date</th> 
-               <th>Time</th>
-               <th>movie_code</th> 
-               <th>movie_name</th> 
-               <th>movie_poster</th>  
-               <th>Edit</th>
-               <th>Delete</th>
-               <th>View</th>
+                <th>ID</th>
+                <th>Seat Type</th>
+                <th>Seat Logo</th>
+                <th>Full Ticket Price</th>
+                <th>Half Ticket Price</th>
+                <th>Edit</th>
+                
             </tr>
         </thead>
         <tbody>
-            @foreach($shows as $show)
+            @foreach($prices as $price)
                 <tr>
-                    <td class="movie-name">{{$show->id}}</td> 
-                    <td class="movie-name">{{$show->date}}</td>
-                    <td class="movie-name">{{$show->time}}</td>
-                    <td class="movie-name">{{$show->movie_code}}</td>
-                    <td class="movie-name">{{$show->movie_name}}</td>
+                    <td>{{ $price->id }}</td>
+                    <td class="movie-name">{{ $price->seat_type }}</td>
                     <td>
                         <img 
-                            src="{{ $show->poster ? asset('storage/' . $show->poster) : asset('images/default-poster.jpg') }}" 
-                            alt="Poster" 
+                            src="{{ $price->seat_logo ? asset('storage/' . $price->seat_logo) : asset('images/default-poster.jpg') }}" 
+                            alt="SeatLogo" 
                             style="max-width: 100px; height: auto;" 
                         />
                     </td>
+                    <td class="movie-name">{{ $price->full_price }}</td>
+                    <td class="movie-name">{{ $price->half_price }}</td>
+                    
+    
                     <td>
-                        <form method="GET" action="{{ route('show.edit', ['show' => $show]) }}">
-                            <button type="submit">Edit</button>
+                        <form method="GET" action="{{ route('price.edit', ['price' => $price]) }}">
+                            <button type="submit" class="btn-edit" aria-label="Edit Movie">
+                                <img src="icons/icons8-edit-50.png" alt="Edit" style="width: 14px; height: 14px; margin-right: 5px;" />
+                                Edit
+                            </button>
                         </form>
                     </td>
-                    <td>
-                        <form method="post" action="{{route('show.destroy', ['show' => $show])}}">
-                            @csrf
-                            @method('delete')
-                            <input type="submit" value="Delete">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="GET" action="{{ route('show.detail', ['show' => $show]) }}">
-                            <button type="submit">View</button>
-                        </form>
-                    </td>
+                    
+                    
                 </tr>
             @endforeach
         </tbody>
-        </table>
-    </div>
+    </table>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal" style="display: none;">
-        <div class="modal-content" style="
-            background-color: var(--primary-color);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
-            color: var(--text-color);
-            text-align: center;
-        ">
-            <span class="close-button" style="
-                color: #ffffff;
-                float: right;
-                font-size: 24px;
-                font-weight: bold;
-                cursor: pointer;
-            ">&times;</span>
-            <p>Are you sure you want to delete this show?</p>
-            <div style="margin: 20px 0;">
-                <img src="icons/icons8-delete (1).gif" alt="Delete" style="width: 30px; height: 30px;" />
-            </div>
-            <div class="modal-actions" style="display: flex; justify-content: center; gap: 20px;">
-                <button id="confirmDelete" class="action-button btn-delete" style="width: 100px;">Confirm</button>
-                <button id="cancelDelete" class="action-button btn-view" style="width: 100px;">Cancel</button>
-            </div>
-        </div>
-    </div>
+    
 
-    <!-- JavaScript for Delete Confirmation Modal -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Modal Elements
-            const deleteModal = document.getElementById('deleteModal');
-            const closeButton = deleteModal.querySelector('.close-button');
-            const cancelDeleteButton = document.getElementById('cancelDelete');
-            const confirmDeleteButton = document.getElementById('confirmDelete');
-            let formToSubmit = null;
+    
 
-            // Function to open the modal
-            function openModal(form) {
-                deleteModal.style.display = 'block';
-                formToSubmit = form;
-            }
-
-            // Function to close the modal
-            function closeModal() {
-                deleteModal.style.display = 'none';
-                formToSubmit = null;
-                confirmDeleteButton.disabled = false;
-            }
-
-            // Event listener for delete buttons
-            const deleteButtons = document.querySelectorAll('.delete-button');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const form = e.target.closest('form');
-                    openModal(form);
-                });
-            });
-
-            // Event listener for confirm delete
-            confirmDeleteButton.addEventListener('click', () => {
-                if (formToSubmit) {
-                    // Optionally disable the confirm button to prevent multiple clicks
-                    confirmDeleteButton.disabled = true;
-                    formToSubmit.submit();
-                }
-            });
-
-            // Event listener for cancel delete
-            cancelDeleteButton.addEventListener('click', () => {
-                closeModal();
-            });
-
-            // Event listener for close button (X)
-            closeButton.addEventListener('click', () => {
-                closeModal();
-            });
-
-            // Close modal when clicking outside the modal content
-            window.addEventListener('click', (event) => {
-                if (event.target == deleteModal) {
-                    closeModal();
-                }
-            });
-        });
-    </script>
 </body>
 </html>

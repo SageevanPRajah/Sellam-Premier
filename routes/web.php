@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\PriceController;
+use App\Http\Controllers\SeatController;
 
 
 Route::get('/', function () {
@@ -22,6 +24,7 @@ Route::get('/', function () {
     Route::put('/movie/{movie}/update',[MovieController::class, 'update'])->name('movie.update');
     Route::delete('/movie/{movie}/destroy',[MovieController::class, 'destroy'])->name('movie.destroy');
     Route::get('/movie/{movie}/detail',[MovieController::class, 'detail'])->name('movie.detail');
+    Route::get('/movie/{movie}/inspect',[MovieController::class, 'inspect'])->name('movie.inspect');
 
     //Route Show
     Route::get('/show',[ShowController::class, 'index'])->name('show.index');
@@ -31,6 +34,19 @@ Route::get('/', function () {
     Route::put('/show/{show}/update',[ShowController::class, 'update'])->name('show.update');
     Route::delete('/show/{show}/destroy',[ShowController::class, 'destroy'])->name('show.destroy');
     Route::get('/show/{show}/detail',[ShowController::class, 'detail'])->name('show.detail');
+
+    //Route Price
+    Route::get('/price',[PriceController::class, 'index'])->name('price.index');
+    Route::get('/price/create',[PriceController::class, 'create'])->name('price.create');
+    Route::post('/price',[PriceController::class, 'store'])->name('price.store');
+    Route::get('/price/{price}/edit',[PriceController::class, 'edit'])->name('price.edit');
+    Route::put('/price/{price}/update',[PriceController::class, 'update'])->name('price.update');
+
+    //Route Seat
+    Route::get('/seat',[SeatController::class, 'index'])->name('seat.index');
+    Route::get('/seat/create',[SeatController::class, 'create'])->name('seat.create');
+    Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
+    Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
