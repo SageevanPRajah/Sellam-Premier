@@ -296,12 +296,12 @@
             </div>
 
             <div class="form-group">
-                <label for="movie_poster">Movie Poster</label>
+                <label for="poster">Movie Poster</label>
                 <!-- You can display the poster if needed -->
-                <img id="poster_display" src="" alt="Movie Poster" style="max-width: 100%; height: auto; margin-bottom: 20px;" />
+                <img id="poster_display" src="" alt="Poster" style="max-width: 100%; height: auto; margin-bottom: 20px;" />
             </div>
 
-            <input type="hidden" id="movie_poster" name="movie_poster" />
+            <input type="hidden" id="poster" name="poster" />
 
             <div class="form-group">
                 <button type="submit" class="submit-button">
@@ -313,27 +313,13 @@
 
     <script>
         function getMoviePoster() {
-            const selectedMovie = document.getElementById('movie_name').selectedOptions[0];
-            const posterPath = selectedMovie.getAttribute('data-poster') || '';
-            console.log(posterPath); // Debugging line
-            document.getElementById('movie_poster').value = posterPath;
+    const selectedMovie = document.getElementById('movie_name').selectedOptions[0];
+    const posterPath = selectedMovie.getAttribute('data-poster');
+    console.log(posterPath); // Debugging line
+    document.getElementById('poster').value = posterPath;
+}
 
-            // Optional: Display the poster image
-            const posterDisplay = document.getElementById('poster_display');
-            if (posterPath) {
-                posterDisplay.src = posterPath;
-                posterDisplay.style.display = 'block';
-            } else {
-                posterDisplay.src = '';
-                posterDisplay.style.display = 'none';
-            }
-        }
-
-        function convertDuration() {
-            // Since this form doesn't have duration inputs, this function can be removed or repurposed.
-            // If duration is needed, implement accordingly.
-            return true;
-        }
+        
     </script>
 </body>
 </html>
