@@ -114,7 +114,7 @@
         </div>
         <!-- Hidden input to store movie poster path -->
         <div>
-            <input type="hidden" id="movie_poster" name="movie_poster" />
+            <input type="hidden" id="poster" name="poster" />
         </div>
         
         
@@ -128,7 +128,7 @@
     const selectedMovie = document.getElementById('movie_name').selectedOptions[0];
     const posterPath = selectedMovie.getAttribute('data-poster');
     console.log(posterPath); // Debugging line
-    document.getElementById('movie_poster').value = posterPath;
+    document.getElementById('poster').value = posterPath;
 }
     </script>
 

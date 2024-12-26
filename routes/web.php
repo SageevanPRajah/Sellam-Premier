@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\PriceController;
+use App\Http\Controllers\SeatController;
 
 
 Route::get('/', function () {
@@ -40,6 +41,12 @@ Route::get('/', function () {
     Route::post('/price',[PriceController::class, 'store'])->name('price.store');
     Route::get('/price/{price}/edit',[PriceController::class, 'edit'])->name('price.edit');
     Route::put('/price/{price}/update',[PriceController::class, 'update'])->name('price.update');
+
+    //Route Seat
+    Route::get('/seat',[SeatController::class, 'index'])->name('seat.index');
+    Route::get('/seat/create',[SeatController::class, 'create'])->name('seat.create');
+    Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
+    Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
