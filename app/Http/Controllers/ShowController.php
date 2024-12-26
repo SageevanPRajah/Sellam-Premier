@@ -26,7 +26,7 @@ class ShowController extends Controller
             'time' => 'required',
             'movie_code' => 'required',
             'movie_name' => 'required',
-            'movie_poster' => 'required|string',
+            'poster' => 'required|string',
         ]);
 
         $newShow = Show::create($data);
@@ -44,6 +44,7 @@ class ShowController extends Controller
             'time' => 'required',
             'movie_code' => 'required',
             'movie_name' => 'required',
+            'poster' => 'required|string',
         ]);
 
         $show->update($data);

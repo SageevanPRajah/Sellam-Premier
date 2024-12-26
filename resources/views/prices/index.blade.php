@@ -365,6 +365,10 @@
 <body>
     <h1>Ticket Price</h1>
 
+    <div class="add-link">
+        <a href="{{route('price.create')}}">Add New Price</a>
+    </div>
+
     @if(session()->has('success'))
         <div class="success-message">
             {{ session('success') }}

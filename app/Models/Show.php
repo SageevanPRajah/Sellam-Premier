@@ -14,7 +14,7 @@ class Show extends Model
         'time',
         'movie_code',
         'movie_name',
-        'movie_poster'
+        'poster'
     ];
 
     //fetch the movie poster based on the movie name

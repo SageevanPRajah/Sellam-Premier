@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shows', function (Blueprint $table) {
+        Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->date('date'); // Date of the show
-            $table->string('time'); // 30min time slot
-            $table->string('movie_code'); // night or matnee like
-            $table->string('movie_name'); // Name of the movie
-            $table->string('poster')->nullable(); // Store movie poster image path
+            $table->string('seat_code');
+            $table->string('seat_no');
+            $table->string('seat_type');
+            $table->string('seat_letter');
+            $table->integer('seat_digit');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shows');
+        Schema::dropIfExists('seats');
     }
 };
