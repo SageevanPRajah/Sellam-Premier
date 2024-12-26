@@ -367,51 +367,31 @@
     </div>
     <div>
         <div class="add-link">
-            <a href="{{route('show.create')}}">Add New Show</a>
+            <a href="{{route('seat.create')}}">Add New Seat</a>
         </div>
         <table id="movieTable">
             <thead>
             <tr>
-               <th>ID</th> 
-               <th>Date</th> 
-               <th>Time</th>
-               <th>movie_code</th> 
-               <th>movie_name</th> 
-               <th>movie_poster</th>  
-               <th>Edit</th>
-               <th>Delete</th>
+               <th>ID</th>  
+               <th>Seat Code</th>
+               <th>Seat Type</th> 
+               <th>Seat No</th> 
+               <th>Row</th>
+               <th>Number</th>
                <th>View</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($shows as $show)
+            @foreach($seats as $seat)
                 <tr>
-                    <td class="movie-name">{{$show->id}}</td> 
-                    <td class="movie-name">{{$show->date}}</td>
-                    <td class="movie-name">{{$show->time}}</td>
-                    <td class="movie-name">{{$show->movie_code}}</td>
-                    <td class="movie-name">{{$show->movie_name}}</td>
+                    <td class="movie-name">{{$seat->id}}</td> 
+                    <td class="movie-name">{{$seat->seat_code}}</td>
+                    <td class="movie-name">{{$seat->seat_type}}</td>
+                    <td class="movie-name">{{$seat->seat_no}}</td>
+                    <td class="movie-name">{{$seat->seat_letter}}</td>
+                    <td class="movie-name">{{$seat->seat_digit}}</td>
                     <td>
-                        <img 
-                            src="{{ $show->poster ? asset('storage/' . $show->poster) : asset('images/default-poster.jpg') }}" 
-                            alt="Poster" 
-                            style="max-width: 100px; height: auto;" 
-                        />
-                    </td>
-                    <td>
-                        <form method="GET" action="{{ route('show.edit', ['show' => $show]) }}">
-                            <button type="submit">Edit</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="post" action="{{route('show.destroy', ['show' => $show])}}">
-                            @csrf
-                            @method('delete')
-                            <input type="submit" value="Delete">
-                        </form>
-                    </td>
-                    <td>
-                        <form method="GET" action="{{ route('show.detail', ['show' => $show]) }}">
+                        <form method="GET" action="{{ route('seat.detail', ['seat' => $seat]) }}">
                             <button type="submit">View</button>
                         </form>
                     </td>
