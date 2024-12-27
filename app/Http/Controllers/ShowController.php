@@ -43,8 +43,7 @@ class ShowController extends Controller
             'date' => 'required',
             'time' => 'required',
             'movie_code' => 'required',
-            'movie_name' => 'required',
-            'poster' => 'required|string',
+            
         ]);
 
         $show->update($data);
