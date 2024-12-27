@@ -184,14 +184,24 @@
             <!-- Show Time -->
             <div class="form-group">
                 <label for="time">Time</label>
-                <input 
-                    type="text" 
-                    name="time" 
-                    id="time" 
-                    placeholder="e.g. 19:30" 
-                    value="{{ old('time', $show->time) }}" 
-                    required 
-                />
+                <select 
+                        name="time" 
+                        id="time" 
+                        required 
+                        aria-label="Show Time"
+                        value="{{ old('time', $show->time) }}"
+                    >
+                        @php
+                            $start = strtotime('00:00'); // Start time (12:00 AM)
+                            $end = strtotime('23:59'); // End time (11:59 PM)
+
+                            while ($start <= $end) {
+                                $time = date('g:i A', $start); // Format time as "6:00 AM"
+                                echo "<option value=\"$time\">$time</option>";
+                                $start = strtotime('+30 minutes', $start); // Increment by 30 minutes
+                            }
+                        @endphp
+                    </select>
             </div>
 
             <!-- Show Type (movie_code) -->
@@ -217,19 +227,14 @@
                     id="movie_name" 
                     placeholder="Enter Movie Name" 
                     value="{{ old('movie_name', $show->movie_name) }}" 
-                    required 
+                    readonly 
                 />
             </div>
 
             <!-- Poster Field + Current Poster Preview -->
             <div class="form-group">
                 <label for="poster">Show Poster</label>
-                <input 
-                    type="file" 
-                    name="poster" 
-                    id="poster" 
-                    accept="image/*" 
-                />
+                
                 @if($show->poster)
                     <div class="current-poster">
                         <p>Current Poster:</p>
