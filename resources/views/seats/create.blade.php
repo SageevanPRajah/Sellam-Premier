@@ -3,105 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Create Ticket Price</title>
+
+    <!-- Font Awesome for icons (optional, if you plan to use icons) -->
+    <link 
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-p6qD4WmF1g4p8qPQ5cM+PEOj8EeA0bg65dwZ2rBt+9v9V/GMq3O36RlhjzQpYYzTCnzqqe/GJZy43k5BSYyxzg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    />
+
     <style>
-        /* Reset some default styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* CSS Variables for Neumorphic Black and Gray Theme */
+        :root {
+            --background-color: #121212;
+            --primary-color: #1e1e1e;
+            --secondary-color: #2e2e2e;
+            --text-color: #e0e0e0;
+            --accent-color: #4CAF50;
+            --button-color: #2e2e2e;
+            --button-hover-color: #3e3e3e;
+            --border-color: #555;
+            --success-color: #4CAF50;
+            --danger-color: #FF5555;
+            --info-color: #2196F3;
+            --muted-color: #777;
+            --shadow-light: #2b2b2b;
+            --shadow-dark: #0c0c0c;
         }
 
         body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--background-color);
+            color: var(--text-color);
             display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center;    /* Center vertically */
-            height: 100vh;          /* Full viewport height */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
+        /* Container */
         .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px; /* Set a max width for responsiveness */
+            background-color: var(--primary-color);
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
+            width: 90%;
+            max-width: 600px;
+            color: var(--text-color);
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             text-align: center;
-            color: #343a40;
+            color: var(--text-color);
+        }
+
+        /* Success and Error Messages */
+        .success-message {
+            text-align: center; 
+            color: var(--success-color); 
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .error-messages ul {
+            color: var(--danger-color);
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 15px;
+        }
+
+        .error-messages ul li {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-messages ul li::before {
+            content: "\f071"; /* Font Awesome exclamation-circle icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
             font-weight: bold;
-            margin-bottom: 5px;
-            color: #495057;
+            margin-bottom: 8px;
+            color: var(--text-color);
         }
 
+        select,
         input[type="text"],
         input[type="number"],
         input[type="date"],
         input[type="file"],
         input[type="submit"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-bottom: 15px; /* Add space between inputs */
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            box-shadow: inset 2px 2px 6px var(--shadow-dark), inset -2px -2px 6px var(--shadow-light);
+            font-size: 16px;
+            outline: none;
+            transition: box-shadow 0.3s, background-color 0.3s;
         }
 
+        select:focus,
         input[type="text"]:focus,
         input[type="number"]:focus,
         input[type="date"]:focus,
         input[type="file"]:focus {
-            border-color: #80bdff;
-            outline: none;
-            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+            box-shadow: 0 0 10px var(--info-color);
         }
 
+        select::placeholder,
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        input[type="file"]::placeholder {
+            color: #aaa;
+        }
+
+        /* Submit Button */
         input[type="submit"] {
-            background-color: #007bff;
+            background-color: var(--accent-color);
             color: #fff;
             border: none;
-            cursor: pointer;
+            border-radius: 30px;
+            padding: 12px 20px;
             font-size: 16px;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        ul {
-            color: #dc3545;
-            list-style-type: none;
-            padding: 0;
-            margin: 0 0 15px;
-        }
-
-        ul li {
-            margin-bottom: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .row input {
-            flex: 1;
+            background-color: var(--button-hover-color);
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            color: #000;
         }
 
         /* Responsive adjustments */
@@ -111,12 +170,90 @@
             }
         }
     </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Create Ticket Price</h1>
+
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="post" action="{{ route('seat.store') }}" onsubmit="return updateHiddenFields()" enctype="multipart/form-data">
+            @csrf
+            @method('post')  
+            <input type="hidden" name="seat_code" id="seat_code" />  
+            <input type="hidden" name="seat_no" id="seat_no" />
+
+            <div class="form-group">
+                <label for="seat_type">Seat Type</label>
+                <select name="seat_type" id="seat_type" onchange="updateHiddenFields()" required aria-label="Seat Type">
+                    <option value="" disabled selected>Select seat type</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="seat_letter">Seat Letter</label>
+                <input 
+                    type="text" 
+                    name="seat_letter" 
+                    id="seat_letter" 
+                    placeholder="Enter Seat Letter" 
+                    oninput="updateHiddenFields()" 
+                    required 
+                    aria-label="Seat Letter"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="seat_digit">Seat Digit</label>
+                <input 
+                    type="number" 
+                    name="seat_digit" 
+                    id="seat_digit" 
+                    placeholder="Enter Seat Digit" 
+                    oninput="updateHiddenFields()" 
+                    required 
+                    aria-label="Seat Digit"
+                />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save New Seat"/>
+            </div>
+        </form>
+    </div>
+
     <script>
         function updateHiddenFields() {
             // Get input values
             const seatType = document.getElementById('seat_type').value;
-            const seatLetter = document.querySelector('input[name="seat_letter"]').value.toUpperCase();
-            const seatDigit = document.querySelector('input[name="seat_digit"]').value;
+            const seatLetter = document.getElementById('seat_letter').value.toUpperCase();
+            const seatDigit = document.getElementById('seat_digit').value;
+
+            // Validate inputs
+            if (!seatType || !seatLetter || !seatDigit) {
+                // Optionally, you can display a message or handle incomplete inputs
+                return false; // Prevent form submission if needed
+            }
 
             // Map seat type to first letter
             const seatTypeMap = {
@@ -126,59 +263,16 @@
             };
             const seatTypeInitial = seatTypeMap[seatType] || '';
 
-            // Update hidden fields
+            // Construct seat_no and seat_code
             const seatNo = `${seatLetter}-${seatDigit}`;
             const seatCode = `${seatTypeInitial}-${seatLetter}-${seatDigit}`;
 
+            // Update hidden fields
             document.getElementById('seat_no').value = seatNo;
             document.getElementById('seat_code').value = seatCode;
+
+            return true; // Allow form submission
         }
     </script>
-</head>
-<body>
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <h1>Ticket Price Create</h1>
-        <div>
-            @if($errors->any())
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{$error}}</li>
-                @endforeach
-            </ul>
-            @endif
-        </div>
-        <div class="form-container">
-        <form method="post" action="{{route('seat.store')}}" enctype="multipart/form-data" >
-        @csrf
-        @method('post')  
-            <input type="hidden" name="seat_code" id="seat_code" />  
-            <input type="hidden" name="seat_no" id="seat_no" />
-            <div>
-                <label for="seat_type">Seat Type</label>
-                <select name="seat_type" id="seat_type" onchange="updateHiddenFields()">
-                    <option value="" disabled selected>Select seat type</option>
-                    <option value="Silver">Silver</option>
-                    <option value="Gold">Gold</option>
-                    <option value="Platinum">Platinum</option>
-                </select>
-            </div>
-            <div>
-                <label>Seat Letter</label>
-                <input type="text" name="seat_letter" placeholder="Enter Seat letter" oninput="updateHiddenFields()" />
-            </div>
-            <div>
-                <label>Seat Digit</label>
-                <input type="number" name="seat_digit" placeholder="Enter seat_digit" oninput="updateHiddenFields()" />
-            </div>
-            <div>
-                <input type="submit" value="Save a new Seat"/>
-            </div>
-        </form>
-        </div>
-        </div>
-    </div>
-
 </body>
 </html>
