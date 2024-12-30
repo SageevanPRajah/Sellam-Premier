@@ -122,10 +122,17 @@ class BookingController extends Controller
     }
 
 
-    public function selectSeats($id){
-        $show = Show::findOrFail($id);
-        return view('bookings.select_seats', compact('show'));
-    }
+    public function selectSeats($id)
+{
+    $show = Show::findOrFail($id);
+
+    // Fetch booked seats for the selected show
+    $bookedSeats = Booking::where('movie_id', $show->id)
+        ->pluck('seat_code')
+        ->toArray();
+
+    return view('bookings.select_seats', compact('show', 'bookedSeats'));
+}
 
     public function detail(){
         return view('bookings.detail');

@@ -457,42 +457,45 @@
 <script>
     let selectedSeats = []; // Array to hold selected seats.
 
-    document.querySelectorAll('#seat-types button').forEach(button => {
-        button.addEventListener('click', () => {
-            const seatType = button.dataset.type;
+    // Use booked seats passed from the backend
+    const bookedSeats = @json($bookedSeats); // This array is injected from the backend
 
-            // Hide all layouts first
-            document.querySelectorAll('.seat-type-layout-section').forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // Show the selected seat type layout
-            if (seatType === "Silver") {
-                document.getElementById('silver-layout').style.display = 'block';
-            } else if (seatType === "Gold") {
-                document.getElementById('gold-layout').style.display = 'block';
-            } else if (seatType === "Platinum") {
-                document.getElementById('platinum-layout').style.display = 'block';
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mark booked seats dynamically
+        document.querySelectorAll('.seat').forEach(seat => {
+            const seatCode = seat.getAttribute('data-seat-code');
+            if (bookedSeats.includes(seatCode)) {
+                seat.classList.add('booked'); // Add 'booked' class
+                seat.disabled = true; // Disable button (optional for accessibility)
             }
 
-            // Set the selected seat type in the hidden input field
-            document.getElementById('selected-seat-type').value = seatType;
+            // Add click event for non-booked seats
+            if (!seat.classList.contains('booked')) {
+                seat.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleSeatSelection(seatCode, seat);
+                });
+            }
+        });
+
+        // Event listeners for seat type selection
+        document.querySelectorAll('#seat-types button').forEach(button => {
+            button.addEventListener('click', () => {
+                const seatType = button.dataset.type;
+
+                // Hide all layouts
+                document.querySelectorAll('.seat-type-layout-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Show the selected layout
+                document.getElementById(`${seatType.toLowerCase()}-layout`).style.display = 'block';
+
+                // Set the selected seat type in the hidden input field
+                document.getElementById('selected-seat-type').value = seatType;
+            });
         });
     });
-
-    // Add event listener for all seat buttons
-    document.querySelectorAll('.seat').forEach(seat => {
-        // Skip already booked seats
-        if (seat.classList.contains('booked')) {
-            return;
-        }
-
-        seat.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleSeatSelection(seat.getAttribute('data-seat-code'), seat);
-        });
-    });
-
 
     function toggleSeatSelection(seatCode, seatButton) {
         if (!seatCode) {
@@ -502,22 +505,37 @@
 
         // Toggle seat selection
         if (selectedSeats.includes(seatCode)) {
-            // If already selected, remove from selectedSeats array
+            // If already selected, remove from the array
             selectedSeats = selectedSeats.filter(seat => seat !== seatCode);
             seatButton.classList.remove('selected');
         } else {
-            // If not selected, add to selectedSeats array
+            // Add to the array if not selected
             selectedSeats.push(seatCode);
             seatButton.classList.add('selected');
         }
 
-        // Update the hidden input field with the selected seats
+        // Update the hidden input with selected seats
         document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
         console.log(`Currently selected seats: ${selectedSeats}`);
     }
+
 </script>
 
 <style>
+
+        table {
+            margin: 10px auto;
+            border-collapse: collapse;
+            width: 50%;
+        }
+        th, td {
+            border: 0px solid black;
+            padding: 5px;
+            text-align: center;
+            width: 30px;
+            height: 30px;
+        }
+
     .seat-type-layout-section {
         margin-top: 20px;
     }
