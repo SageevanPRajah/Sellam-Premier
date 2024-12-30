@@ -10,6 +10,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\BookingController;
 
 
 Route::get('/', function () {
@@ -47,6 +48,22 @@ Route::get('/', function () {
     Route::get('/seat/create',[SeatController::class, 'create'])->name('seat.create');
     Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
     Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
+
+    //Route Booking
+    Route::get('/booking',[BookingController::class, 'index'])->name('booking.index');
+    Route::get('/booking/create',[BookingController::class, 'create'])->name('booking.create');
+    Route::post('/booking',[BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking/{booking}/edit',[BookingController::class, 'edit'])->name('booking.edit');
+    Route::put('/booking/{booking}/update',[BookingController::class, 'update'])->name('booking.update');
+    Route::delete('/booking/{booking}/destroy',[BookingController::class, 'destroy'])->name('booking.destroy');
+    Route::get('/booking/detail',[BookingController::class, 'detail'])->name('booking.detail');
+
+    Route::post('/booking/shows', [BookingController::class, 'getShows'])->name('booking.getShows');
+    Route::post('/booking/seats', [BookingController::class, 'getSeats'])->name('booking.getSeats');
+    Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
