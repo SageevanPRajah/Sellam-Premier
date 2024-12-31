@@ -212,7 +212,7 @@
 
             <div class="form-group">
                 <label for="seat_letter">Seat Letter</label>
-                <input 
+                <input  
                     type="text" 
                     name="seat_letter" 
                     id="seat_letter" 
