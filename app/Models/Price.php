@@ -12,6 +12,7 @@ class Price extends Model
     protected $fillable = [
         'seat_type',
         'seat_logo',
+        'movie_code',
         'full_price',
         'half_price',
     ];

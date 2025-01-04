@@ -11,6 +11,8 @@ use App\Http\Controllers\ShowController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BillingController;
+
 
 
 Route::get('/', function () {
@@ -57,9 +59,17 @@ Route::get('/', function () {
     Route::put('/booking/{booking}/update',[BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{booking}/destroy',[BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/booking/detail',[BookingController::class, 'detail'])->name('booking.detail');
-
+    
+    //Route Booking Get Shows and Seats
     Route::post('/booking/shows', [BookingController::class, 'getShows'])->name('booking.getShows');
     Route::post('/booking/seats', [BookingController::class, 'getSeats'])->name('booking.getSeats');
+
+    //Route Billing
+    Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
+    Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
+    Route::post('/billing',[BillingController::class, 'store'])->name('billing.store');
+
+    //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');
 
 

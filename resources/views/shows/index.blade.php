@@ -430,7 +430,7 @@
                 <th>ID</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Show Type</th>
+                <th>Price Type</th>
                 <th>Movie Name</th>
                 <th>Poster</th>
                 <th>Edit</th>

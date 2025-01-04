@@ -21,6 +21,7 @@ class PriceController extends Controller
         $data = $request->validate([
             'seat_type' => 'required',
             'seat_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'movie_code' => 'required',
             'full_price' => 'required|decimal:0,2',
             'half_price' => 'required|decimal:0,2',
         ]);

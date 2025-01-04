@@ -483,6 +483,7 @@
                 <th>ID</th>
                 <th>Seat Type</th>
                 <th>Seat Logo</th>
+                <th>Price Code</th>
                 <th>Full Ticket Price</th>
                 <th>Half Ticket Price</th>
                 <th>Edit</th>
@@ -498,6 +499,7 @@
                         <img src="{{ $price->seat_logo ? asset('storage/' . $price->seat_logo) : asset('images/default-poster.jpg') }}"
                             alt="SeatLogo" style="max-width: 60px; height: auto;" />
                     </td>
+                    <td class="movie-name">{{ $price->movie_code }}</td>
                     <td class="movie-name">{{ $price->full_price }}</td>
                     <td class="movie-name">{{ $price->half_price }}</td>
 

@@ -254,15 +254,18 @@
                 <label for="seat_logo">Seat Logo</label>
                 <input type="file" name="seat_logo" id="seat_logo" accept="image/*" required />
             </div>
-
-            <div class="form-group">
-                <label for="full_price">Full Price</label>
-                <input type="text" name="full_price" id="full_price" placeholder="Enter full price" value="{{ old('full_price') }}" required />
+            <div>
+                <label for="movie_code">Price Type</label>
+                <select name="movie_code" id="movie_code">
+                    <option value="" disabled selected>Select Price Type</option>
+                    <option value="Price 1">Price 1</option>
+                    <option value="Price 2">Price 2</option>
+                    <option value="Price 3">Price 3</option>
+                </select>
             </div>
-
-            <div class="form-group">
-                <label for="half_price">Half Price</label>
-                <input type="text" name="half_price" id="half_price" placeholder="Enter half price" value="{{ old('half_price') }}" required />
+            <div>
+                <label>Full Price</label>
+                <input type="text" name="full_price" placeholder="Enter full_price" />
             </div>
 
             <div class="form-group">
