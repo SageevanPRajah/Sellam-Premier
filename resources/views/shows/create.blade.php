@@ -244,20 +244,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="movie_code">Movie Code</label>
+                    <label for="movie_code">Price Type</label>
                     <select 
                         name="movie_code" 
                         id="movie_code" 
                         required 
                         aria-label="Movie Code"
                     >
-                        <option value="">Select Movie Code</option>
-                        <option value="Morning Show">Morning Show</option>
-                        <option value="Matinee Show">Matinee Show</option>
-                        <option value="Night Show">Night Show</option>
-                        <option value="Midnight Show">Midnight Show</option>
-                        <option value="Special Show">Special Show</option>
-                        <option value="Premiere Show">Premiere Show</option>
+                        <option value="">Select Price Type</option>
+                        <option value="Price 1">Price 1</option>
+                        <option value="Price 2">Price 2</option>
+                        <option value="Price 3">Price 3</option>
                     </select>
                 </div>
 

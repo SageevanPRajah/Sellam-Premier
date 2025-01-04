@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('seat_type');
             $table->string('seat_logo');
+            $table->string('movie_code');
             $table->decimal('full_price');
             $table->decimal('half_price');
             $table->timestamps();
