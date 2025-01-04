@@ -144,6 +144,15 @@
                 <input type="file" name="seat_logo" id="seat_logo" accept="image/*" required />
             </div>
             <div>
+                <label for="movie_code">Price Type</label>
+                <select name="movie_code" id="movie_code">
+                    <option value="" disabled selected>Select Price Type</option>
+                    <option value="Price 1">Price 1</option>
+                    <option value="Price 2">Price 2</option>
+                    <option value="Price 3">Price 3</option>
+                </select>
+            </div>
+            <div>
                 <label>Full Price</label>
                 <input type="text" name="full_price" placeholder="Enter full_price" />
             </div>

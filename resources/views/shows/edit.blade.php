@@ -206,15 +206,12 @@
 
             <!-- Show Type (movie_code) -->
             <div class="form-group">
-                <label for="movie_code">Show Type</label>
+                <label for="movie_code">Price Type</label>
                 <select name="movie_code" id="movie_code" required>
                     <option value="">-- Select Show Type --</option>
-                    <option value="Morning Show"  {{ $show->movie_code === 'Morning Show' ? 'selected' : '' }}>Morning Show</option>
-                    <option value="Matinee Show"  {{ $show->movie_code === 'Matinee Show' ? 'selected' : '' }}>Matinee Show</option>
-                    <option value="Night Show"    {{ $show->movie_code === 'Night Show' ? 'selected' : '' }}>Night Show</option>
-                    <option value="Midnight Show" {{ $show->movie_code === 'Midnight Show' ? 'selected' : '' }}>Midnight Show</option>
-                    <option value="Special Show"  {{ $show->movie_code === 'Special Show' ? 'selected' : '' }}>Special Show</option>
-                    <option value="Premiere Show" {{ $show->movie_code === 'Premiere Show' ? 'selected' : '' }}>Premiere Show</option>
+                    <option value="Price 1"  {{ $show->movie_code === 'Price 1' ? 'selected' : '' }}>Price 1</option>
+                    <option value="Price 2"  {{ $show->movie_code === 'Price 2' ? 'selected' : '' }}>Price 2</option>
+                    <option value="Price 3"    {{ $show->movie_code === 'Price 3' ? 'selected' : '' }}>Price 3</option>
                 </select>
             </div>
 

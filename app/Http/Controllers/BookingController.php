@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -50,9 +51,16 @@ class BookingController extends Controller
                     'time' => $request->time
                 ]);
             }
-
-            return redirect()->route('booking.index')
-                ->with('success', 'Booking successfully created for selected seats!');
+            
+        // Save booking-related data in session
+        session([
+            'movie_id' => $show->id,
+            'seat_type' => $request->seat_type,
+            'selected_seats_count' => count($selectedSeats),
+        ]);
+        // Redirect to billing.create route
+        return redirect()->route('billing.create')->with('success', 'Booking successfully created!');
+            
         } catch (\Exception $e) {
             Log::error('Booking Store Error: ' . $e->getMessage());
             return redirect()->back()
