@@ -13,16 +13,18 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background-color:rgb(40, 43, 46);
         }
         h1 {
             margin: 20px 0;
             text-align: center;
+            color: var(--text-color);
         }
 
         /* Success Message */
         .success-message {
             text-align: center; 
-            color: green; 
+            color: (--success-color); 
             margin-bottom: 10px;
         }
 
@@ -37,10 +39,12 @@
 
         /* Slider Container */
         .slider-container {
-            width: 80%;
+            width: 100%;
             overflow: hidden;   /* Hides overflow for slider effect */
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            background-color: var(--primary-color);
+            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
             text-align: center;
         }
         .slider-wrapper {
@@ -51,10 +55,15 @@
             justify-content: center;
         }
         .slider-item {
-            flex: 0 0 auto;
+            flex: 1 1 auto;
             width: 180px;
             margin: 10px 5px; /* gap between items */
             text-align: center;
+            background-color: var(--primary-color);
+            border-radius: 15px;
+            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            padding: 10px;
+            height: 220px;
         }
         .slider-item img {
             width: 100%;
@@ -102,17 +111,21 @@
             margin: 20px 0;
         }
         .add-link a {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 8px 12px;
-            background-color: rgb(178, 201, 163); 
-            color: #333;
+            background-color: rgb(37, 38, 39);
+            color: var(--text-color);
             text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s, color 0.3s;
-            margin-left: 1450px;
+            border-radius: 30px;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left:57%;
         }
         .add-link a:hover {
-            background-color: rgb(35, 86, 60);
+            background-color: #242222;
             color: rgb(237, 240, 239);
         }
         .add-link a i {
@@ -158,57 +171,76 @@
             width: 80%;
             font-size: 16px;
             text-align: center;
+            background-color:rgb(41, 43, 44);
+            box-shadow: 0 0 10px var(--shadow-dark);
+            border-radius: 15px;
+            overflow: hidden;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 15px;
+            padding: 10px;
+            color: var(--text-color);
         }
         th {
-            background-color: rgb(0, 0, 0);
+            background-color: rgb(35, 36, 36);
             font-weight: bold;
             text-align: center;
-            color: #fff;
+            color: #ffffff;
         }
 
-        /* Buttons in table */
+        /* Buttons in table (Neumorphic Gray and Black) */
+        .action-button {
+            width: 100px;
+            /* height: 40px; */
+            padding: 7px 0;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            transition: box-shadow 0.3s, background-color 0.3s;
+            color: #ffffff;
+            margin: 0 auto; /* Center the button within the cell */
+        }
+
         .btn-edit {
-            background-color: #007BFF;
-            padding: 8px 25px;
-            border: none;
-            color: white;
-            border-radius: 7px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color:rgb(81, 88, 94); /* Gray */
         }
+
         .btn-delete {
-            background-color: #FF0000;
-            padding: 8px 15px;
-            border: none;
-            color: white;
-            border-radius: 7px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #343a40; /* Dark Gray */
         }
+
         .btn-view {
-            background-color: rgb(55, 130, 63);
-            padding: 8px 25px;
-            border: none;
-            color: white;
-            border-radius: 7px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #495057; /* Medium Gray */
         }
+
         .btn-edit:hover,
         .btn-delete:hover,
         .btn-view:hover {
-            opacity: 0.8;
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
+            color: black;
+            
         }
+
+        .btn-edit:hover img,
+        .btn-delete:hover img,
+        .btn-view:hover img {
+        filter: brightness(0) invert(0); /* Remove inversion to make the image black */
+        }
+        /* .btn-edit img, .btn-delete img, .btn-view img:hover {
+        color: black;
+        } */
+
+        .btn-edit img,
+        .btn-delete img,
+        .btn-view img {
+            margin-right: 5px;
+            filter: brightness(0) invert(1); /* Invert icon colors for visibility */
+        }
+
 
         /* Status Badge */
         .status-badge {
@@ -367,7 +399,7 @@
     </div>
     <div>
         <div class="add-link">
-            <a href="{{route('seat.create')}}">Add New Seat</a>
+            <a href="{{route('seat.create')}}"><img src="icons/icons8-add-24.png" alt="Add" style="width: 19px; height: 19px; margin-bottom: 3px;" /> Add New Seat</a>
         </div>
         <table id="movieTable">
             <thead>

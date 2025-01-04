@@ -38,6 +38,7 @@
             padding: 0;
             background-color:rgb(40, 43, 46);
             color: var(--text-color);
+            font-size:12px;
         }
 
         h1 {
@@ -64,7 +65,7 @@
 
         /* Slider Container */
         .slider-container {
-            width: 80%;
+            width: 100%;
             overflow: hidden;   /* Hides overflow for slider effect */
             border: 1px solid var(--border-color);
             border-radius: 15px;
@@ -82,7 +83,7 @@
         }
 
         .slider-item {
-            flex: 0 0 auto;
+            flex: 1 1 auto;
             width: 180px;
             margin: 10px 5px; /* gap between items */
             text-align: center;
@@ -90,11 +91,12 @@
             border-radius: 15px;
             box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
             padding: 10px;
+            height: 220px;
         }
 
         .slider-item img {
             width: 100%;
-            height: 220px;
+            height: 190px;
             object-fit: cover;
             border-radius: 10px;
         }
@@ -147,7 +149,7 @@
         .add-link a {
             display: inline-flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 8px 12px;
             background-color: var(--primary-color);
             color: var(--text-color);
             text-decoration: none;
@@ -190,13 +192,13 @@
         .search-bar input,
         .search-bar select,
         .search-bar input[type="date"] {
-            padding: 10px 15px;
+            padding: 8px 12px;
             border: none;
             border-radius: 20px;
-            background-color: rgb(53, 53, 53);
+            background-color: rgb(53, 53, 53); 
             color: var(--text-color);
             /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             transition: box-shadow 0.3s;
         }
@@ -239,7 +241,7 @@
         }
 
         th, td {
-            padding: 15px;
+            padding: 10px;
             color: var(--text-color);
         }
 
@@ -284,11 +286,11 @@
         .action-button {
             width: 100px;
             /* height: 40px; */
-            padding: 10px 0;
+            padding: 7px 0;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -319,10 +321,10 @@
         }
 
         .btn-edit:hover img,
-.btn-delete:hover img,
-.btn-view:hover img {
-    filter: brightness(0) invert(0); /* Remove inversion to make the image black */
-}
+        .btn-delete:hover img,
+        .btn-view:hover img {
+        filter: brightness(0) invert(0); /* Remove inversion to make the image black */
+        }
         /* .btn-edit img, .btn-delete img, .btn-view img:hover {
         color: black;
         } */

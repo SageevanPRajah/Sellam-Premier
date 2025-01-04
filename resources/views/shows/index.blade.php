@@ -38,7 +38,7 @@
             padding: 0;
             background-color: rgb(40, 43, 46);
             color: var(--text-color);
-            font-family: Arial, sans-serif;
+            font-size:12px;
         }
 
         h1 {
@@ -63,7 +63,7 @@
         .add-link a {
             display: inline-flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 8px 12px;
             background-color: var(--primary-color);
             color: var(--text-color);
             text-decoration: none;
@@ -80,7 +80,8 @@
         }
 
         .add-link a img {
-            margin-right: 10px;
+            margin-right: 12px;
+            margin-top: -3px;
             filter: brightness(0) invert(1); /* Invert icon colors for visibility */
         }
 
@@ -109,7 +110,7 @@
         .search-bar select,
         .search-bar input[type="text"],
         .search-bar input[type="date"] {
-            padding: 10px 15px;
+            padding: 8px 12px;
             border: none;
             border-radius: 20px;
             background-color: rgb(53, 53, 53);
@@ -143,7 +144,7 @@
         }
 
         th, td {
-            padding: 15px;
+            padding: 10px;
             color: var(--text-color);
         }
 
@@ -156,11 +157,11 @@
         /* Buttons (Edit, Delete, View) */
         .action-button {
             width: 100px;
-            padding: 10px 0;
+            padding: 7px 0;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;

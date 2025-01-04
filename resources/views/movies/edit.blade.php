@@ -36,7 +36,6 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
             background-color: rgb(41, 43, 44);
             color: var(--text-color);
             display: flex;
@@ -47,16 +46,18 @@
 
         .container {
             background-color: rgb(40, 42, 42);
-            padding: 30px 40px;
+            padding: 0px 40px;
             border-radius: 15px;
             box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
             width: 100%;
             max-width: 600px; /* Set a max width for responsiveness */
             color: var(--text-color);
+            margin-top: 40px;
+            margin-bottom: 100px;
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-align: center;
             color: var(--text-color);
         }
@@ -85,14 +86,13 @@
         select,
         input[type="submit"] {
             width: 100%;
-            padding: 10px 15px;
+            padding: 9px 10px;
             border: none;
             border-radius: 20px;
             background-color: rgb(47, 48, 49);
             color: var(--text-color);
             box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light);
-            font-size: 16px;
-            margin-bottom: 15px; /* Space between inputs */
+            font-size: 12px;
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
 

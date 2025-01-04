@@ -52,7 +52,7 @@
             background-color: var(--primary-color);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             width: 90%;
             max-width: 800px; /* Increased max-width to accommodate more fields in a row */
             margin: 40px auto;
