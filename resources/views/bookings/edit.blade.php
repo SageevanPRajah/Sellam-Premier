@@ -19,18 +19,14 @@
         </div>
 
         <div class="form-group">
-            <label for="status">Status</label>
-            <select id="status" name="status" class="form-control">
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
-            </select>
+            <input type="hidden" name="status" value="0">
         </div>
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Movie Name</th>
-                    <th>Seat Code</th>
+                    <th>Seat Type</th>
                     <th>Seat No</th>
                     <th>Select</th>
                 </tr>
@@ -39,10 +35,10 @@
                 @foreach ($bookings as $booking)
                 <tr>
                     <td>{{ $booking->movie_name }}</td>
-                    <td>{{ $booking->seat_code }}</td>
+                    <td>{{ $booking->seat_type }}</td>
                     <td>{{ $booking->seat_no }}</td>
                     <td>
-                        <input type="checkbox" name="booking_ids[]" value="{{ $booking->id }}">
+                        <input type="checkbox" name="booking_ids[]" value="{{ $booking->id }}" >
                     </td>
                 </tr>
                 @endforeach

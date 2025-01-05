@@ -12,14 +12,12 @@ use App\Models\Seat;
 
 class BookingController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $bookings = Booking::all();
         return view('bookings.index', compact('bookings'));
     }
 
-    public function create()
-    {
+    public function create(){
         return view('bookings.create');
     }
 
@@ -89,8 +87,9 @@ class BookingController extends Controller
     }
 
 
-    public function show(Booking $booking){
-        return view('bookings.show', compact('booking'));
+    public function show(){
+        $bookings = Booking::all();
+        return view('bookings.show', compact('bookings'));
     }
 
     public function edit(Request $request){
@@ -105,40 +104,38 @@ class BookingController extends Controller
     }
 
 
-    public function bulkUpdate(Request $request)
-{
-    $validated = $request->validate([
-        'booking_ids' => 'required|array', // Array of booking IDs to update
-        'phone' => 'nullable|string',
-        'name' => 'nullable|string',
-        'status' => 'nullable|boolean',
-    ]);
-
-    try {
-        $bookingIds = $validated['booking_ids'];
-
-        // Fetch the movie_id from the first booking (assuming all bookings are for the same movie)
-        $movieId = Booking::find($bookingIds[0])->movie_id;
-
-        // Update all selected bookings with the same values
-        Booking::whereIn('id', $bookingIds)->update([
-            'phone' => $validated['phone'] ?? 'Counter booking',
-            'name' => $validated['name'] ?? 'Counter booking',
-            'status' => $validated['status'] ?? true,
+    public function bulkUpdate(Request $request){
+        $validated = $request->validate([
+            'booking_ids' => 'required|array', // Array of booking IDs to update
+            'phone' => 'nullable|string',
+            'name' => 'nullable|string',
+            'status' => 'nullable|boolean',
         ]);
 
-         // Redirect to the 'selectSeats' route with the movie_id
-         return redirect()->route('booking.selectSeats', ['id' => $movieId])
-         ->with('success', 'Bookings updated successfully!');
-    } catch (\Exception $e) {
-        Log::error('Bulk Update Error: ' . $e->getMessage());
-        return redirect()->back()->withErrors('Failed to update bookings: ' . $e->getMessage());
+        try {
+            $bookingIds = $validated['booking_ids'];
+
+            // Fetch the movie_id from the first booking (assuming all bookings are for the same movie)
+            $movieId = Booking::find($bookingIds[0])->movie_id;
+
+            // Update all selected bookings with the same values
+            Booking::whereIn('id', $bookingIds)->update([
+                'phone' => $validated['phone'] ?? 'Counter booking',
+                'name' => $validated['name'] ?? 'Counter booking',
+                'status' => $validated['status'] ?? true,
+            ]);
+
+            // Redirect to the 'selectSeats' route with the movie_id
+            return redirect()->route('booking.selectSeats', ['id' => $movieId])
+            ->with('success', 'Bookings updated successfully!');
+        } catch (\Exception $e) {
+            Log::error('Bulk Update Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Failed to update bookings: ' . $e->getMessage());
+        }
     }
-}
 
 
-    public function destroy(Booking $booking)
-    {
+    public function destroy(Booking $booking){
         $booking->delete();
 
         return redirect()->route('bookings.index')
@@ -171,21 +168,20 @@ class BookingController extends Controller
     }
 
 
-    public function selectSeats($id)
-{
-    $show = Show::findOrFail($id);
+    public function selectSeats($id){
+        $show = Show::findOrFail($id);
 
-    // Fetch booked seats with status for the selected show
-    $bookedSeats = Booking::where('movie_id', $show->id)
-        ->select('seat_code', 'status') // Fetch seat_code and status
-        ->get()
-        ->mapWithKeys(function ($item) {
-            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
-        })
-        ->toArray();
+        // Fetch booked seats with status for the selected show
+        $bookedSeats = Booking::where('movie_id', $show->id)
+            ->select('seat_code', 'status') // Fetch seat_code and status
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+            })
+            ->toArray();
 
-    return view('bookings.select_seats', compact('show', 'bookedSeats'));
-}
+        return view('bookings.select_seats', compact('show', 'bookedSeats'));
+    }
 
 
     public function detail(){
