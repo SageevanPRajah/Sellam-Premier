@@ -17,5 +17,8 @@ class Booking extends Model
         'seat_type',
         'seat_no',
         'seat_code',
+        'phone',
+        'name',
+        'status',
     ];
 }

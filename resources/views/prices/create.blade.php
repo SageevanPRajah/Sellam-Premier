@@ -268,14 +268,9 @@
                 <input type="text" name="full_price" placeholder="Enter full_price" />
             </div>
 
-            <div class="form-group">
-                <label for="active">Active</label>
-                <label class="toggle-switch">
-                    <!-- Hidden field to handle unchecked state -->
-                    <input type="hidden" name="active" value="0">
-                    <input type="checkbox" name="active" id="active" value="1" {{ old('active') ? 'checked' : '' }}>
-                    <span class="slider"></span>
-                </label>
+            <div>
+                <label>Half Price</label>
+                <input type="text" name="half_price" placeholder="Enter half_price" />
             </div>
 
             <div class="form-group">

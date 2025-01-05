@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('seat_type'); 
             $table->string('seat_no');
             $table->string('seat_code');
+            $table->string('phone')->default('Counter booking');
+            $table->string('name')->default('Counter booking');
+            $table->boolean('status')->default(true);
             $table->timestamps();
 
             $table->foreign('movie_id')->references('id')->on('shows')->onDelete('cascade'); // Added foreign key constraint
