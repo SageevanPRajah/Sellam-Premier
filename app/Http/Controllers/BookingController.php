@@ -37,19 +37,29 @@ class BookingController extends Controller
         try {
             $show = Show::findOrFail($request->movie_id);
             $selectedSeats = json_decode($request->selected_seats, true); // Decode JSON array of seats
+            $createdBookings = []; // Store created booking IDs
 
-            foreach ($selectedSeats as $seatCode) {
-                $seat = Seat::where('seat_code', $seatCode)->firstOrFail();
-
-                Booking::create([
-                    'movie_id' => $show->id,
-                    'movie_name' => $show->movie_name,
-                    'seat_type' => $request->seat_type,
-                    'seat_code' => $seatCode,
-                    'seat_no' => $seat->seat_no,
-                    'date' => $request->selected_date,
-                    'time' => $request->time
-                ]);
+            if (is_array($selectedSeats) && count($selectedSeats) > 0) {
+                foreach ($selectedSeats as $seatCode) {
+                    $seat = Seat::where('seat_code', $seatCode)->firstOrFail();
+    
+                    $booking = Booking::create([
+                        'movie_id' => $show->id,
+                        'movie_name' => $show->movie_name,
+                        'seat_type' => $request->seat_type,
+                        'seat_code' => $seatCode,
+                        'seat_no' => $seat->seat_no,
+                        'date' => $request->selected_date,
+                        'time' => $request->time,
+                    ]);
+    
+                    // Add the booking ID to the array
+                    $createdBookings[] = $booking->id;
+                }
+            } else {
+                return redirect()->back()
+                    ->withErrors(['error' => 'No seats selected. Please select at least one seat.'])
+                    ->withInput();
             }
             
         // Save booking-related data in session
@@ -57,9 +67,18 @@ class BookingController extends Controller
             'movie_id' => $show->id,
             'seat_type' => $request->seat_type,
             'selected_seats_count' => count($selectedSeats),
+            'created_booking_ids' => $createdBookings,
         ]);
-        // Redirect to billing.create route
-        return redirect()->route('billing.create')->with('success', 'Booking successfully created!');
+
+        // Check which button was pressed
+        if ($request->has('confirm_booking')) {
+            // Redirect to billing.create route
+            return redirect()->route('billing.create')->with('success', 'Booking successfully created!');
+        } elseif ($request->has('reserve_seats')) {
+            // Redirect to booking.edit route with booking IDs
+            return redirect()->route('booking.edit', ['ids' => implode(',', $createdBookings)])
+                ->with('success', 'Seats reserved successfully!');
+        }
             
         } catch (\Exception $e) {
             Log::error('Booking Store Error: ' . $e->getMessage());
@@ -74,27 +93,49 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking'));
     }
 
-    public function edit(Booking $booking){
-        return view('bookings.edit', compact('booking'));
+    public function edit(Request $request){
+        $bookingIds = explode(',', $request->query('ids')); // Get booking IDs from query string
+        $bookings = Booking::whereIn('id', $bookingIds)->get();
+
+        if ($bookings->isEmpty()) {
+            return redirect()->route('booking.index')->withErrors('No bookings found for editing.');
+        }
+
+        return view('bookings.edit', compact('bookings'));
     }
 
-    public function update(Request $request, Booking $booking)
-    {
-        $request->validate([
-            'date' => 'required',
-            'time' => 'required',
-            'movie_id' => 'required',
-            'movie_name' => 'required',
-            'seat_type' => 'required',
-            'seat_no' => 'required',
-            'seat_code' => 'required',
+
+    public function bulkUpdate(Request $request)
+{
+    $validated = $request->validate([
+        'booking_ids' => 'required|array', // Array of booking IDs to update
+        'phone' => 'nullable|string',
+        'name' => 'nullable|string',
+        'status' => 'nullable|boolean',
+    ]);
+
+    try {
+        $bookingIds = $validated['booking_ids'];
+
+        // Fetch the movie_id from the first booking (assuming all bookings are for the same movie)
+        $movieId = Booking::find($bookingIds[0])->movie_id;
+
+        // Update all selected bookings with the same values
+        Booking::whereIn('id', $bookingIds)->update([
+            'phone' => $validated['phone'] ?? 'Counter booking',
+            'name' => $validated['name'] ?? 'Counter booking',
+            'status' => $validated['status'] ?? true,
         ]);
 
-        $booking->update($request->all());
-
-        return redirect()->route('bookings.index')
-            ->with('success', 'Booking updated successfully');
+         // Redirect to the 'selectSeats' route with the movie_id
+         return redirect()->route('booking.selectSeats', ['id' => $movieId])
+         ->with('success', 'Bookings updated successfully!');
+    } catch (\Exception $e) {
+        Log::error('Bulk Update Error: ' . $e->getMessage());
+        return redirect()->back()->withErrors('Failed to update bookings: ' . $e->getMessage());
     }
+}
+
 
     public function destroy(Booking $booking)
     {
