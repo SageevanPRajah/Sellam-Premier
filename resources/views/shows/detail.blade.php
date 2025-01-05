@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Dynamic Dashboard</title>
+@extends('layouts.app')
+
+@section('content')
   <!-- Font Awesome for icons -->
   <link
     rel="stylesheet"
@@ -154,17 +152,12 @@
       color: #555;
     }
   </style>
-</head>
-<body>
+
+
 
 <!-- Header -->
-<div class="header">
-  <div class="title">My Dashboard</div>
-  <div class="header-icons">
-    <i class="fas fa-cog" title="Settings"></i>
-    <i class="fas fa-user-circle" title="Profile"></i>
-  </div>
-</div>
+<div class="container">
+
 
 <!-- Dashboard Container -->
 <div class="dashboard-container">
@@ -204,6 +197,7 @@
     </div>
   </div>
 </div>
+</div>
 
 <script>
   // Toggle sidebar (expand or collapse)
@@ -239,6 +233,4 @@
       });
   }
 </script>
-
-</body>
-</html>
+@endsection

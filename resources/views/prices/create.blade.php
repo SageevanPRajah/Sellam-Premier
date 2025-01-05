@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Price Create</title>
 
     <!-- Font Awesome for icons (if needed) -->
-    <link 
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="sha512-p6qD4WmF1g4p8qPQ5cM+PEOj8EeA0bg65dwZ2rBt+9v9V/GMq3O36RlhjzQpYYzTCnzqqe/GJZy43k5BSYyxzg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-    />
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         /* CSS Variables for Neumorphic Black and Gray Theme */
@@ -56,7 +53,8 @@
             border-radius: 15px;
             box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
             width: 100%;
-            max-width: 600px; /* Set a max width for responsiveness */
+            max-width: 600px;
+            /* Set a max width for responsiveness */
             color: var(--text-color);
             margin: 40px 0;
         }
@@ -133,7 +131,8 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #388E3C; /* Darker shade of accent-color */
+            background-color: #388E3C;
+            /* Darker shade of accent-color */
             box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
         }
 
@@ -189,15 +188,15 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--accent-color);
         }
 
-        input:focus + .slider {
+        input:focus+.slider {
             box-shadow: 0 0 1px var(--accent-color);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(26px);
         }
 
@@ -223,22 +222,23 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <h1>Ticket Price Create</h1>
         <div>
-            @if($errors->any())
+            @if ($errors->any())
                 <ul class="error-messages">
-                    @foreach($errors->all() as $error)
-                        <li>{{$error}}</li>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             @endif
         </div>
         <form method="post" action="{{ route('price.store') }}" enctype="multipart/form-data">
             @csrf
-            @method('post')    
+            @method('post')
 
             <div class="form-group">
                 <label for="seat_type">Seat Type</label>
@@ -268,21 +268,17 @@
                 <input type="text" name="full_price" placeholder="Enter full_price" />
             </div>
 
-            <div class="form-group">
-                <label for="active">Active</label>
-                <label class="toggle-switch">
-                    <!-- Hidden field to handle unchecked state -->
-                    <input type="hidden" name="active" value="0">
-                    <input type="checkbox" name="active" id="active" value="1" {{ old('active') ? 'checked' : '' }}>
-                    <span class="slider"></span>
-                </label>
+            <div>
+                <label>Half Price</label>
+                <input type="text" name="half_price" placeholder="Enter half_price" />
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Save a New Seat Price"/>
+                <input type="submit" value="Save a New Seat Price" />
             </div>
         </form>
     </div>
 
 </body>
+
 </html>

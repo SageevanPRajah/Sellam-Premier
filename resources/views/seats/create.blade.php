@@ -174,7 +174,7 @@
 <body>
 
     <div class="container">
-        <h1>Create Ticket Price</h1>
+        <h1>Create seat</h1>
 
         <!-- Success Message -->
         @if(session()->has('success'))

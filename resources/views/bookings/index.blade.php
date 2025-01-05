@@ -434,9 +434,9 @@
                 <th>Seat Type</th>
                 <th>seat Number</th>
                 <th>seat Code</th>
-                <th>Edit</th>
+                <th>Name</th>
                 <th>Delete</th>
-                <th>View</th>
+                <th>PhoneNumber</th>
             </tr>
         </thead>
         <tbody>
