@@ -1,0 +1,55 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h1>Edit Bookings</h1>
+
+    <form action="{{ route('booking.bulkUpdate') }}" method="POST">
+        @csrf
+        @method('POST')
+
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" placeholder="Phone" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Name" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" class="form-control">
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Movie Name</th>
+                    <th>Seat Code</th>
+                    <th>Seat No</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($bookings as $booking)
+                <tr>
+                    <td>{{ $booking->movie_name }}</td>
+                    <td>{{ $booking->seat_code }}</td>
+                    <td>{{ $booking->seat_no }}</td>
+                    <td>
+                        <input type="checkbox" name="booking_ids[]" value="{{ $booking->id }}">
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+@endsection
