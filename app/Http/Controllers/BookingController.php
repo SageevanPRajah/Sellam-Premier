@@ -175,13 +175,18 @@ class BookingController extends Controller
 {
     $show = Show::findOrFail($id);
 
-    // Fetch booked seats for the selected show
+    // Fetch booked seats with status for the selected show
     $bookedSeats = Booking::where('movie_id', $show->id)
-        ->pluck('seat_code')
+        ->select('seat_code', 'status') // Fetch seat_code and status
+        ->get()
+        ->mapWithKeys(function ($item) {
+            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+        })
         ->toArray();
 
     return view('bookings.select_seats', compact('show', 'bookedSeats'));
 }
+
 
     public function detail(){
         return view('bookings.detail');
