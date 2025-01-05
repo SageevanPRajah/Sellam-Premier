@@ -68,7 +68,10 @@
             transition: background-color 0.3s, color 0.3s;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 57%;
+            /* Center the button */
+            display: block;
+            margin: 0 auto;
+            width: fit-content;
         }
 
         .add-link a:hover {
@@ -104,9 +107,7 @@
             color: var(--text-color);
         }
 
-        .search-bar select,
-        .search-bar input[type="text"],
-        .search-bar input[type="date"] {
+        .search-bar input[type="text"] {
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
@@ -115,11 +116,10 @@
             font-size: 16px;
             outline: none;
             transition: box-shadow 0.3s;
+            width: 300px;
         }
 
-        .search-bar select:focus,
-        .search-bar input[type="text"]:focus,
-        .search-bar input[type="date"]:focus {
+        .search-bar input[type="text"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
 
@@ -152,7 +152,7 @@
             color: #ffffff;
         }
 
-        /* Buttons (Edit, Delete, View) */
+        /* Buttons (View) */
         .action-button {
             width: 100px;
             padding: 10px 0;
@@ -170,160 +170,23 @@
             /* Center the button within the cell */
         }
 
-        .btn-edit {
-            background-color: rgb(81, 88, 94);
-            /* Gray */
-        }
-
-        .btn-delete {
-            background-color: #343a40;
-            /* Dark Gray */
-        }
-
         .btn-view {
             background-color: #495057;
             /* Medium Gray */
         }
 
-        .btn-edit:hover,
-        .btn-delete:hover,
         .btn-view:hover {
             color: black;
+            background-color: #6c757d;
         }
 
-        .btn-edit img,
-        .btn-delete img,
         .btn-view img {
             margin-right: 5px;
             filter: brightness(0) invert(1);
         }
 
-        .btn-edit:hover img,
-        .btn-delete:hover img,
         .btn-view:hover img {
             filter: brightness(0) invert(0);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: none;
-            width: 300px;
-            border-radius: 20px;
-            text-align: center;
-            color: rgb(41, 43, 44);
-        }
-
-        .close-button {
-            color: #ffffff;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #FF5555;
-            text-decoration: none;
-        }
-
-        .modal-actions {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .modal-actions button {
-            width: 100px;
-            padding: 10px 0;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #ffffff;
-            transition: box-shadow 0.3s, background-color 0.3s;
-        }
-
-        #confirmDelete {
-            background-color: #FF5555;
-        }
-
-        #cancelDelete {
-            background-color: #6c757d;
-        }
-
-        /* Pagination and Rows per Page */
-        .pagination-container {
-            width: 80%;
-            margin: 20px auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .rows-per-page {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .rows-per-page select {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 20px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            font-size: 16px;
-            outline: none;
-            transition: box-shadow 0.3s;
-        }
-
-        .rows-per-page select:focus {
-            box-shadow: 0 0 10px #2196F3;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pagination button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 20px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-        }
-
-        .pagination button.active {
-            background-color: #2196F3;
-            color: #ffffff;
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-        }
-
-        .pagination button:hover:not(.active) {
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-            background-color: #555555;
         }
 
         /* Responsive Design */
@@ -346,9 +209,7 @@
                 width: 100%;
             }
 
-            .search-bar select,
-            .search-bar input[type="text"],
-            .search-bar input[type="date"] {
+            .search-bar input[type="text"] {
                 width: 100%;
             }
 
@@ -368,7 +229,7 @@
 </head>
 
 <body>
-    <h1>Booking details</h1>
+    <h1>Booking Details</h1>
 
     <!-- Success Message -->
     @if (session()->has('success'))
@@ -387,40 +248,10 @@
 
     <!-- Search Bar with Filters -->
     <div class="search-bar">
-        <!-- movie_code Filter (Dropdown) -->
-        <div class="filter-group">
-            <label for="movieCodeSelect">Show Type</label>
-            <select id="movieCodeSelect" aria-label="Select Show Type">
-                <option value="all">All Show Types</option>
-                <option value="Morning Show">Morning Show</option>
-                <option value="Matinee Show">Matinee Show</option>
-                <option value="Night Show">Night Show</option>
-                <option value="Midnight Show">Midnight Show</option>
-                <option value="Special Show">Special Show</option>
-                <option value="Premiere Show">Premiere Show</option>
-            </select>
-        </div>
-
-        <!-- Filter by Time -->
-        <div class="filter-group">
-            <label for="timeInput">Time</label>
-            <input type="text" id="timeInput" placeholder="e.g. 19:30" aria-label="Filter by Time">
-        </div>
-
-        <!-- Date Range Filter -->
-        <div class="filter-group">
-            <label for="startDate">From Date</label>
-            <input type="date" id="startDate" aria-label="Filter Shows From Date">
-        </div>
-        <div class="filter-group">
-            <label for="endDate">To Date</label>
-            <input type="date" id="endDate" aria-label="Filter Shows To Date">
-        </div>
-
         <!-- General Search -->
         <div class="filter-group">
             <label for="searchInput">Search</label>
-            <input type="text" id="searchInput" placeholder="Search by Movie Name" aria-label="Search Shows">
+            <input type="text" id="searchInput" placeholder="Search by Movie Name, Name, Phone Number" aria-label="Search Shows">
         </div>
     </div>
 
@@ -431,19 +262,18 @@
                 <th>ID</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Show Id</th>
+                <th>Show ID</th>
                 <th>Movie Name</th>
                 <th>Seat Type</th>
-                <th>seat Number</th>
-                <th>seat Code</th>
+                <th>Seat Number</th>
+                <th>Seat Code</th>
                 <th>Name</th>
-                <th>PhoneNumber</th>
-                <th>Status</th>
-                <th>Delete</th>
+                <th>Phone Number</th>
+                <th>View</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($bookings as $booking)
+            @foreach ($bookings->where('status', '0') as $booking)
                 <tr>
                     <td>{{ $booking->id }}</td>
                     <td>{{ $booking->date }}</td>
@@ -455,9 +285,9 @@
                     <td>{{ $booking->seat_code }}</td>
                     <td>{{ $booking->name }}</td>
                     <td>{{ $booking->phone }}</td>
-                    <td>{{ $booking->status }}</td>
                     <td>
-                        <form method="GET" action="{{ route('booking.detail', ['booking' => $booking]) }}">
+                        <form method="GET" action="{{ route('booking.detail', ['booking' => $booking->id]) }}">
+                            @csrf
                             <button type="submit" class="action-button btn-view">
                                 <img src="icons/icons8-eye-32.png" alt="View"
                                     style="width: 17px; height: 17px; margin-right: 5px;" />
@@ -470,9 +300,28 @@
         </tbody>
     </table>
 
-
-
-
+    <!-- Optional: Pagination and Rows per Page -->
+    <!-- Uncomment and customize if needed -->
+    <!--
+    <div class="pagination-container">
+        <div class="rows-per-page">
+            <label for="rowsSelect">Rows per page:</label>
+            <select id="rowsSelect">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <div class="pagination">
+            <button>&laquo;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>&raquo;</button>
+        </div>
+    </div>
+    -->
 </body>
 
 </html>
