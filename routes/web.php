@@ -55,8 +55,8 @@ Route::get('/', function () {
     Route::get('/booking',[BookingController::class, 'index'])->name('booking.index');
     Route::get('/booking/create',[BookingController::class, 'create'])->name('booking.create');
     Route::post('/booking',[BookingController::class, 'store'])->name('booking.store');
-    Route::get('/booking/{booking}/edit',[BookingController::class, 'edit'])->name('booking.edit');
-    Route::put('/booking/{booking}/update',[BookingController::class, 'update'])->name('booking.update');
+    Route::get('/booking/edit',[BookingController::class, 'edit'])->name('booking.edit');
+    Route::post('/bookings/bulk-update', [BookingController::class, 'bulkUpdate'])->name('booking.bulkUpdate');
     Route::delete('/booking/{booking}/destroy',[BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/booking/detail',[BookingController::class, 'detail'])->name('booking.detail');
     

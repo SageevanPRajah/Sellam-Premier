@@ -450,7 +450,8 @@
             <input id="selected-movie-id" name="movie_id" value="{{ $show->id }}" >
             <input id="selected-movie-name" name="movie_name" value="{{ $show->movie_name }}" >
             <input id="selected-seat-type" name="seat_type" >
-        <button type="submit" id="confirm-booking" class="button">Confirm Booking</button>
+        <button type="submit" name="reserve_seats" class="button">Reserve Seats</button>
+        <button type="submit" name="confirm_booking" id="confirm-booking" class="button">Confirm Booking</button>
     </form>
 </div>
 
@@ -561,9 +562,14 @@
     }
 
     .seat.booked {
-        background-color: #ccc;
+        background-color: #e81414;
         cursor: not-allowed;
     }
+
+    .seat.reserved {
+    background-color: #ffc107; /* Yellow for reserved */
+    cursor: not-allowed;
+}
 
     .seat-type-layout-section table {
         margin: 0 auto;
