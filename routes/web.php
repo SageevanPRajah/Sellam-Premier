@@ -59,6 +59,7 @@ Route::get('/', function () {
     Route::post('/bookings/bulk-update', [BookingController::class, 'bulkUpdate'])->name('booking.bulkUpdate');
     Route::delete('/booking/{booking}/destroy',[BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/booking/detail',[BookingController::class, 'detail'])->name('booking.detail');
+    Route::get('/booking/show',[BookingController::class, 'show'])->name('booking.show');
     
     //Route Booking Get Shows and Seats
     Route::post('/booking/shows', [BookingController::class, 'getShows'])->name('booking.getShows');
