@@ -464,20 +464,28 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Mark booked seats dynamically
         document.querySelectorAll('.seat').forEach(seat => {
-            const seatCode = seat.getAttribute('data-seat-code');
-            if (bookedSeats.includes(seatCode)) {
-                seat.classList.add('booked'); // Add 'booked' class
-                seat.disabled = true; // Disable button (optional for accessibility)
-            }
+    const seatCode = seat.getAttribute('data-seat-code'); // Get the seat code from the button
 
-            // Add click event for non-booked seats
-            if (!seat.classList.contains('booked')) {
-                seat.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    toggleSeatSelection(seatCode, seat);
-                });
-            }
+    if (bookedSeats.hasOwnProperty(seatCode)) {
+        if (bookedSeats[seatCode]) {
+            // If the status is true, mark as booked
+            seat.classList.add('booked'); // Add 'booked' class for styling
+            seat.disabled = true; // Disable button (optional for accessibility)
+        } else {
+            // If the status is false, mark as reserved
+            seat.classList.add('reserved'); // Add 'reserved' class for styling
+            seat.disabled = true; // Disable button
+        }
+    }
+
+    // Add click event for non-booked and non-reserved seats
+    if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
+        seat.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleSeatSelection(seatCode, seat);
         });
+    }
+});
 
         // Event listeners for seat type selection
         document.querySelectorAll('#seat-types button').forEach(button => {

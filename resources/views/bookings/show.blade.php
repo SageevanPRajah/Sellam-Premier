@@ -229,7 +229,11 @@
 </head>
 
 <body>
-    <h1>Booking Details</h1>
+    <h1>Resereved Seats</h1>
+
+    <form action="" method="POST">
+        @csrf
+        @method('POST')
 
     <!-- Success Message -->
     @if (session()->has('success'))
@@ -238,20 +242,13 @@
         </div>
     @endif
 
-    <!-- Add New Show Button -->
-    <div class="add-link">
-        <a href="{{ route('show.create') }}">
-            <img src="icons/icons8-add-24.png" alt="Add" style="width: 19px; height: 19px; margin-bottom: -3px;" />
-            Add Booking
-        </a>
-    </div>
 
     <!-- Search Bar with Filters -->
     <div class="search-bar">
         <!-- General Search -->
         <div class="filter-group">
             <label for="searchInput">Search</label>
-            <input type="text" id="searchInput" placeholder="Search by Movie Name, Name, Phone Number" aria-label="Search Shows">
+            <input type="text" id="searchInput" placeholder="Search by Phone Number" aria-label="Search Phone Number">
         </div>
     </div>
 
@@ -262,11 +259,9 @@
                 <th>ID</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Show ID</th>
                 <th>Movie Name</th>
                 <th>Seat Type</th>
                 <th>Seat Number</th>
-                <th>Seat Code</th>
                 <th>Name</th>
                 <th>Phone Number</th>
                 <th>View</th>
@@ -277,51 +272,46 @@
                 <tr>
                     <td>{{ $booking->id }}</td>
                     <td>{{ $booking->date }}</td>
-                    <td>{{ $booking->time }}</td>
-                    <td>{{ $booking->movie_id }}</td>
+                    <td>{{ $booking->time }}</td>  
                     <td>{{ $booking->movie_name }}</td>
                     <td>{{ $booking->seat_type }}</td>
                     <td>{{ $booking->seat_no }}</td>
-                    <td>{{ $booking->seat_code }}</td>
                     <td>{{ $booking->name }}</td>
                     <td>{{ $booking->phone }}</td>
                     <td>
-                        <form method="GET" action="{{ route('booking.detail', ['booking' => $booking->id]) }}">
-                            @csrf
-                            <button type="submit" class="action-button btn-view">
-                                <img src="icons/icons8-eye-32.png" alt="View"
-                                    style="width: 17px; height: 17px; margin-right: 5px;" />
-                                View
-                            </button>
-                        </form>
+                        <input type="checkbox" name="booking_ids[]" value="{{ $booking->id }}">
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-    <!-- Optional: Pagination and Rows per Page -->
-    <!-- Uncomment and customize if needed -->
-    <!--
-    <div class="pagination-container">
-        <div class="rows-per-page">
-            <label for="rowsSelect">Rows per page:</label>
-            <select id="rowsSelect">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </div>
-        <div class="pagination">
-            <button>&laquo;</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>&raquo;</button>
-        </div>
-    </div>
-    -->
+    <button type="submit" class="">Confirm Booking</button>
+</form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const table = document.getElementById('showTable');
+            const rows = table.querySelectorAll('tbody tr');
+    
+            searchInput.addEventListener('keyup', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+    
+                rows.forEach(row => {
+                    const phoneCell = row.querySelector('td:nth-child(8)'); // Phone number column
+                    const phoneText = phoneCell.textContent.toLowerCase();
+    
+                    if (phoneText.includes(searchTerm)) {
+                        row.style.display = ''; // Show row if it matches
+                    } else {
+                        row.style.display = 'none'; // Hide row if it doesn't match
+                    }
+                });
+            });
+        });
+    </script>
+    
+
 </body>
 
 </html>
