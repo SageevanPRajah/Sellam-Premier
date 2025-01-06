@@ -10,7 +10,6 @@ class Billing extends Model
     use HasFactory;
 
     protected $fillable = [
-        'billing_date',
         'booking_id',
         'movie_id',
         'movie_name',

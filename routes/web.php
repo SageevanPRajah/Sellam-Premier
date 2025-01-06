@@ -70,7 +70,7 @@ Route::get('/', function () {
     //Route Billing
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
-    Route::post('/billing',[BillingController::class, 'store'])->name('billing.store');
+    Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
 
     //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');
