@@ -21,4 +21,10 @@ class Booking extends Model
         'name',
         'status',
     ];
+
+    public function billing()
+    {
+        return $this->hasOne(Billing::class);
+    }
+
 }

@@ -204,12 +204,12 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .search-bar .filter-group {
                 width: 100%;
             }
-
-            .search-bar input[type="text"] {
+            .search-bar select,
+            .search-bar input[type="text"],
+            .search-bar input[type="date"] {
                 width: 100%;
             }
 
@@ -231,10 +231,6 @@
 <body>
     <h1>Resereved Seats</h1>
 
-    <form action="" method="POST">
-        @csrf
-        @method('POST')
-
     <!-- Success Message -->
     @if (session()->has('success'))
         <div class="success-message">
@@ -242,6 +238,34 @@
         </div>
     @endif
 
+    <form action="{{ route('bookings.updateSelected') }}" method="POST">
+        @csrf
+        @method('POST')
+
+    <div class="form-group">
+        <input type="hidden" name="status" value="0">
+    </div>
+
+    <!-- Filter by Time -->
+    <div class="filter-group">
+        <label for="timeInput">Time</label>
+        <select 
+                    id="timeInput" 
+                    placeholder="am/pm" 
+                    aria-label="Filter by Time"
+                    >
+                        @php
+                            $start = strtotime('00:00'); // Start time (12:00 AM)
+                            $end = strtotime('23:59'); // End time (11:59 PM)
+
+                            while ($start <= $end) {
+                                $time = date('g:i A', $start); // Format time as "6:00 AM"
+                                echo "<option value=\"$time\">$time</option>";
+                                $start = strtotime('+30 minutes', $start); // Increment by 30 minutes
+                            }
+                        @endphp
+                    </select>
+    </div>
 
     <!-- Search Bar with Filters -->
     <div class="search-bar">
@@ -286,30 +310,56 @@
         </tbody>
     </table>
 
-    <button type="submit" class="">Confirm Booking</button>
+    <div class="action-buttons">
+        <button type="submit" name="action" value="confirm" class="btn btn-primary">Confirm Booking</button>
+        <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel Booking</button>
+    </div>
 </form>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const searchInput = document.getElementById('searchInput');
-            const table = document.getElementById('showTable');
-            const rows = table.querySelectorAll('tbody tr');
-    
-            searchInput.addEventListener('keyup', function () {
-                const searchTerm = searchInput.value.toLowerCase();
-    
-                rows.forEach(row => {
-                    const phoneCell = row.querySelector('td:nth-child(8)'); // Phone number column
-                    const phoneText = phoneCell.textContent.toLowerCase();
-    
-                    if (phoneText.includes(searchTerm)) {
-                        row.style.display = ''; // Show row if it matches
-                    } else {
-                        row.style.display = 'none'; // Hide row if it doesn't match
-                    }
-                });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const timeInput = document.getElementById('timeInput');
+        const table = document.getElementById('showTable');
+        const rows = table.querySelectorAll('tbody tr');
+
+        // Function to filter rows by search input
+        function filterBySearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            rows.forEach(row => {
+                const phoneCell = row.querySelector('td:nth-child(8)'); // Phone number column
+                const phoneText = phoneCell.textContent.toLowerCase();
+
+                if (phoneText.includes(searchTerm)) {
+                    row.style.display = ''; // Show row if it matches
+                } else {
+                    row.style.display = 'none'; // Hide row if it doesn't match
+                }
             });
-        });
-    </script>
+        }
+
+        // Function to filter rows by time input
+        function filterByTime() {
+            const selectedTime = timeInput.value;
+
+            rows.forEach(row => {
+                const timeCell = row.querySelector('td:nth-child(3)'); // Time column
+                const timeText = timeCell.textContent;
+
+                if (selectedTime === '' || timeText === selectedTime) {
+                    row.style.display = ''; // Show row if it matches or no time is selected
+                } else {
+                    row.style.display = 'none'; // Hide row if it doesn't match
+                }
+            });
+        }
+
+        // Event listeners for independent filters
+        searchInput.addEventListener('keyup', filterBySearch);
+        timeInput.addEventListener('change', filterByTime);
+    });
+</script>
+
     
 
 </body>

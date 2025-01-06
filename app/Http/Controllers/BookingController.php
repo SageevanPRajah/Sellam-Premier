@@ -87,10 +87,40 @@ class BookingController extends Controller
     }
 
 
-    public function show(){
-        $bookings = Booking::all();
-        return view('bookings.show', compact('bookings'));
+    public function show()
+{
+    $bookings = Booking::all();
+    return view('bookings.show', compact('bookings'));
+}
+
+public function updateSelected(Request $request)
+{
+    $validated = $request->validate([
+        'booking_ids' => 'required|array',
+        'action' => 'required|string', // Either 'confirm' or 'cancel'
+    ]);
+
+    $bookingIds = $validated['booking_ids'];
+
+    if ($validated['action'] === 'confirm') {
+        // Update the status of selected bookings
+        Booking::whereIn('id', $bookingIds)->update(['status' => true]);
+        
+        // Redirect to billing page with the count of selected tickets
+        $selectedSeatsCount = count($bookingIds);
+        session(['selected_seats_count' => $selectedSeatsCount]);
+
+        return redirect()->route('billing.create')->with('success', 'Booking confirmed.');
+    } elseif ($validated['action'] === 'cancel') {
+        // Delete the selected bookings
+        Booking::whereIn('id', $bookingIds)->delete();
+
+        return redirect()->route('booking.show')->with('success', 'Selected bookings have been canceled.');
     }
+
+    return redirect()->back()->withErrors(['error' => 'Invalid action.']);
+}
+
 
     public function edit(Request $request){
         $bookingIds = explode(',', $request->query('ids')); // Get booking IDs from query string
