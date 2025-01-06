@@ -71,6 +71,10 @@ Route::get('/', function () {
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
     Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
+    Route::get('/billing/{billing}/edit', [BillingController::class, 'edit'])->name('billing.edit');
+    Route::put('/billing/{billing}/update', [BillingController::class, 'update'])->name('billing.update');
+    Route::delete('/billing/{billing}/destroy', [BillingController::class, 'destroy'])->name('billing.destroy');
+    Route::get('/billing/{billing}/detail', [BillingController::class, 'detail'])->name('billing.detail');
 
     //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');

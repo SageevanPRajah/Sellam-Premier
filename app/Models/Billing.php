@@ -19,14 +19,5 @@ class Billing extends Model
         'half_tickets',
         'total_price',
     ];
-
-    public function booking()
-    {
-        return $this->belongsTo(Booking::class);
-    }
-
-    public function show()
-    {
-        return $this->belongsTo(Show::class, 'movie_id');
-    }
+ 
 }
