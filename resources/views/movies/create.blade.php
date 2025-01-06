@@ -43,6 +43,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
 
         /* Container */
@@ -53,7 +55,9 @@
             /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             width: 90%;
             max-width: 600px;
+            max-height: 1000px;
             color: var(--text-color);
+            
         }
 
         h1 {
@@ -112,13 +116,13 @@
         input[type="date"],
         input[type="file"] {
             width: 100%;
-            padding: 12px 20px;
+            padding: 6px 13px;
             border: none;
             border-radius: 20px;
             background-color:rgb(39, 40, 43);
             color: var(--text-color);
-            box-shadow: inset 2px 2px 6px var(--shadow-dark), inset -2px -2px 6px var(--shadow-light);
-            font-size: 16px;
+            box-shadow: inset 0.5px 0.5px 1.5px var(--shadow-dark), inset -0.5px -0.5px 1.5px var(--shadow-light);
+            font-size: 13px;
             outline: none;
             transition: box-shadow 0.3s, background-color 0.3s;
         }
@@ -152,7 +156,7 @@
             color: #fff;
             border: none;
             border-radius: 30px;
-            padding: 12px 20px;
+            padding: 6px 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;

@@ -9,6 +9,13 @@
             Billing
         </h1>
 
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <!-- Error Messages -->
         @if($errors->any())
             <div class="error-messages">
