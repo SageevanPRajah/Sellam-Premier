@@ -232,11 +232,22 @@
     <h1>Resereved Seats</h1>
 
     <!-- Success Message -->
-    @if (session()->has('success'))
-        <div class="success-message">
-            {{ session('success') }}
-        </div>
-    @endif
+    @if(session()->has('success'))
+    <div class="success-message">
+        {{ session('success') }}
+    </div>
+@endif
+
+<!-- Error Messages -->
+@if($errors->any())
+    <div class="error-messages">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{$error}}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     <form action="{{ route('bookings.updateSelected') }}" method="POST">
         @csrf

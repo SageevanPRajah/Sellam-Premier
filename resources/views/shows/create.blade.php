@@ -292,11 +292,11 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="poster">Movie Poster</label>
                 <!-- You can display the poster if needed -->
                 <img id="poster_display" src="" alt="Poster" style="max-width: 100%; height: auto; margin-bottom: 20px;" />
-            </div>
+            </div> --}}
 
             <input type="hidden" id="poster" name="poster" />
 

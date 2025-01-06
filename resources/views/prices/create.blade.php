@@ -30,55 +30,80 @@
             --shadow-dark: #0c0c0c;
         }
 
-        /* Reset some default styles */
-        * {
-            box-sizing: border-box;
+        body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
             font-family: Arial, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            padding: 30px 0;
         }
 
+        /* Container */
         .container {
             background-color: var(--primary-color);
-            padding: 40px;
+            padding: 60px;
             border-radius: 15px;
-            box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
-            width: 100%;
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
+            width: 90%;
             max-width: 600px;
-            /* Set a max width for responsiveness */
+            max-height: 1000px;
             color: var(--text-color);
-            margin: 40px 0;
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             text-align: center;
             color: var(--text-color);
         }
 
-        .error-messages {
-            color: var(--danger-color);
-            list-style-type: none;
-            margin-bottom: 15px;
+        /* Success and Error Messages */
+        .success-message {
+            text-align: center;
+            color: var(--success-color);
+            margin-bottom: 20px;
+            font-size: 18px;
         }
 
-        .error-messages li {
+        .error-messages ul {
+            color: var(--danger-color);
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 15px;
+        }
+
+        .error-messages ul li {
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-messages ul li::before {
+            content: "\f071"; /* Font Awesome exclamation-circle icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative; /* For positioning the custom arrow */
         }
 
         label {
             display: block;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: var(--text-color);
         }
 
@@ -86,23 +111,22 @@
         input[type="number"],
         input[type="date"],
         input[type="file"],
-        select,
-        input[type="submit"] {
+        select {
             width: 100%;
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
             background-color: var(--secondary-color);
             color: var(--text-color);
-            box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light);
+            box-shadow: inset 0.5px 0.5px 1.5px var(--shadow-dark),
+                inset -0.5px -0.5px 1.5px var(--shadow-light);
             font-size: 14px;
-            margin-bottom: 15px;
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            outline: none;
+            transition: box-shadow 0.3s, background-color 0.3s;
         }
 
         input[type="text"]::placeholder,
         input[type="number"]::placeholder,
-        input[type="date"]::placeholder,
         input[type="file"]::placeholder,
         select::placeholder {
             color: #aaa;
@@ -114,111 +138,101 @@
         input[type="file"]:focus,
         select:focus {
             box-shadow: 0 0 10px var(--info-color);
-            outline: none;
-            background-color: var(--button-hover-color);
         }
 
-        input[type="submit"] {
+        /* Styled Select */
+        select {
+            -webkit-appearance: none; /* Remove default arrow in Chrome */
+            -moz-appearance: none; /* Remove default arrow in Firefox */
+            appearance: none; /* Remove default arrow in IE */
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'6'%20viewBox%3D'0%200%2010%206'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0,0 L5,6 L10,0' fill='%23e0e0e0'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 10px 6px;
+            padding-right: 40px; /* Space for the arrow */
+        }
+
+        /* Optional: For IE compatibility */
+        select::-ms-expand {
+            display: none;
+        }
+
+        /* Duration Inputs */
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row input {
+            flex: 1;
+        }
+
+        /* Submit Button */
+        .submit-button {
             background-color: var(--accent-color);
             color: #fff;
             border: none;
-            cursor: pointer;
+            border-radius: 30px;
+            padding: 12px 20px;
             font-size: 16px;
             font-weight: bold;
-            border-radius: 30px;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #388E3C;
-            /* Darker shade of accent-color */
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .current-poster {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .current-poster img {
-            max-width: 150px;
-            border-radius: 10px;
-            box-shadow: 3px 3px 10px var(--shadow-dark), -3px -3px 10px var(--shadow-light);
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--secondary-color);
-            transition: 0.4s;
-            border-radius: 34px;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
         }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--primary-color);
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: var(--accent-color);
-        }
-
-        input:focus+.slider {
-            box-shadow: 0 0 1px var(--accent-color);
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(26px);
+        .submit-button:hover {
+            background-color: var(--button-hover-color);
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                inset -2px -2px 5px var(--shadow-light);
+            color: #000;
         }
 
         /* Responsive adjustments */
         @media (max-width: 576px) {
-            .container {
-                padding: 20px;
+            .row {
+                flex-direction: column;
             }
         }
 
-        /* Additional Styles for Select */
-        select {
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23e0e0e0" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 6.646a.5.5 0 011 0L8 8.793l2.354-2.147a.5.5 0 11.708.708l-3 2.727a.5.5 0 01-.708 0l-3-2.727a.5.5 0 010-.708z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-            padding-right: 40px;
+        /* Optional: Add New Movie Link (if navigating from another page) */
+        .add-link {
+            text-align: center;
+            margin-top: 20px;
         }
 
-        select:focus {
-            outline: none;
+        .add-link a {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: var(--button-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 5px 5px 15px var(--shadow-dark),
+                -5px -5px 15px var(--shadow-light);
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-link a:hover {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                inset -2px -2px 5px var(--shadow-light);
+            background-color: var(--button-hover-color);
+            color: #fff;
+        }
+
+        .add-link a img {
+            margin-right: 10px;
+            filter: brightness(0) invert(1);
+            /* Invert icon colors for visibility */
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -234,6 +248,13 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+            @endif
+
+            <!-- Success Message -->
+            @if(session()->has('success'))
+                <div class="success-message">
+                    {{ session('success') }}
+                </div>
             @endif
         </div>
         <form method="post" action="{{ route('price.store') }}" enctype="multipart/form-data">
@@ -254,27 +275,31 @@
                 <label for="seat_logo">Seat Logo</label>
                 <input type="file" name="seat_logo" id="seat_logo" accept="image/*" required />
             </div>
-            <div>
-                <label for="movie_code">Price Type</label>
-                <select name="movie_code" id="movie_code">
-                    <option value="" disabled selected>Select Price Type</option>
-                    <option value="Price 1">Price 1</option>
-                    <option value="Price 2">Price 2</option>
-                    <option value="Price 3">Price 3</option>
-                </select>
-            </div>
-            <div>
-                <label>Full Price</label>
-                <input type="text" name="full_price" placeholder="Enter full_price" />
-            </div>
 
-            <div>
-                <label>Half Price</label>
-                <input type="text" name="half_price" placeholder="Enter half_price" />
+            <div class="form-group">
+                <label for="movie_code">Price Type</label>
+                <select name="movie_code" id="movie_code" required>
+                    <option value="" disabled selected>Select Price Type</option>
+                    <option value="Price 1" {{ old('movie_code') == 'Price 1' ? 'selected' : '' }}>Price 1</option>
+                    <option value="Price 2" {{ old('movie_code') == 'Price 2' ? 'selected' : '' }}>Price 2</option>
+                    <option value="Price 3" {{ old('movie_code') == 'Price 3' ? 'selected' : '' }}>Price 3</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Save a New Seat Price" />
+                <label for="full_price">Full Price</label>
+                <input type="text" name="full_price" id="full_price" placeholder="Enter full price"
+                    value="{{ old('full_price') }}" required />
+            </div>
+
+            <div class="form-group">
+                <label for="half_price">Half Price</label>
+                <input type="text" name="half_price" id="half_price" placeholder="Enter half price"
+                    value="{{ old('half_price') }}" required />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save a New Seat Price" class="submit-button" />
             </div>
         </form>
     </div>
