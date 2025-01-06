@@ -13,11 +13,23 @@ class Billing extends Model
         'booking_id',
         'movie_id',
         'movie_name',
+        'date',
+        'time',
         'seat_type',
         'total_tickets',
         'full_tickets',
         'half_tickets',
         'total_price',
     ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function show()
+    {
+        return $this->belongsTo(Show::class);
+    }
  
 }

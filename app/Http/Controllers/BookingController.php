@@ -218,6 +218,4 @@ class BookingController extends Controller
         return view('bookings.detail');
     }
 
-    
-
 }

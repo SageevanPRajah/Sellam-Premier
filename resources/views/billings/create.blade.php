@@ -124,6 +124,8 @@
                 <input type="hidden" name="booking_id" value="{{ session('created_booking_ids')[0] ?? '' }}">
                 <input type="hidden" name="movie_id" value="{{ $show->id }}">
                 <input type="hidden" name="movie_name" value="{{ $show->movie_name }}">
+                <input type="hidden" name="date" value="{{ $show->date }}">
+                <input type="hidden" name="time" value="{{ $show->time }}">
                 <input type="hidden" name="seat_type" value="{{ $price->seat_type }}">
                 <input type="hidden" name="total_tickets" value="{{ session('selected_seats_count', 0) }}">
                 <input type="hidden" id="full-tickets-input" name="full_tickets" value="0">
