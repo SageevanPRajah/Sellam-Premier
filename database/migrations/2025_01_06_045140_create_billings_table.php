@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('movie_id');
             $table->string('movie_name');
+            $table->string('date');
+            $table->string('time');
             $table->string('seat_type');
             $table->integer('total_tickets');
             $table->integer('full_tickets');
