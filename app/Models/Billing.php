@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Booking extends Model
+class Billing extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'date',
-        'time',
+        'booking_id',
         'movie_id',
         'movie_name',
         'seat_type',
-        'seat_no',
-        'seat_code',
-        'phone',
-        'name',
-        'status',
+        'total_tickets',
+        'full_tickets',
+        'half_tickets',
+        'total_price',
     ];
-
+ 
 }

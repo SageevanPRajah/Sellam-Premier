@@ -119,11 +119,22 @@
             </p>
 
             <!-- Payment Button -->
-            <button class="button"
-                    id="confirm-payment"
-                    style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
-                Confirm Payment
-            </button>
+            <form action="{{ route('billing.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="booking_id" value="{{ session('created_booking_ids')[0] ?? '' }}">
+                <input type="hidden" name="movie_id" value="{{ $show->id }}">
+                <input type="hidden" name="movie_name" value="{{ $show->movie_name }}">
+                <input type="hidden" name="seat_type" value="{{ $price->seat_type }}">
+                <input type="hidden" name="total_tickets" value="{{ session('selected_seats_count', 0) }}">
+                <input type="hidden" id="full-tickets-input" name="full_tickets" value="0">
+                <input type="hidden" id="half-tickets-input" name="half_tickets" value="0">
+                <input type="hidden" id="total-price-input" name="total_price" value="0">
+            
+                <button type="submit" class="button" 
+                        style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                    Confirm Payment
+                </button>
+            </form>
         </div>
     </div>
 
@@ -133,43 +144,52 @@
         const halfTicketsInput = document.getElementById('half-tickets');
         const totalPriceEl = document.getElementById('total-price');
         const totalTicketsEl = document.getElementById('total-tickets');
-
-        // Retrieve total selected seats from session
-        const totalTickets = parseInt({{ session('selected_seats_count', 0) }});
-        let remainingFullTickets = totalTickets;
-
-        totalTicketsEl.textContent = totalTickets;
-
+        const fullTicketsHiddenInput = document.getElementById('full-tickets-input');
+        const halfTicketsHiddenInput = document.getElementById('half-tickets-input');
+        const totalPriceHiddenInput = document.getElementById('total-price-input');
+    
+        function updateHiddenInputs() {
+            fullTicketsHiddenInput.value = fullTicketsInput.value; // Set full tickets count
+            halfTicketsHiddenInput.value = halfTicketsInput.value; // Set half tickets count
+            totalPriceHiddenInput.value = parseFloat(totalPriceEl.textContent); // Set total price
+        }
+    
         function calculateTotal() {
+            const totalTickets = parseInt({{ session('selected_seats_count', 0) }}); // Total tickets from session
             const halfTickets = parseInt(halfTicketsInput.value) || 0;
-
-            // Ensure we don't exceed total tickets
-            if (halfTickets > totalTickets) {
-                halfTicketsInput.value = totalTickets;
-                remainingFullTickets = 0;
-            } else {
-                remainingFullTickets = totalTickets - halfTickets;
+    
+            let remainingFullTickets = totalTickets - halfTickets;
+    
+            if (remainingFullTickets < 0) {
+                remainingFullTickets = 0; // Ensure full tickets count is not negative
+                halfTicketsInput.value = totalTickets; // Reset half tickets to max
             }
-
+    
             // Reflect the full tickets count in the fullTicketsInput
             fullTicketsInput.value = remainingFullTickets;
-
+    
             if (price) {
-                // Calculate total price
                 const fullPrice = parseFloat(price.full_price) || 0;
                 const halfPrice = parseFloat(price.half_price) || 0;
                 const totalPrice = (remainingFullTickets * fullPrice) + (halfTickets * halfPrice);
+    
+                // Update the displayed total price
                 totalPriceEl.textContent = totalPrice.toFixed(2);
             } else {
                 console.error("Price object is not available.");
                 totalPriceEl.textContent = "0.00";
             }
+    
+            // Update hidden input fields for form submission
+            updateHiddenInputs();
         }
-
-        // Update price whenever half tickets change
+    
+        // Event listeners for real-time updates
+        fullTicketsInput.addEventListener('input', calculateTotal);
         halfTicketsInput.addEventListener('input', calculateTotal);
-
-        // Initial calculation
+    
+        // Initial calculation on page load
         calculateTotal();
     </script>
+    
 @endsection

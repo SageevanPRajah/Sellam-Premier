@@ -21,8 +21,8 @@ class BookingController extends Controller
         return view('bookings.create');
     }
 
-    public function store(Request $request)
-    {
+    // Store booking when user selects seats designated for a show
+    public function store(Request $request){
         // Validate input
         $validated = $request->validate([
             'selected_seats' => 'required|json', // Validate selected_seats as JSON array
@@ -86,12 +86,41 @@ class BookingController extends Controller
         }
     }
 
-
+    // reserved booking view
     public function show(){
         $bookings = Booking::all();
         return view('bookings.show', compact('bookings'));
     }
 
+    // reserved booking conform or cancel
+    public function updateSelected(Request $request){
+        $validated = $request->validate([
+            'booking_ids' => 'required|array',
+            'action' => 'required|string', // Either 'confirm' or 'cancel'
+        ]);
+
+        $bookingIds = $validated['booking_ids'];
+
+        if ($validated['action'] === 'confirm') {
+            // Update the status of selected bookings
+            Booking::whereIn('id', $bookingIds)->update(['status' => true]);
+            
+            // Redirect to billing page with the count of selected tickets
+            $selectedSeatsCount = count($bookingIds);
+            session(['selected_seats_count' => $selectedSeatsCount]);
+
+            return redirect()->route('billing.create')->with('success', 'Booking confirmed.');
+        } elseif ($validated['action'] === 'cancel') {
+            // Delete the selected bookings
+            Booking::whereIn('id', $bookingIds)->delete();
+
+            return redirect()->route('booking.show')->with('success', 'Selected bookings have been canceled.');
+        }
+
+        return redirect()->back()->withErrors(['error' => 'Invalid action.']);
+    }
+
+    //going add reservation number and name
     public function edit(Request $request){
         $bookingIds = explode(',', $request->query('ids')); // Get booking IDs from query string
         $bookings = Booking::whereIn('id', $bookingIds)->get();
@@ -104,6 +133,7 @@ class BookingController extends Controller
     }
 
 
+    //Add reservartion number and name
     public function bulkUpdate(Request $request){
         $validated = $request->validate([
             'booking_ids' => 'required|array', // Array of booking IDs to update
@@ -142,6 +172,7 @@ class BookingController extends Controller
             ->with('success', 'Booking deleted successfully');
     }
 
+    // Get shows based on the selected date helping seat selection
     public function getShows(Request $request){
         $date = $request->input('date'); // Use `date` from the `shows` table
         $shows = Show::where('date', $date)->get();
@@ -153,8 +184,7 @@ class BookingController extends Controller
         return response()->json($shows, 200); // Return shows
     }
 
-
-
+    // Get seats based on the selected show and seat type helping seat selecting 
     public function getSeats(Request $request){
         $showId = $request->input('show_id'); // Match `show_id`
         $seatType = $request->input('seat_type'); // Match `seat_type`
@@ -167,7 +197,7 @@ class BookingController extends Controller
         return response()->json(['seats' => $seats, 'bookedSeats' => $bookedSeats]);
     }
 
-
+    // Select seats for a show picture logic 
     public function selectSeats($id){
         $show = Show::findOrFail($id);
 
@@ -187,5 +217,7 @@ class BookingController extends Controller
     public function detail(){
         return view('bookings.detail');
     }
+
+    
 
 }
