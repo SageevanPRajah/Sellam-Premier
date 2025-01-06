@@ -22,4 +22,9 @@ class Booking extends Model
         'status',
     ];
 
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class);
+    }
+
 }
