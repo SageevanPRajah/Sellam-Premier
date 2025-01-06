@@ -15,7 +15,7 @@
     />
 
     <style>
-        /* CSS Variables */
+        /* CSS Variables for Neumorphic Black and Gray Theme */
         :root {
             --background-color: #121212;
             --primary-color: #1e1e1e;
@@ -36,7 +36,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: rgb(40, 43, 46);
+            background-color:rgb(40, 43, 46);
             color: var(--text-color);
             font-size:12px;
         }
@@ -49,12 +49,98 @@
 
         /* Success Message */
         .success-message {
-            text-align: center;
-            color: var(--success-color);
+            text-align: center; 
+            color: var(--success-color); 
             margin-bottom: 10px;
         }
 
-        /* Add New Show Button */
+        /* Slider Controls Container */
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Slider Container */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;   /* Hides overflow for slider effect */
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            background-color: var(--primary-color);
+            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
+            text-align: center;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+            margin: 0; 
+            padding: 0;
+            justify-content: center;
+        }
+
+        .slider-item {
+            flex: 1 1 auto;
+            width: 180px;
+            margin: 10px 5px; /* gap between items */
+            text-align: center;
+            background-color: var(--primary-color);
+            border-radius: 15px;
+            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            padding: 10px;
+            height: 220px;
+        }
+
+        .slider-item img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .slider-item a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .slider-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Slider Control Buttons (Neumorphic Gray and Black) */
+        .slider-control-btn {
+            background-color: var(--button-color);
+            border-radius: 50%;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            color: var(--text-color);
+            border: none;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: box-shadow 0.3s, background-color 0.3s;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-control-btn:hover {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+        }
+
+        .slider-control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Add New Movie Button (Neumorphic Gray and Black) */
         .add-link {
             text-align: center;
             margin: 20px 0;
@@ -68,66 +154,77 @@
             color: var(--text-color);
             text-decoration: none;
             border-radius: 30px;
-            transition: background-color 0.3s, color 0.3s;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 57%;
+            margin-left:57%;
         }
 
         .add-link a:hover {
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             background-color: #333;
             color: #fff;
         }
 
         .add-link a img {
-            margin-right: 12px;
-            margin-top: -3px;
+            margin-right: 10px;
             filter: brightness(0) invert(1); /* Invert icon colors for visibility */
         }
 
-        /* Search Bar */
+        /* Search Bar with Status and Date Range Filter */
         .search-bar {
             width: 80%;
             margin: 20px auto;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            gap: 15px; /* Adds space between elements */
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
         }
 
         .search-bar .filter-group {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .search-bar label {
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
+        .search-bar input,
         .search-bar select,
-        .search-bar input[type="text"],
         .search-bar input[type="date"] {
             padding: 8px 12px;
             border: none;
             border-radius: 20px;
-            background-color: rgb(53, 53, 53);
+            background-color: rgb(53, 53, 53); 
             color: var(--text-color);
-            font-size: 16px;
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
+            font-size: 14px;
             outline: none;
             transition: box-shadow 0.3s;
         }
 
+        .search-bar input::placeholder {
+            color: #aaa;
+        }
+
+        a:-webkit-any-link {
+            color: gray;
+        }
+
+        .search-bar input:focus,
         .search-bar select:focus,
-        .search-bar input[type="text"]:focus,
         .search-bar input[type="date"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
 
-        .search-bar input[type="text"]::placeholder {
-            color: #aaa;
+        .search-bar select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e0e0e0' d='M6 8.4L2.4 4.8l1.2-1.2L6 6l2.4-2.4 1.2 1.2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            cursor: pointer;
+            padding-right: 30px;
         }
 
         /* Table */
@@ -137,7 +234,7 @@
             width: 80%;
             font-size: 16px;
             text-align: center;
-            background-color: rgb(41, 43, 44);
+            background-color:rgb(41, 43, 44);
             box-shadow: 0 0 10px var(--shadow-dark);
             border-radius: 15px;
             overflow: hidden;
@@ -151,12 +248,44 @@
         th {
             background-color: rgb(35, 36, 36);
             font-weight: bold;
+            text-align: center;
             color: #ffffff;
         }
 
-        /* Buttons (Edit, Delete, View) */
+        /* Status Badge */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color:rgb(37, 39, 39);
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active::before {
+            background-color:rgb(6, 248, 14);
+        }
+
+        .status-inactive::before {
+            background-color:rgb(255, 0, 0);
+        }
+
+        /* Buttons in table (Neumorphic Gray and Black) */
         .action-button {
             width: 100px;
+            /* height: 40px; */
             padding: 7px 0;
             border: none;
             border-radius: 30px;
@@ -172,7 +301,7 @@
         }
 
         .btn-edit {
-            background-color: rgb(81, 88, 94); /* Gray */
+            background-color:rgb(81, 88, 94); /* Gray */
         }
 
         .btn-delete {
@@ -186,42 +315,48 @@
         .btn-edit:hover,
         .btn-delete:hover,
         .btn-view:hover {
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             color: black;
-        }
-
-        .btn-edit img,
-        .btn-delete img,
-        .btn-view img {
-            margin-right: 5px;
-            filter: brightness(0) invert(1);
+            
         }
 
         .btn-edit:hover img,
         .btn-delete:hover img,
         .btn-view:hover img {
-            filter: brightness(0) invert(0);
+        filter: brightness(0) invert(0); /* Remove inversion to make the image black */
+        }
+        /* .btn-edit img, .btn-delete img, .btn-view img:hover {
+        color: black;
+        } */
+
+        .btn-edit img,
+        .btn-delete img,
+        .btn-view img {
+            margin-right: 5px;
+            filter: brightness(0) invert(1); /* Invert icon colors for visibility */
         }
 
-        /* Modal Styles */
+        /* Modal Styles (Neumorphic Gray and Black) */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; 
-            z-index: 1000; 
+            z-index: 1000; /* Sit on top */
             left: 0;
             top: 0;
             width: 100%; 
             height: 100%; 
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
         }
 
         .modal-content {
             background-color: #fff;
-            margin: 10% auto;
+            margin: 10% auto; /* 10% from top and centered */
             padding: 20px;
             border: none;
-            width: 300px;
+            width: 300px; /* Could be more or less, depending on screen size */
             border-radius: 20px;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             text-align: center;
             color: rgb(41, 43, 44);
         }
@@ -254,15 +389,21 @@
             cursor: pointer;
             font-size: 14px;
             color: #ffffff;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s;
         }
 
         #confirmDelete {
-            background-color: #FF5555; 
+            background-color: #FF5555; /* Danger */
         }
 
         #cancelDelete {
-            background-color: #6c757d; 
+            background-color: #6c757d; /* Gray */
+        }
+
+        #confirmDelete:hover,
+        #cancelDelete:hover {
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
         }
 
         /* Pagination and Rows per Page */
@@ -287,6 +428,7 @@
             border-radius: 20px;
             background-color: var(--secondary-color);
             color: var(--text-color);
+            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
             font-size: 16px;
             outline: none;
             transition: box-shadow 0.3s;
@@ -308,6 +450,7 @@
             border-radius: 20px;
             background-color: var(--secondary-color);
             color: var(--text-color);
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             cursor: pointer;
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
@@ -325,6 +468,12 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .slider-container {
+                width: 100%;
+            }
+            .slider-item {
+                width: 120px;
+            }
             table {
                 font-size: 14px;
             }
@@ -338,9 +487,10 @@
             }
             .search-bar .filter-group {
                 width: 100%;
+                justify-content: space-between;
             }
+            .search-bar input,
             .search-bar select,
-            .search-bar input[type="text"],
             .search-bar input[type="date"] {
                 width: 100%;
             }
@@ -361,10 +511,21 @@
 
     <!-- Success Message -->
     @if(session()->has('success'))
-        <div class="success-message">
-            {{ session('success') }}
-        </div>
-    @endif
+    <div class="success-message">
+        {{ session('success') }}
+    </div>
+@endif
+
+<!-- Error Messages -->
+@if($errors->any())
+    <div class="error-messages">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{$error}}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     <!-- Add New Show Button -->
     <div class="add-link">

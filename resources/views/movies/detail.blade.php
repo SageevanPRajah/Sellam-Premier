@@ -124,6 +124,25 @@
         <div class="poster">
             <img src="{{ asset('storage/' . $movie->poster) }}" alt="Movie Poster">
         </div>
+
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
         <div class="movie-details">
             <h1>{{ $movie->name }} ({{ date('Y', strtotime($movie->release_date)) }})</h1>
             

@@ -7,14 +7,34 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Show Table</h1>
+    
     <style>
+        /* CSS Variables for Neumorphic Black and Gray Theme */
+        :root {
+            --background-color: #121212;
+            --primary-color: #1e1e1e;
+            --secondary-color: #2e2e2e;
+            --text-color: #e0e0e0;
+            --accent-color: #4CAF50;
+            --button-color: #2e2e2e;
+            --button-hover-color: #3e3e3e;
+            --border-color: #555;
+            --success-color: #4CAF50;
+            --danger-color: #FF5555;
+            --info-color: #2196F3;
+            --muted-color: #777;
+            --shadow-light: #2b2b2b;
+            --shadow-dark: #0c0c0c;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
             background-color:rgb(40, 43, 46);
+            color: var(--text-color);
+            font-size:12px;
         }
+
         h1 {
             margin: 20px 0;
             text-align: center;
@@ -24,7 +44,7 @@
         /* Success Message */
         .success-message {
             text-align: center; 
-            color: (--success-color); 
+            color: var(--success-color); 
             margin-bottom: 10px;
         }
 
@@ -47,6 +67,7 @@
             box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
             text-align: center;
         }
+
         .slider-wrapper {
             display: flex;
             transition: transform 0.5s ease;
@@ -54,6 +75,7 @@
             padding: 0;
             justify-content: center;
         }
+
         .slider-item {
             flex: 1 1 auto;
             width: 180px;
@@ -65,56 +87,64 @@
             padding: 10px;
             height: 220px;
         }
+
         .slider-item img {
             width: 100%;
-            height: 220px;
+            height: 190px;
             object-fit: cover;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 10px;
         }
+
         .slider-item a {
             display: block;
-            margin-top: 5px;
+            margin-top: 10px;
             text-decoration: none;
-            color: #007BFF;
+            color: #2196F3;
+            font-weight: bold;
         }
+
         .slider-item a:hover {
             text-decoration: underline;
         }
 
-        /* Slider Control Buttons (light gray background, black icons) */
+        /* Slider Control Buttons (Neumorphic Gray and Black) */
         .slider-control-btn {
-            background-color: #ccc;
-            color: #000;
-            border: none;
-            width: 40px;
-            height: 40px;
+            background-color: var(--button-color);
             border-radius: 50%;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            color: var(--text-color);
+            border: none;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
             font-size: 16px;
-            text-align: center;
-            line-height: 40px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            transition: box-shadow 0.3s, background-color 0.3s;
             margin: 0 10px;
-        }
-        .slider-control-btn:hover {
-            opacity: 1;
-        }
-        .slider-control-btn i {
-            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Add New Movie Button */
+        .slider-control-btn:hover {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+        }
+
+        .slider-control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Add New Movie Button (Neumorphic Gray and Black) */
         .add-link {
             text-align: center;
             margin: 20px 0;
         }
+
         .add-link a {
             display: inline-flex;
             align-items: center;
             padding: 8px 12px;
-            background-color: rgb(37, 38, 39);
+            background-color: var(--primary-color);
             color: var(--text-color);
             text-decoration: none;
             border-radius: 30px;
@@ -124,13 +154,16 @@
             font-weight: bold;
             margin-left:57%;
         }
+
         .add-link a:hover {
-            background-color: #242222;
-            color: rgb(237, 240, 239);
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
+            background-color: #333;
+            color: #fff;
         }
-        .add-link a i {
-            margin-right: 5px;
-            
+
+        .add-link a img {
+            margin-right: 10px;
+            filter: brightness(0) invert(1); /* Invert icon colors for visibility */
         }
 
         /* Search Bar with Status and Date Range Filter */
@@ -140,28 +173,52 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 10px; /* Adds space between elements */
+            gap: 15px; /* Adds space between elements */
             flex-wrap: wrap; /* Allows wrapping on smaller screens */
         }
+
         .search-bar .filter-group {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 10px;
         }
+
         .search-bar input,
         .search-bar select,
         .search-bar input[type="date"] {
             padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            background-color: rgb(53, 53, 53); 
+            color: var(--text-color);
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
+            font-size: 14px;
+            outline: none;
+            transition: box-shadow 0.3s;
         }
+
+        .search-bar input::placeholder {
+            color: #aaa;
+        }
+
+        a:-webkit-any-link {
+            color: gray;
+        }
+
         .search-bar input:focus,
         .search-bar select:focus,
         .search-bar input[type="date"]:focus {
-            outline: none;
-            border-color: #007BFF;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            box-shadow: 0 0 10px #2196F3;
+        }
+
+        .search-bar select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e0e0e0' d='M6 8.4L2.4 4.8l1.2-1.2L6 6l2.4-2.4 1.2 1.2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            cursor: pointer;
+            padding-right: 30px;
         }
 
         /* Table */
@@ -176,15 +233,47 @@
             border-radius: 15px;
             overflow: hidden;
         }
+
         th, td {
             padding: 10px;
             color: var(--text-color);
         }
+
         th {
             background-color: rgb(35, 36, 36);
             font-weight: bold;
             text-align: center;
             color: #ffffff;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color:rgb(37, 39, 39);
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active::before {
+            background-color:rgb(6, 248, 14);
+        }
+
+        .status-inactive::before {
+            background-color:rgb(255, 0, 0);
         }
 
         /* Buttons in table (Neumorphic Gray and Black) */
@@ -241,25 +330,7 @@
             filter: brightness(0) invert(1); /* Invert icon colors for visibility */
         }
 
-
-        /* Status Badge */
-        .status-badge {
-            display: inline-block;
-            padding: 3px 6px;
-            border-radius: 13px;
-            text-align: center;
-            width: 100px;
-            font-weight: bold;
-            color: black;
-        }
-        .status-active {
-            background-color: rgb(172, 236, 143);
-        }
-        .status-inactive {
-            background-color: rgb(234, 106, 15);
-        }
-
-        /* Modal Styles */
+        /* Modal Styles (Neumorphic Gray and Black) */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; 
@@ -269,21 +340,23 @@
             width: 100%; 
             height: 100%; 
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+            background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from top and centered */
+            background-color: #fff;
+            margin: 10% auto; /* 10% from top and centered */
             padding: 20px;
-            border: 1px solid #888;
+            border: none;
             width: 300px; /* Could be more or less, depending on screen size */
-            border-radius: 15px;
+            border-radius: 20px;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             text-align: center;
+            color: rgb(41, 43, 44);
         }
 
         .close-button {
-            color: #aaa;
+            color: #ffffff;
             float: right;
             font-size: 24px;
             font-weight: bold;
@@ -292,7 +365,7 @@
 
         .close-button:hover,
         .close-button:focus {
-            color: #000;
+            color: #FF5555;
             text-decoration: none;
         }
 
@@ -304,6 +377,27 @@
 
         .modal-actions button {
             width: 100px;
+            padding: 10px 0;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ffffff;
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
+            transition: box-shadow 0.3s, background-color 0.3s;
+        }
+
+        #confirmDelete {
+            background-color: #FF5555; /* Danger */
+        }
+
+        #cancelDelete {
+            background-color: #6c757d; /* Gray */
+        }
+
+        #confirmDelete:hover,
+        #cancelDelete:hover {
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
         }
 
         /* Pagination and Rows per Page */
@@ -315,37 +409,55 @@
             align-items: center;
             flex-wrap: wrap;
         }
+
         .rows-per-page {
             display: flex;
             align-items: center;
             gap: 5px;
         }
+
         .rows-per-page select {
-            padding: 6px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
             font-size: 16px;
+            outline: none;
+            transition: box-shadow 0.3s;
         }
+
+        .rows-per-page select:focus {
+            box-shadow: 0 0 10px #2196F3;
+        }
+
         .pagination {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 10px;
         }
+
         .pagination button {
-            padding: 6px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
+
         .pagination button.active {
-            background-color: #007BFF;
-            color: #fff;
-            border-color: #007BFF;
+            background-color: #2196F3;
+            color: #ffffff;
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
         }
+
         .pagination button:hover:not(.active) {
-            background-color: #f1f1f1;
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            background-color: #555555;
         }
 
         /* Responsive Design */
@@ -354,10 +466,10 @@
                 width: 100%;
             }
             .slider-item {
-                width: 100px;
+                width: 120px;
             }
             table {
-                font-size: 12px;
+                font-size: 14px;
             }
             .add-link {
                 margin-left: 0;
@@ -389,11 +501,24 @@
     </style>
 </head>
 <body>
-    <h1>Movie</h1>
+    <h1>SEATS</h1>
     <div>
+        
+        <!-- Success Message -->
         @if(session()->has('success'))
-            <div>
-                {{session('success')}}
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
     </div>

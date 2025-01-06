@@ -37,7 +37,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
+            background-color: rgb(41, 43, 44);
             color: var(--text-color);
             display: flex;
             justify-content: center;
@@ -46,18 +46,19 @@
         }
 
         .container {
-            background-color: var(--primary-color);
-            padding: 40px;
+            background-color: rgb(40, 42, 42);
+            padding: 0px 40px;
             border-radius: 15px;
             box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
             width: 100%;
             max-width: 600px; /* Set a max width for responsiveness */
             color: var(--text-color);
-            margin: 40px 0;
+            margin-top: 40px;
+            margin-bottom: 100px;
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-align: center;
             color: var(--text-color);
         }
@@ -86,14 +87,13 @@
         select,
         input[type="submit"] {
             width: 100%;
-            padding: 10px 15px;
+            padding: 9px 10px;
             border: none;
             border-radius: 20px;
-            background-color: var(--secondary-color);
+            background-color: rgb(47, 48, 49);
             color: var(--text-color);
             box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light);
-            font-size: 14px;
-            margin-bottom: 15px;
+            font-size: 12px;
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
 
@@ -128,7 +128,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #388E3C; /* Darker shade of accent-color */
+            background-color: darken(var(--accent-color), 10%);
             box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
         }
 
@@ -142,7 +142,7 @@
         }
 
         .current-poster img {
-            max-width: 150px;
+            max-width: 100px;
             border-radius: 10px;
             box-shadow: 3px 3px 10px var(--shadow-dark), -3px -3px 10px var(--shadow-light);
         }
@@ -170,6 +170,7 @@
             background-color: var(--secondary-color);
             transition: 0.4s;
             border-radius: 34px;
+            /* box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light); */
         }
 
         .slider:before {
@@ -182,6 +183,7 @@
             background-color: var(--primary-color);
             transition: 0.4s;
             border-radius: 50%;
+            /* box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light); */
         }
 
         input:checked + .slider {
@@ -209,13 +211,23 @@
     <div class="container">
         <h1>Edit Seat Price</h1>
         <div>
-            @if ($errors->any())
-                <ul class="error-messages">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
+            <!-- Success Message -->
+        @if(session()->has('success'))
+        <div class="success-message">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="error-messages">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         </div>
         <form method="post" action="{{ route('price.update', ['price' => $price]) }}" enctype="multipart/form-data">
             @csrf

@@ -515,6 +515,18 @@
         </div>
     @endif
 
+
+<!-- Error Messages -->
+@if($errors->any())
+    <div class="error-messages">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{$error}}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <!-- Slider Controls Container -->
     <div class="slider-controls">
         <!-- Prev Button -->
