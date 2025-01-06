@@ -68,10 +68,7 @@
             transition: background-color 0.3s, color 0.3s;
             cursor: pointer;
             font-weight: bold;
-            /* Center the button */
-            display: block;
-            margin: 0 auto;
-            width: fit-content;
+            margin-left: 57%;
         }
 
         .add-link a:hover {
@@ -107,7 +104,9 @@
             color: var(--text-color);
         }
 
-        .search-bar input[type="text"] {
+        .search-bar select,
+        .search-bar input[type="text"],
+        .search-bar input[type="date"] {
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
@@ -116,10 +115,11 @@
             font-size: 16px;
             outline: none;
             transition: box-shadow 0.3s;
-            width: 300px;
         }
 
-        .search-bar input[type="text"]:focus {
+        .search-bar select:focus,
+        .search-bar input[type="text"]:focus,
+        .search-bar input[type="date"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
 
@@ -152,7 +152,7 @@
             color: #ffffff;
         }
 
-        /* Buttons (View) */
+        /* Buttons (Edit, Delete, View) */
         .action-button {
             width: 100px;
             padding: 10px 0;
@@ -170,23 +170,160 @@
             /* Center the button within the cell */
         }
 
+        .btn-edit {
+            background-color: rgb(81, 88, 94);
+            /* Gray */
+        }
+
+        .btn-delete {
+            background-color: #343a40;
+            /* Dark Gray */
+        }
+
         .btn-view {
             background-color: #495057;
             /* Medium Gray */
         }
 
+        .btn-edit:hover,
+        .btn-delete:hover,
         .btn-view:hover {
             color: black;
-            background-color: #6c757d;
         }
 
+        .btn-edit img,
+        .btn-delete img,
         .btn-view img {
             margin-right: 5px;
             filter: brightness(0) invert(1);
         }
 
+        .btn-edit:hover img,
+        .btn-delete:hover img,
         .btn-view:hover img {
             filter: brightness(0) invert(0);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: none;
+            width: 300px;
+            border-radius: 20px;
+            text-align: center;
+            color: rgb(41, 43, 44);
+        }
+
+        .close-button {
+            color: #ffffff;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #FF5555;
+            text-decoration: none;
+        }
+
+        .modal-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .modal-actions button {
+            width: 100px;
+            padding: 10px 0;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ffffff;
+            transition: box-shadow 0.3s, background-color 0.3s;
+        }
+
+        #confirmDelete {
+            background-color: #FF5555;
+        }
+
+        #cancelDelete {
+            background-color: #6c757d;
+        }
+
+        /* Pagination and Rows per Page */
+        .pagination-container {
+            width: 80%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .rows-per-page {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rows-per-page select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+
+        .rows-per-page select:focus {
+            box-shadow: 0 0 10px #2196F3;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .pagination button.active {
+            background-color: #2196F3;
+            color: #ffffff;
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+        }
+
+        .pagination button:hover:not(.active) {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            background-color: #555555;
         }
 
         /* Responsive Design */
@@ -204,9 +341,11 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .search-bar .filter-group {
                 width: 100%;
             }
+
             .search-bar select,
             .search-bar input[type="text"],
             .search-bar input[type="date"] {
@@ -229,7 +368,7 @@
 </head>
 
 <body>
-    <h1>Resereved Seats</h1>
+    <h1>Billing Details</h1>
 
     <!-- Success Message -->
     @if (session()->has('success'))
@@ -238,130 +377,44 @@
         </div>
     @endif
 
-    <form action="{{ route('bookings.updateSelected') }}" method="POST">
-        @csrf
-        @method('POST')
-
-    <div class="form-group">
-        <input type="hidden" name="status" value="0">
-    </div>
-
-    <!-- Filter by Time -->
-    <div class="filter-group">
-        <label for="timeInput">Time</label>
-        <select 
-                    id="timeInput" 
-                    placeholder="am/pm" 
-                    aria-label="Filter by Time"
-                    >
-                        @php
-                            $start = strtotime('00:00'); // Start time (12:00 AM)
-                            $end = strtotime('23:59'); // End time (11:59 PM)
-
-                            while ($start <= $end) {
-                                $time = date('g:i A', $start); // Format time as "6:00 AM"
-                                echo "<option value=\"$time\">$time</option>";
-                                $start = strtotime('+30 minutes', $start); // Increment by 30 minutes
-                            }
-                        @endphp
-                    </select>
-    </div>
-
-    <!-- Search Bar with Filters -->
-    <div class="search-bar">
-        <!-- General Search -->
-        <div class="filter-group">
-            <label for="searchInput">Search</label>
-            <input type="text" id="searchInput" placeholder="Search by Phone Number" aria-label="Search Phone Number">
-        </div>
-    </div>
-
-    <!-- Shows Table -->
-    <table id="showTable">
+    <!-- Billing Table -->
+    <table id="billingTable">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Date</th>
-                <th>Time</th>
                 <th>Movie Name</th>
                 <th>Seat Type</th>
-                <th>Seat Number</th>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>View</th>
+                <th>Total Tickets</th>
+                <th>Full Tickets</th>
+                <th>Half Tickets</th>
+                <th>Total Price</th>
+                <th>Created At</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($bookings->where('status', '0') as $booking)
+            @foreach ($billings as $billing)
                 <tr>
-                    <td>{{ $booking->id }}</td>
-                    <td>{{ $booking->date }}</td>
-                    <td>{{ $booking->time }}</td>  
-                    <td>{{ $booking->movie_name }}</td>
-                    <td>{{ $booking->seat_type }}</td>
-                    <td>{{ $booking->seat_no }}</td>
-                    <td>{{ $booking->name }}</td>
-                    <td>{{ $booking->phone }}</td>
+                    <td>{{ $billing->id }}</td>
+                    <td>{{ $billing->movie_name }}</td>
+                    <td>{{ $billing->seat_type }}</td>
+                    <td>{{ $billing->total_tickets }}</td>
+                    <td>{{ $billing->full_tickets }}</td>
+                    <td>{{ $billing->half_tickets }}</td>
+                    <td>Rs. {{ number_format($billing->total_price, 2) }}</td>
+                    <td>{{ $billing->created_at }}</td>
                     <td>
-                        <input type="checkbox" name="booking_ids[]" value="{{ $booking->id }}">
+                        <!-- Action Buttons -->
+                        <form method="GET" action="{{ route('billing.detail', $billing->id) }}" style="display:inline;">
+                           <button type="submit" class="action-button btn-delete">
+                                Detail
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <div class="action-buttons">
-        <button type="submit" name="action" value="confirm" class="btn btn-primary">Confirm Booking</button>
-        <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel Booking</button>
-    </div>
-</form>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('searchInput');
-        const timeInput = document.getElementById('timeInput');
-        const table = document.getElementById('showTable');
-        const rows = table.querySelectorAll('tbody tr');
-
-        // Function to filter rows by search input
-        function filterBySearch() {
-            const searchTerm = searchInput.value.toLowerCase();
-
-            rows.forEach(row => {
-                const phoneCell = row.querySelector('td:nth-child(8)'); // Phone number column
-                const phoneText = phoneCell.textContent.toLowerCase();
-
-                if (phoneText.includes(searchTerm)) {
-                    row.style.display = ''; // Show row if it matches
-                } else {
-                    row.style.display = 'none'; // Hide row if it doesn't match
-                }
-            });
-        }
-
-        // Function to filter rows by time input
-        function filterByTime() {
-            const selectedTime = timeInput.value;
-
-            rows.forEach(row => {
-                const timeCell = row.querySelector('td:nth-child(3)'); // Time column
-                const timeText = timeCell.textContent;
-
-                if (selectedTime === '' || timeText === selectedTime) {
-                    row.style.display = ''; // Show row if it matches or no time is selected
-                } else {
-                    row.style.display = 'none'; // Hide row if it doesn't match
-                }
-            });
-        }
-
-        // Event listeners for independent filters
-        searchInput.addEventListener('keyup', filterBySearch);
-        timeInput.addEventListener('change', filterByTime);
-    });
-</script>
-
-    
-
 </body>
 
 </html>
