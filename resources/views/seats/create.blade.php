@@ -42,7 +42,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            padding: 30px 0;
         }
 
         /* Container */
@@ -50,9 +51,10 @@
             background-color: var(--primary-color);
             padding: 60px;
             border-radius: 15px;
-            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             width: 90%;
             max-width: 600px;
+            max-height: 1000px;
             color: var(--text-color);
         }
 
@@ -64,8 +66,8 @@
 
         /* Success and Error Messages */
         .success-message {
-            text-align: center; 
-            color: var(--success-color); 
+            text-align: center;
+            color: var(--success-color);
             margin-bottom: 20px;
             font-size: 18px;
         }
@@ -98,6 +100,7 @@
 
         .form-group {
             margin-bottom: 25px;
+            position: relative; /* For positioning the custom arrow */
         }
 
         label {
@@ -107,41 +110,68 @@
             color: var(--text-color);
         }
 
-        select,
         input[type="text"],
         input[type="number"],
         input[type="date"],
         input[type="file"],
-        input[type="submit"] {
+        select {
             width: 100%;
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 20px;
             background-color: var(--secondary-color);
             color: var(--text-color);
-            box-shadow: inset 2px 2px 6px var(--shadow-dark), inset -2px -2px 6px var(--shadow-light);
-            font-size: 16px;
+            box-shadow: inset 0.5px 0.5px 1.5px var(--shadow-dark),
+                inset -0.5px -0.5px 1.5px var(--shadow-light);
+            font-size: 14px;
             outline: none;
             transition: box-shadow 0.3s, background-color 0.3s;
         }
 
-        select:focus,
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="date"]:focus,
-        input[type="file"]:focus {
-            box-shadow: 0 0 10px var(--info-color);
-        }
-
-        select::placeholder,
         input[type="text"]::placeholder,
         input[type="number"]::placeholder,
-        input[type="file"]::placeholder {
+        input[type="file"]::placeholder,
+        select::placeholder {
             color: #aaa;
         }
 
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            box-shadow: 0 0 10px var(--info-color);
+        }
+
+        /* Styled Select */
+        select {
+            -webkit-appearance: none; /* Remove default arrow in Chrome */
+            -moz-appearance: none; /* Remove default arrow in Firefox */
+            appearance: none; /* Remove default arrow in IE */
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'6'%20viewBox%3D'0%200%2010%206'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0,0 L5,6 L10,0' fill='%23e0e0e0'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 10px 6px;
+            padding-right: 40px; /* Space for the arrow */
+        }
+
+        /* Optional: For IE compatibility */
+        select::-ms-expand {
+            display: none;
+        }
+
+        /* Duration Inputs */
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row input {
+            flex: 1;
+        }
+
         /* Submit Button */
-        input[type="submit"] {
+        .submit-button {
             background-color: var(--accent-color);
             color: #fff;
             border: none;
@@ -150,16 +180,18 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
-        input[type="submit"]:hover {
+        .submit-button:hover {
             background-color: var(--button-hover-color);
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                inset -2px -2px 5px var(--shadow-light);
             color: #000;
         }
 
@@ -168,6 +200,42 @@
             .row {
                 flex-direction: column;
             }
+        }
+
+        /* Optional: Add New Movie Link (if navigating from another page) */
+        .add-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .add-link a {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: var(--button-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 5px 5px 15px var(--shadow-dark),
+                -5px -5px 15px var(--shadow-light);
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-link a:hover {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                inset -2px -2px 5px var(--shadow-light);
+            background-color: var(--button-hover-color);
+            color: #fff;
+        }
+
+        .add-link a img {
+            margin-right: 10px;
+            filter: brightness(0) invert(1);
+            /* Invert icon colors for visibility */
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>

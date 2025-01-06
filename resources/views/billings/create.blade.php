@@ -9,6 +9,24 @@
             Billing
         </h1>
 
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Movie Information & Poster -->
         <div style="display: flex; gap: 1rem; background-color: #ffffff; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
             
