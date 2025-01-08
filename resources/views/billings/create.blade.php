@@ -192,6 +192,25 @@
     
         // Initial calculation on page load
         calculateTotal();
+
+        document.getElementById('confirm-payment-btn').addEventListener('click', function () {
+    // Submit the billing form to store data
+    const form = document.getElementById('billing-form');
+    form.submit();
+
+    // Open the ticket PDF in a new window for printing
+    const bookingId = form.querySelector('input[name="booking_id"]').value;
+    setTimeout(() => {
+        const printWindow = window.open(`/generate-tickets?booking_id=${bookingId}`, '_blank');
+        
+        // Wait for the printing to finish
+        printWindow.onafterprint = () => {
+            // Redirect to the needed page
+            window.location.href = `/booking/selectSeats/${form.querySelector('input[name="movie_id"]').value}`;
+        };
+    }, 1000); // Allow some time for the billing data to be stored
+});
+
     </script>
     
 @endsection
