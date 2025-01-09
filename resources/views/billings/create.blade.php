@@ -137,6 +137,19 @@
                     Confirm Payment
                 </button>
             </form>
+            <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
+                <button type="submit" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                    Print
+                </button>
+            </form>
+            
+            <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
+                <label for="seat_codes">Select Seats for Re-Print:</label>
+                <input type="text" name="seat_codes" placeholder="Enter seat codes (e.g., A1,A2)" style="margin-bottom: 10px;">
+                <button type="submit" class="button" style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                    Re-Print
+                </button>
+            </form>
         </div>
     </div>
 
@@ -193,23 +206,18 @@
         // Initial calculation on page load
         calculateTotal();
 
-        document.getElementById('confirm-payment-btn').addEventListener('click', function () {
-    // Submit the billing form to store data
-    const form = document.getElementById('billing-form');
-    form.submit();
+        document.querySelector('.print-button').addEventListener('click', function () {
+    const bookingId = '{{ session('created_booking_ids')[0] ?? '' }}';
+    const printWindow = window.open(`/generate-tickets/${bookingId}`, '_blank');
 
-    // Open the ticket PDF in a new window for printing
-    const bookingId = form.querySelector('input[name="booking_id"]').value;
-    setTimeout(() => {
-        const printWindow = window.open(`/generate-tickets?booking_id=${bookingId}`, '_blank');
-        
-        // Wait for the printing to finish
+    printWindow.onload = () => {
+        printWindow.print();
         printWindow.onafterprint = () => {
-            // Redirect to the needed page
-            window.location.href = `/booking/selectSeats/${form.querySelector('input[name="movie_id"]').value}`;
+            window.location.href = '/booking/selectSeats/{{ $show->id }}';
         };
-    }, 1000); // Allow some time for the billing data to be stored
+    };
 });
+
 
     </script>
     
