@@ -80,10 +80,9 @@ class BillingController extends Controller
             'total_price' => $validated['total_price'],
         ]);
 
-        // Redirect to ticket generation
-        $bookingIds = implode(',', session('created_booking_ids'));
-        return redirect()->route('billing.generateTickets', ['bookingIds' => $bookingIds])
-            ->with('success', 'Billing data stored successfully, and tickets are ready for printing.');
+        // Redirect to the 'selectSeats' route
+        return redirect()->route('booking.selectSeats', ['id' => $validated['movie_id']])
+            ->with('success', 'Billing data stored successfully. Please proceed to select your seats.');
     } catch (\Exception $e) {
         // Log error and redirect back with an error message
         Log::error('Billing Store Error: ', [
