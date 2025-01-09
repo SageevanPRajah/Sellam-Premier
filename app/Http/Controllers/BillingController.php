@@ -187,26 +187,37 @@ class BillingController extends Controller
     }
 
     // Generate tickets for the selected booking IDs
-    public function generateTickets($bookingIds)
+    public function generateTickets(Request $request, $bookingIds)
 {
     try {
+        $seatFilter = $request->input('seat_codes', []); // Fetch selected seat codes for re-print
+
         // Split the booking IDs into an array
         $bookingIdsArray = explode(',', $bookingIds);
 
         // Fetch all bookings that match the given IDs
-        $bookings = Booking::whereIn('id', $bookingIdsArray)->get();
+        $bookings = Booking::whereIn('id', $bookingIdsArray)
+            ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
+                $query->whereIn('seat_code', $seatFilter); // Filter specific seats for re-print
+            })
+            ->get();
 
         if ($bookings->isEmpty()) {
             return redirect()->back()->withErrors(['error' => 'No bookings found.']);
         }
 
         // Initialize mPDF
-        $mpdf = new Mpdf();
+        $mpdf = new Mpdf(['format' => [80, 150]]); // Adjust for POS printer dimensions
+
+        $bookingsCount = $bookings->count(); // Get total bookings count
+        $currentIndex = 0; // Initialize current index
 
         foreach ($bookings as $booking) {
+            $currentIndex++; // Increment the current index for each iteration
+
             // Generate ticket content for each booking
             $html = "
-                <div style='text-align: center; font-family: Arial, sans-serif; border: 1px dashed #000; padding: 20px; margin: 10px;'>
+                <div style='text-align: center; font-family: Arial, sans-serif; border: 1px dashed #000; padding: 10px; margin: 5px;'>
                     <h2>Movie Ticket</h2>
                     <p><strong>Movie:</strong> {$booking->movie_name}</p>
                     <p><strong>Date:</strong> {$booking->date}</p>
@@ -218,15 +229,20 @@ class BillingController extends Controller
 
             // Add ticket to the PDF
             $mpdf->WriteHTML($html);
-            $mpdf->AddPage(); // Start a new page for the next ticket
+
+            // Add a page break if this is not the last ticket
+            if ($currentIndex < $bookingsCount) {
+                $mpdf->AddPage();
+            }
         }
 
-        // Output the combined PDF for download or printing
-        $mpdf->Output('Tickets.pdf', 'I'); // Inline display for printing
+        // Output the combined PDF for download or inline display
+        return $mpdf->Output('Tickets.pdf', 'I'); // 'I' for inline display, 'D' for download
     } catch (\Exception $e) {
         return redirect()->back()->withErrors(['error' => 'Failed to generate tickets: ' . $e->getMessage()]);
     }
 }
+
 
 
 }
