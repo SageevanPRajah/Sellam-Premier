@@ -141,12 +141,12 @@
                 <button type="submit" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
                     Print
                 </button>
-            </form>
+            </form>            
             
             <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
                 <label for="seat_codes">Select Seats for Re-Print:</label>
                 <input type="text" name="seat_codes" placeholder="Enter seat codes (e.g., A1,A2)" style="margin-bottom: 10px;">
-                <button type="submit" class="button" style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
                     Re-Print
                 </button>
             </form>
@@ -205,19 +205,6 @@
     
         // Initial calculation on page load
         calculateTotal();
-
-        document.querySelector('.print-button').addEventListener('click', function () {
-    const bookingId = '{{ session('created_booking_ids')[0] ?? '' }}';
-    const printWindow = window.open(`/generate-tickets/${bookingId}`, '_blank');
-
-    printWindow.onload = () => {
-        printWindow.print();
-        printWindow.onafterprint = () => {
-            window.location.href = '/booking/selectSeats/{{ $show->id }}';
-        };
-    };
-});
-
 
     </script>
     

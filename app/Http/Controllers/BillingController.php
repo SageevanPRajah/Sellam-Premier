@@ -80,10 +80,9 @@ class BillingController extends Controller
             'total_price' => $validated['total_price'],
         ]);
 
-        // Redirect to ticket generation
-        $bookingIds = implode(',', session('created_booking_ids'));
-        return redirect()->route('billing.generateTickets', ['bookingIds' => $bookingIds])
-            ->with('success', 'Billing data stored successfully, and tickets are ready for printing.');
+        // Redirect to the 'selectSeats' route
+        return redirect()->route('booking.selectSeats', ['id' => $validated['movie_id']])
+            ->with('success', 'Billing data stored successfully. Please proceed to select your seats.');
     } catch (\Exception $e) {
         // Log error and redirect back with an error message
         Log::error('Billing Store Error: ', [
@@ -186,63 +185,84 @@ class BillingController extends Controller
         return redirect()->route('billing.index')->with('success', 'Billing data deleted successfully.');
     }
 
-    // Generate tickets for the selected booking IDs
     public function generateTickets(Request $request, $bookingIds)
-{
-    try {
-        $seatFilter = $request->input('seat_codes', []); // Fetch selected seat codes for re-print
+    {
+        try {
+            $seatFilter = $request->input('seat_codes', []); // Fetch selected seat codes for re-print
+    
+            $bookingIdsArray = explode(',', $bookingIds);
+    
+            $bookings = Booking::whereIn('id', $bookingIdsArray)
+                ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
+                    $query->whereIn('seat_code', $seatFilter);
+                })
+                ->get();
+    
+            if ($bookings->isEmpty()) {
+                return redirect()->back()->withErrors(['error' => 'No bookings found.']);
+            }
+    
+            // Generate ticket HTML for each booking
+            $html = "<!DOCTYPE html>
+            <html>
+            <head>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+                .ticket { width: 80mm; margin: auto; padding: 10px; text-align: center; }
+                .ticket h2 { margin: 5px 0; font-size: 16px; }
+                .ticket p { margin: 5px 0; font-size: 12px; }
+                hr { border: 1px dashed #000; margin: 10px 0; }
+            </style>
+            <script>
+    window.onload = function() {
+        // Trigger the print dialog
+        window.print();
 
-        // Split the booking IDs into an array
-        $bookingIdsArray = explode(',', $bookingIds);
+        // After the printing is done
+        window.onafterprint = function() {
+            // Redirect the parent tab to the desired route
+            
 
-        // Fetch all bookings that match the given IDs
-        $bookings = Booking::whereIn('id', $bookingIdsArray)
-            ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
-                $query->whereIn('seat_code', $seatFilter); // Filter specific seats for re-print
-            })
-            ->get();
+            // Close the current tab
+            window.close();
+        };
+    };
+</script>
 
-        if ($bookings->isEmpty()) {
-            return redirect()->back()->withErrors(['error' => 'No bookings found.']);
-        }
-
-        // Initialize mPDF
-        $mpdf = new Mpdf(['format' => [80, 150]]); // Adjust for POS printer dimensions
-
-        $bookingsCount = $bookings->count(); // Get total bookings count
-        $currentIndex = 0; // Initialize current index
-
-        foreach ($bookings as $booking) {
-            $currentIndex++; // Increment the current index for each iteration
-
-            // Generate ticket content for each booking
-            $html = "
-                <div style='text-align: center; font-family: Arial, sans-serif; border: 1px dashed #000; padding: 10px; margin: 5px;'>
-                    <h2>Movie Ticket</h2>
+        </head>
+        <body>";
+    
+            foreach ($bookings as $booking) {
+                $html .= "
+                <div class='ticket'>
+                    <h2>Sellam Premier</h2>
+                    <p>3D Digital Cinema</p>
+                    <p>Chenkalady, Batticaloa</p>
+                    <p>TP: 065-2240064 / 071-3641686</p>
+                    <hr>
+                    <p><strong>Serial #:</strong> {$booking->id}</p>
+                    <p><strong>Date:</strong> " . date('d-M-Y h:i A') . "</p>
+                    <hr>
                     <p><strong>Movie:</strong> {$booking->movie_name}</p>
                     <p><strong>Date:</strong> {$booking->date}</p>
                     <p><strong>Time:</strong> {$booking->time}</p>
                     <p><strong>Seat:</strong> {$booking->seat_no}</p>
                     <p><strong>Seat Type:</strong> {$booking->seat_type}</p>
+                    <hr>
+                    <p>This ticket is non-refundable.<br>Keep it safe.</p>
                 </div>
-            ";
-
-            // Add ticket to the PDF
-            $mpdf->WriteHTML($html);
-
-            // Add a page break if this is not the last ticket
-            if ($currentIndex < $bookingsCount) {
-                $mpdf->AddPage();
+                <div style='page-break-after: always;'></div>";
             }
+    
+            $html .= "</body></html>";
+    
+            // Return the HTML response
+            return response($html)->header('Content-Type', 'text/html');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to generate tickets: ' . $e->getMessage()]);
         }
-
-        // Output the combined PDF for download or inline display
-        return $mpdf->Output('Tickets.pdf', 'I'); // 'I' for inline display, 'D' for download
-    } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => 'Failed to generate tickets: ' . $e->getMessage()]);
     }
-}
-
+    
 
 
 }
