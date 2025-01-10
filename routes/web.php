@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/sellam', function () {
+    return view('sellam');
+});
+
     //Route Movie
     Route::get('/movie',[MovieController::class, 'index'])->name('movie.index');
     Route::get('/movie/create',[MovieController::class, 'create'])->name('movie.create');
