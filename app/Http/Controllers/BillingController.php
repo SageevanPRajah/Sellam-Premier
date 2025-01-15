@@ -207,12 +207,46 @@ class BillingController extends Controller
             <html>
             <head>
             <style>
-                body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-                .ticket { width: 80mm; margin: auto; padding: 10px; text-align: center; }
-                .ticket h2 { margin: 5px 0; font-size: 16px; }
-                .ticket p { margin: 5px 0; font-size: 12px; }
-                hr { border: 1px dashed #000; margin: 10px 0; }
-            </style>
+            @page {
+                size: 80mm 150mm; /* Set page size */
+                margin: 0; /* Remove default margins */
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ticket {
+                width: 80mm;
+                height: 150mm;
+                margin: auto;
+                text-align: center;
+                padding: 5px;
+                box-sizing: border-box;
+            }
+
+            .ticket h2 {
+                margin: 5px 0;
+                font-size: 22px;
+            }
+
+            .ticket p {
+                margin: 5px 0;
+                font-size: 20px;
+            }
+
+            hr {
+                border: 1px dashed #000;
+                margin: 5px 0;
+            }
+
+            @media print {
+                .ticket {
+                    page-break-after: always;
+                }
+            }
+        </style>
             <script>
     window.onload = function() {
         // Trigger the print dialog
@@ -235,6 +269,7 @@ class BillingController extends Controller
             foreach ($bookings as $booking) {
                 $html .= "
                 <div class='ticket'>
+                <p>DEL LANKA ADVANCED TICKETBOOKING</p>
                     <h2>Sellam Premier</h2>
                     <p>3D Digital Cinema</p>
                     <p>Chenkalady, Batticaloa</p>
@@ -244,12 +279,24 @@ class BillingController extends Controller
                     <p><strong>Date:</strong> " . date('d-M-Y h:i A') . "</p>
                     <hr>
                     <p><strong>Movie:</strong> {$booking->movie_name}</p>
-                    <p><strong>Date:</strong> {$booking->date}</p>
-                    <p><strong>Time:</strong> {$booking->time}</p>
-                    <p><strong>Seat:</strong> {$booking->seat_no}</p>
                     <p><strong>Seat Type:</strong> {$booking->seat_type}</p>
                     <hr>
-                    <p>This ticket is non-refundable.<br>Keep it safe.</p>
+                    <p><strong>Date:</strong> {$booking->date}</p>
+                    <p><strong>Time:</strong> {$booking->time}</p>
+                    <p><strong>Seat:</strong> {$booking->seat_no}    <strong>PAID</strong></p>
+
+                    
+                    <hr>
+                    <p><strong>அறிவித்தல்:</strong></p>
+                    <p>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
+                    <p>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
+                    <p>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
+                    <hr>
+                    <p>Software Developed By</p>
+                    <p>ForgeTech Crafters</p>
+                    <p>076-2646376</p>
+
+
                 </div>
                 <div style='page-break-after: always;'></div>";
             }
