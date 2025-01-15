@@ -1,26 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    /* Make the entire page background gray */
+    body {
+        background-color: #ccc; 
+        margin: 0; 
+        padding: 0;
+    }
+
+    /* Center all content inside the container */
+    .container {
+        /* The container will take the full viewport height
+           and use flex to center content both vertically and horizontally */
+        min-height: 100vh;  
+        display: flex;  
+        flex-direction: column;  
+        justify-content: center;  
+        align-items: center; 
+        text-align: center; /* Center text as well */
+    }
+
+    /* Just for demonstration, style your messages */
+    .success-message {
+        color: green;
+        margin-bottom: 1em;
+    }
+
+    .error-messages {
+        color: red;
+        margin-bottom: 1em;
+    }
+
+    /* Make sure your buttons look nice on a gray background */
+    .button {
+        margin: 0.5em;
+        padding: 0.5em 1em;
+        background: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
 <div class="container">
     <h1>Book Your Seats</h1>
 
     <!-- Success Message -->
     @if(session()->has('success'))
-    <div class="success-message">
-        {{ session('success') }}
-    </div>
-@endif
+        <div class="success-message">
+            {{ session('success') }}
+        </div>
+    @endif
 
-<!-- Error Messages -->
-@if($errors->any())
-    <div class="error-messages">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="error-messages">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <!-- Date Selection -->
     <label for="date">Select Date:</label>
@@ -28,7 +70,7 @@
     <button class="button" id="fetch-shows">Find Shows</button>
 
     <!-- Show Time Selection -->
-    <div id="show-times" style="display: none;">
+    <div id="show-times" style="display: none; margin-top: 2em;">
         <h3>Select Show Time</h3>
         <ul id="shows-list"></ul>
     </div>
@@ -57,12 +99,14 @@
                 const li = document.createElement('li');
                 li.textContent = `${show.time} - ${show.movie_name}`;
                 li.dataset.showId = show.id;
+
                 const button = document.createElement('button');
                 button.textContent = 'Select Show';
                 button.classList.add('button');
                 button.addEventListener('click', () => {
                     window.location.href = `/booking/create/${show.id}`;
                 });
+
                 li.appendChild(button);
                 showList.appendChild(li);
             });

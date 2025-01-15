@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Shows</title>
 
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="sha512-p6qD4WmF1g4p8qPQ5cM+PEOj8EeA0bg65dwZ2rBt+9v9V/GMq3O36RlhjzQpYYzTCnzqqe/GJZy43k5BSYyxzg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    />
 
     <style>
         /* CSS Variables */
@@ -51,49 +54,16 @@
             margin-bottom: 10px;
         }
 
-        /* Add New Show Button */
-        .add-link {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .add-link a {
-            display: inline-flex;
-            align-items: center;
-            padding: 12px 20px;
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            text-decoration: none;
-            border-radius: 30px;
-            transition: background-color 0.3s, color 0.3s;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: 57%;
-        }
-
-        .add-link a:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .add-link a img {
-            margin-right: 10px;
-            filter: brightness(0) invert(1);
-            /* Invert icon colors for visibility */
-        }
-
-        /* Search Bar */
+        /* Search Bar / Filter Bar */
         .search-bar {
             width: 80%;
             margin: 20px auto;
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 15px;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .search-bar .filter-group {
+        .filter-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -106,7 +76,8 @@
 
         .search-bar select,
         .search-bar input[type="text"],
-        .search-bar input[type="date"] {
+        .search-bar input[type="date"],
+        .search-bar input[type="time"] {
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
@@ -119,7 +90,8 @@
 
         .search-bar select:focus,
         .search-bar input[type="text"]:focus,
-        .search-bar input[type="date"]:focus {
+        .search-bar input[type="date"]:focus,
+        .search-bar input[type="time"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
 
@@ -152,7 +124,7 @@
             color: #ffffff;
         }
 
-        /* Buttons (Edit, Delete, View) */
+        /* Buttons (Detail, etc.) */
         .action-button {
             width: 100px;
             padding: 10px 0;
@@ -163,167 +135,47 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            box-shadow: 5px 5px 15px var(--shadow-dark),
+                        -5px -5px 15px var(--shadow-light);
             transition: box-shadow 0.3s, background-color 0.3s;
             color: #ffffff;
-            margin: 0 auto;
-            /* Center the button within the cell */
-        }
-
-        .btn-edit {
-            background-color: rgb(81, 88, 94);
-            /* Gray */
+            margin: 0 auto; /* Center the button within the cell */
         }
 
         .btn-delete {
-            background-color: #343a40;
-            /* Dark Gray */
+            background-color: #343a40; /* Dark Gray */
         }
 
-        .btn-view {
-            background-color: #495057;
-            /* Medium Gray */
-        }
-
-        .btn-edit:hover,
-        .btn-delete:hover,
-        .btn-view:hover {
+        .btn-delete:hover {
             color: black;
         }
 
-        .btn-edit img,
-        .btn-delete img,
-        .btn-view img {
+        .btn-delete img {
             margin-right: 5px;
             filter: brightness(0) invert(1);
         }
 
-        .btn-edit:hover img,
-        .btn-delete:hover img,
-        .btn-view:hover img {
+        .btn-delete:hover img {
             filter: brightness(0) invert(0);
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: none;
-            width: 300px;
-            border-radius: 20px;
-            text-align: center;
-            color: rgb(41, 43, 44);
-        }
-
-        .close-button {
-            color: #ffffff;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #FF5555;
-            text-decoration: none;
-        }
-
-        .modal-actions {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .modal-actions button {
-            width: 100px;
-            padding: 10px 0;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #ffffff;
-            transition: box-shadow 0.3s, background-color 0.3s;
-        }
-
-        #confirmDelete {
-            background-color: #FF5555;
-        }
-
-        #cancelDelete {
-            background-color: #6c757d;
-        }
-
-        /* Pagination and Rows per Page */
-        .pagination-container {
+        /* Summary Section at the bottom */
+        .summary-section {
             width: 80%;
             margin: 20px auto;
+            color: var(--text-color);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
+            justify-content: space-between;
+            background-color: rgb(53, 53, 53);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px var(--shadow-dark);
+            gap: 20px;
         }
 
-        .rows-per-page {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .rows-per-page select {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 20px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            font-size: 16px;
-            outline: none;
-            transition: box-shadow 0.3s;
-        }
-
-        .rows-per-page select:focus {
-            box-shadow: 0 0 10px #2196F3;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pagination button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 20px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-        }
-
-        .pagination button.active {
-            background-color: #2196F3;
-            color: #ffffff;
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-        }
-
-        .pagination button:hover:not(.active) {
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-            background-color: #555555;
+        .summary-item {
+            font-size: 18px;
         }
 
         /* Responsive Design */
@@ -332,36 +184,13 @@
                 font-size: 14px;
             }
 
-            .add-link {
-                margin-left: 0;
-                text-align: center;
-            }
-
             .search-bar {
                 flex-direction: column;
-                align-items: flex-start;
             }
 
-            .search-bar .filter-group {
-                width: 100%;
-            }
-
-            .search-bar select,
-            .search-bar input[type="text"],
-            .search-bar input[type="date"] {
-                width: 100%;
-            }
-
-            .pagination-container {
+            .summary-section {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-
-            .rows-per-page,
-            .pagination {
-                width: 100%;
-                justify-content: flex-start;
-                margin-bottom: 10px;
             }
         }
     </style>
@@ -377,12 +206,51 @@
         </div>
     @endif
 
+    <!-- Filters -->
+    <div class="search-bar">
+        <!-- Movie Name Filter -->
+        <div class="filter-group">
+            <label for="movieNameFilter">Movie Name:</label>
+            <input
+                type="text"
+                id="movieNameFilter"
+                placeholder="Search movie name..."
+            />
+        </div>
+
+        <!-- Date Filter -->
+        <div class="filter-group">
+            <label for="dateFilter">Filter by Date:</label>
+            <input type="date" id="dateFilter" />
+        </div>
+
+        <!-- Time Filter -->
+        <div class="filter-group">
+            <label for="timeFilter">Filter by Time (AM/PM):</label>
+            <input type="time" id="timeFilter" />
+        </div>
+
+        <!-- Seat Type Filter -->
+        <div class="filter-group">
+            <label for="seatTypeFilter">Seat Type:</label>
+            <select id="seatTypeFilter">
+                <option value="">All</option>
+                <!-- Storing values in lowercase so the logic can be straightforward. -->
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+                <option value="platinum">Platinum</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Billing Table -->
     <table id="billingTable">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Movie Name</th>
+                <th>Date</th>
+                <th>Time (AM/PM)</th>
                 <th>Seat Type</th>
                 <th>Total Tickets</th>
                 <th>Full Tickets</th>
@@ -393,28 +261,168 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Example rows from your server -->
             @foreach ($billings as $billing)
-                <tr>
-                    <td>{{ $billing->id }}</td>
-                    <td>{{ $billing->movie_name }}</td>
-                    <td>{{ $billing->seat_type }}</td>
-                    <td>{{ $billing->total_tickets }}</td>
-                    <td>{{ $billing->full_tickets }}</td>
-                    <td>{{ $billing->half_tickets }}</td>
-                    <td>Rs. {{ number_format($billing->total_price, 2) }}</td>
-                    <td>{{ $billing->created_at }}</td>
-                    <td>
-                        <!-- Action Buttons -->
-                        <form method="GET" action="{{ route('billing.detail', $billing->id) }}" style="display:inline;">
-                           <button type="submit" class="action-button btn-delete">
-                                Detail
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ $billing->id }}</td>
+                <td>{{ $billing->movie_name }}</td>
+                <td>{{ $billing->date }}</td>
+                <td>{{ $billing->time }}</td>
+                <td>{{ $billing->seat_type }}</td>
+                <td>{{ $billing->total_tickets }}</td>
+                <td>{{ $billing->full_tickets }}</td>
+                <td>{{ $billing->half_tickets }}</td>
+                <td>Rs. {{ number_format($billing->total_price, 2) }}</td>
+                <td>{{ $billing->created_at }}</td>
+                <td>
+                    <!-- Action Button -->
+                    <form method="GET" action="{{ route('billing.detail', $billing->id) }}" style="display:inline;">
+                        <button type="submit" class="action-button btn-delete">
+                            Detail
+                        </button>
+                    </form>
+                </td>
+            </tr>
             @endforeach
         </tbody>
     </table>
-</body>
 
+    <!-- Summary Section -->
+    <div class="summary-section">
+        <div class="summary-item">
+            <strong>Total Full Tickets: </strong>
+            <span id="totalFullTickets">0</span>
+        </div>
+        <div class="summary-item">
+            <strong>Total Half Tickets: </strong>
+            <span id="totalHalfTickets">0</span>
+        </div>
+        <div class="summary-item">
+            <strong>Total Seats: </strong>
+            <span id="totalSeats">0</span>
+        </div>
+        <div class="summary-item">
+            <strong>Total Amount: </strong>
+            <span id="totalAmount">Rs. 0.00</span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Grab all filter inputs
+        const movieNameFilter  = document.getElementById('movieNameFilter');
+        const dateFilter       = document.getElementById('dateFilter');
+        const timeFilter       = document.getElementById('timeFilter');
+        const seatTypeFilter   = document.getElementById('seatTypeFilter');
+
+        // Summary fields
+        const totalFullTicketsEl = document.getElementById('totalFullTickets');
+        const totalHalfTicketsEl = document.getElementById('totalHalfTickets');
+        const totalSeatsEl       = document.getElementById('totalSeats');
+        const totalAmountEl      = document.getElementById('totalAmount');
+
+        // Convert "HH:MM AM/PM" to "HH:MM" in 24-hour format
+        // e.g., "09:30 PM" => "21:30"
+        function parseTime12to24(twelveHourTime) {
+            if (!/AM|PM/i.test(twelveHourTime)) return twelveHourTime.trim();
+            const [time, modifier] = twelveHourTime.split(' ');
+            let [hours, minutes] = time.split(':');
+
+            hours = parseInt(hours, 10);
+            if (modifier.toUpperCase() === 'PM' && hours !== 12) {
+                hours += 12;
+            }
+            if (modifier.toUpperCase() === 'AM' && hours === 12) {
+                hours = 0;
+            }
+            const hoursStr = hours < 10 ? '0' + hours : '' + hours;
+            return hoursStr + ':' + minutes;
+        }
+
+        // Listen for changes in all filters
+        movieNameFilter.addEventListener('input', filterTable);
+        dateFilter.addEventListener('change', filterTable);
+        timeFilter.addEventListener('change', filterTable);
+        seatTypeFilter.addEventListener('change', filterTable);
+
+        // Filter on page load
+        window.onload = filterTable;
+
+        function filterTable() {
+            const selectedMovieName = movieNameFilter.value.trim().toLowerCase();
+            const selectedDate      = dateFilter.value; // e.g., "YYYY-MM-DD"
+            const selectedTime      = timeFilter.value; // "HH:MM" (24-hour)
+            // We store seatTypeFilter values in lowercase in the <select>
+            const selectedSeatType  = seatTypeFilter.value; // "silver", "gold", "platinum", or ""
+
+            // Reset totals
+            let totalFullTickets = 0;
+            let totalHalfTickets = 0;
+            let totalSeats       = 0;
+            let totalAmount      = 0;
+
+            // Iterate over table rows
+            const rows = document.querySelectorAll('#billingTable tbody tr');
+            rows.forEach((row) => {
+                // Extract row data
+                const rowMovieNameRaw = row.querySelector('td:nth-child(2)')?.textContent || "";
+                const rowMovieName    = rowMovieNameRaw.trim().toLowerCase();
+
+                const rowDate         = row.querySelector('td:nth-child(3)')?.textContent.trim() || "";
+                const rowTimeRaw      = row.querySelector('td:nth-child(4)')?.textContent.trim() || "";
+                const rowTime24       = parseTime12to24(rowTimeRaw);
+
+                const rowSeatTypeRaw  = row.querySelector('td:nth-child(5)')?.textContent.trim() || "";
+                // convert seat type to lowercase for comparison
+                const rowSeatType     = rowSeatTypeRaw.toLowerCase();
+
+                const fullTickets     = parseInt(row.querySelector('td:nth-child(7)')?.textContent.trim()) || 0;
+                const halfTickets     = parseInt(row.querySelector('td:nth-child(8)')?.textContent.trim()) || 0;
+
+                let priceText         = row.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
+                // remove "Rs. " and any commas
+                priceText             = priceText.replace("Rs. ", "").replace(",", "");
+                const rowPrice        = parseFloat(priceText) || 0;
+
+                // Apply filters:
+                // 1) Movie name (partial match, case-insensitive)
+                const movieNameMatches = rowMovieName.includes(selectedMovieName);
+
+                // 2) Date
+                const dateMatches      = (!selectedDate || selectedDate === rowDate);
+
+                // 3) Time (must match 24-hour string)
+                const timeMatches      = (!selectedTime || selectedTime === rowTime24);
+
+                // 4) Seat Type (case-insensitive exact or substring)
+                //    For exact match with the dropdown, since the <option> values are "silver", "gold", or "platinum",
+                //    we compare them directly to rowSeatType.
+                const seatTypeMatches  = (!selectedSeatType || rowSeatType === selectedSeatType);
+
+                // If all filters pass, show the row; else hide it
+                if (
+                    movieNameMatches &&
+                    dateMatches &&
+                    timeMatches &&
+                    seatTypeMatches
+                ) {
+                    row.style.display = '';
+                    // Accumulate totals
+                    totalFullTickets += fullTickets;
+                    totalHalfTickets += halfTickets;
+                    totalSeats       += (fullTickets + halfTickets);
+                    totalAmount      += rowPrice;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Update summary
+            totalFullTicketsEl.textContent = totalFullTickets;
+            totalHalfTicketsEl.textContent = totalHalfTickets;
+            totalSeatsEl.textContent       = totalSeats;
+            totalAmountEl.textContent      = "Rs. " + totalAmount.toFixed(2);
+        }
+    </script>
+</body>
 </html>
