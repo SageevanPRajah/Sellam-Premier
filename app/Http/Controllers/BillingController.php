@@ -202,74 +202,20 @@ class BillingController extends Controller
                 return redirect()->back()->withErrors(['error' => 'No bookings found.']);
             }
     
-            // Generate ticket HTML for each booking
-            $html = "<!DOCTYPE html>
-            <html>
-            <head>
-            <style>
-            @page {
-                size: 80mm 150mm; /* Set page size */
-                margin: 0; /* Remove default margins */
-            }
+            // Initialize mPDF with the desired dimensions
+        $mpdf = new Mpdf([
+            'format' => [80, 150], // 80mm x 150mm dimensions
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+        ]);
 
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
-            .ticket {
-                width: 80mm;
-                height: 150mm;
-                margin: auto;
-                text-align: center;
-                padding: 5px;
-                box-sizing: border-box;
-            }
-
-            .ticket h2 {
-                margin: 5px 0;
-                font-size: 22px;
-            }
-
-            .ticket p {
-                margin: 5px 0;
-                font-size: 20px;
-            }
-
-            hr {
-                border: 1px dashed #000;
-                margin: 5px 0;
-            }
-
-            @media print {
-                .ticket {
-                    page-break-after: always;
-                }
-            }
-        </style>
-            <script>
-    window.onload = function() {
-        // Trigger the print dialog
-        window.print();
-
-        // After the printing is done
-        window.onafterprint = function() {
-            // Redirect the parent tab to the desired route
-            
-
-            // Close the current tab
-            window.close();
-        };
-    };
-</script>
-
-        </head>
-        <body>";
-    
-            foreach ($bookings as $booking) {
-                $html .= "
-                <div class='ticket'>
-                <p>DEL LANKA ADVANCED TICKETBOOKING</p>
+        foreach ($bookings as $index => $booking) {
+            // Ticket HTML content
+            $html = "
+                <div style='width: 100%; text-align: center;'>
+                    <p>DEL LANKA ADVANCED TICKETBOOKING</p>
                     <h2>Sellam Premier</h2>
                     <p>3D Digital Cinema</p>
                     <p>Chenkalady, Batticaloa</p>
@@ -283,28 +229,62 @@ class BillingController extends Controller
                     <hr>
                     <p><strong>Date:</strong> {$booking->date}</p>
                     <p><strong>Time:</strong> {$booking->time}</p>
-                    <p><strong>Seat:</strong> {$booking->seat_no}    <strong>PAID</strong></p>
-
-                    
+                    <p><strong>Seat:</strong> {$booking->seat_no} <strong>PAID</strong></p>
                     <hr>
                     <p><strong>அறிவித்தல்:</strong></p>
-                    <p>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
+                    <p>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
                     <p>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
                     <p>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
                     <hr>
                     <p>Software Developed By</p>
                     <p>ForgeTech Crafters</p>
                     <p>076-2646376</p>
+                </div>";
 
+            $mpdf->WriteHTML($html);
 
-                </div>
-                <div style='page-break-after: always;'></div>";
+            // Add a page break if not the last ticket
+            if ($index < count($bookings) - 1) {
+                $mpdf->AddPage();
             }
-    
-            $html .= "</body></html>";
-    
-            // Return the HTML response
-            return response($html)->header('Content-Type', 'text/html');
+        }
+
+        // Generate the PDF as raw binary data
+        $pdfOutput = $mpdf->Output('', 'S'); // Generate as string
+
+        // Properly encode the PDF as base64
+        $pdfBase64 = base64_encode($pdfOutput);
+
+        // Serve the PDF inline with JavaScript for auto-print
+        return response()->make("
+            <html>
+            <head>
+                <script>
+                    window.onload = function() {
+                        const printWindow = window.open('', '_blank');
+                        const pdfData = atob('{$pdfBase64}');
+                        const arrayBuffer = new Uint8Array(pdfData.length);
+                        for (let i = 0; i < pdfData.length; i++) {
+                            arrayBuffer[i] = pdfData.charCodeAt(i);
+                        }
+                        const pdfBlob = new Blob([arrayBuffer], {type: 'application/pdf'});
+                        const pdfUrl = URL.createObjectURL(pdfBlob);
+                        printWindow.location.href = pdfUrl;
+
+                        printWindow.onload = function() {
+                            printWindow.print();
+                            printWindow.onafterprint = function() {
+                                printWindow.close();
+                            };
+                        };
+                    };
+                </script>
+            </head>
+            <body>
+                <p>Loading ticket...</p>
+            </body>
+            </html>
+        ", 200, ['Content-Type' => 'text/html']);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to generate tickets: ' . $e->getMessage()]);
         }
