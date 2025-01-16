@@ -143,13 +143,29 @@
                 </button>
             </form>            
             
-            <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
-                <label for="seat_codes">Select Seats for Re-Print:</label>
-                <input type="text" name="seat_codes" placeholder="Enter seat codes (e.g., A1,A2)" style="margin-bottom: 10px;">
-                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
-                    Re-Print
-                </button>
-            </form>
+            <!-- Toggle Reprint Section -->
+            <button id="toggle-reprint" 
+                    style="background-color: #007bff; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1.5rem;">
+                Show Reprint Options
+            </button>
+
+            <!-- Reprint Options -->
+            <div id="reprint-options" style="display: none; margin-top: 1.5rem;">
+                @foreach(session('created_booking_ids', []) as $bookingId)
+                    @php $booking = \App\Models\Booking::find($bookingId); @endphp
+                    @if($booking)
+                        <div class="ticket-preview" style="margin-bottom: 1rem; border: 1px solid #ccc; padding: 1rem;">
+                            <p><strong>Movie:</strong> {{ $booking->movie_name }}</p>
+                            <p><strong>Seat:</strong> {{ $booking->seat_no }}</p>
+                            <form action="{{ route('billing.generateTickets', ['bookingIds' => $bookingId]) }}" method="GET" target="_blank">
+                                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                                    Re-Print
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -205,6 +221,15 @@
     
         // Initial calculation on page load
         calculateTotal();
+
+        // Toggle Reprint Options
+        document.getElementById('toggle-reprint').addEventListener('click', function () {
+            const reprintOptions = document.getElementById('reprint-options');
+            const isVisible = reprintOptions.style.display === 'block';
+
+            reprintOptions.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? 'Show Reprint Options' : 'Hide Reprint Options';
+        });
 
     </script>
     
