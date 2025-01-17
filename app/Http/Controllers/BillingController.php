@@ -203,7 +203,7 @@ class BillingController extends Controller
             }
     
             // Initialize mPDF with the desired dimensions
-        $mpdf = new Mpdf([
+        $mpdf = new \Mpdf\Mpdf([
             'format' => [80, 150], // 80mm x 150mm dimensions
             'margin_top' => 0,
             'margin_right' => 0,
@@ -211,77 +211,67 @@ class BillingController extends Controller
             'margin_left' => 0,
         ]);
 
+        $ticketHtml = ''; // Variable to hold the full ticket HTML
+
         foreach ($bookings as $index => $booking) {
             // Ticket HTML content
             $html = "
-                <div style='width: 100%; text-align: center;'>
-                    <p>DEL LANKA ADVANCED TICKETBOOKING</p>
-                    <h2>Sellam Premier</h2>
-                    <p>3D Digital Cinema</p>
-                    <p>Chenkalady, Batticaloa</p>
-                    <p>TP: 065-2240064 / 071-3641686</p>
-                    <hr>
-                    <p><strong>Serial #:</strong> {$booking->id}</p>
-                    <p><strong>Date:</strong> " . date('d-M-Y h:i A') . "</p>
-                    <hr>
-                    <p><strong>Movie:</strong> {$booking->movie_name}</p>
-                    <p><strong>Seat Type:</strong> {$booking->seat_type}</p>
-                    <hr>
-                    <p><strong>Date:</strong> {$booking->date}</p>
-                    <p><strong>Time:</strong> {$booking->time}</p>
-                    <p><strong>Seat:</strong> {$booking->seat_no} <strong>PAID</strong></p>
-                    <hr>
-                    <p><strong>அறிவித்தல்:</strong></p>
-                    <p>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
-                    <p>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
-                    <p>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
-                    <hr>
-                    <p>Software Developed By</p>
-                    <p>ForgeTech Crafters</p>
-                    <p>076-2646376</p>
+                <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
+                    <p style='font-size: 10px; margin: 5px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
+                    <h2 style='margin: 5px 0;'>Sellam Premier</h2>
+                    <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
+                    <p style='margin: 5px 0; margin:0;'>Chenkalady, Batticaloa</p>
+                    <p style='margin: 5px 0; margin:0;'>TP: 065-2240064 / 071-3641686</p>
+                    <hr style='border: 1px dashed #000; margin:5px;'>
+                    <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id}</p>
+                    <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>Date: " . date('d-M-Y h:i A') . "</p>
+                    <hr style='border: 1px dashed #000; margin:0;'>
+                    <p style='font-size: 14px; margin: 5px;'><strong>Movie Date:</strong> {$booking->date}</p>
+                    <p style='font-size: 14px; margin: 5px;'><strong>Movie Time:</strong> {$booking->time}</p>
+                    <hr style='border: 1px dashed #000;'>
+                    <p style='font-size: 20px; margin: 5px;'><strong> {$booking->movie_name}</strong></p>
+                    <p style='font-size: 24px; margin:5px;'><strong> {$booking->seat_type}</strong></p>
+                    <hr style='border: 1px dashed #000;'>
+                    <p style='font-size: 20px; margin: 5px;'>Seat No: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
+                    <hr style='border: 1px dashed #000;'>
+                    <p style='font-size: 12px; padding-left:30px; margin:5px; text-align: left;'><strong>அறிவித்தல்:</strong></p>
+                    <p style='font-size: 12px; padding-left:20px; margin:0; text-align: left;'>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
+                    <p style='font-size: 12px; padding-left:20px; margin:0; text-align: left;'>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
+                    <p style='font-size: 12px; padding-left:20px; margin:0; text-align: left;'>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
+                    <hr style='border: 1px dashed #000;'>
+                    <p style='font-size: 10px; margin:0;'>Software Developed By : ForgeTech Crafters</p>
+                    <p style='font-size: 10px; margin:0;'>076-2646376</p>
                 </div>";
 
-            $mpdf->WriteHTML($html);
+            $ticketHtml .= $html;
 
-            // Add a page break if not the last ticket
+            // Add page break if not the last ticket
             if ($index < count($bookings) - 1) {
-                $mpdf->AddPage();
+                $ticketHtml .= "<div style='page-break-after: always;'></div>";
             }
         }
 
-        // Generate the PDF as raw binary data
-        $pdfOutput = $mpdf->Output('', 'S'); // Generate as string
-
-        // Properly encode the PDF as base64
-        $pdfBase64 = base64_encode($pdfOutput);
-
-        // Serve the PDF inline with JavaScript for auto-print
-        return response()->make("
+        // Embed the generated ticket HTML into the response with auto-print functionality
+        return response("
             <html>
             <head>
+                <style>
+                    @page { size: 80mm 150mm; margin: 0; }
+                    body { margin: 0; font-family: Arial, sans-serif; }
+                    .ticket { width: 100%; text-align: center; padding: 10px; }
+                    hr { border: 1px dashed #000; margin: 5px 0; }
+                </style>
                 <script>
                     window.onload = function() {
-                        const printWindow = window.open('', '_blank');
-                        const pdfData = atob('{$pdfBase64}');
-                        const arrayBuffer = new Uint8Array(pdfData.length);
-                        for (let i = 0; i < pdfData.length; i++) {
-                            arrayBuffer[i] = pdfData.charCodeAt(i);
-                        }
-                        const pdfBlob = new Blob([arrayBuffer], {type: 'application/pdf'});
-                        const pdfUrl = URL.createObjectURL(pdfBlob);
-                        printWindow.location.href = pdfUrl;
-
-                        printWindow.onload = function() {
-                            printWindow.print();
-                            printWindow.onafterprint = function() {
-                                printWindow.close();
-                            };
+                        window.print(); // Trigger the print dialog
+                        window.onafterprint = function() {
+                            window.close(); // Close the print tab after printing
                         };
                     };
                 </script>
             </head>
             <body>
-                <p>Loading ticket...</p>
+                {$ticketHtml}
             </body>
             </html>
         ", 200, ['Content-Type' => 'text/html']);
