@@ -1,11 +1,9 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div class="billing-page-container"
          style="max-width: 800px; margin: 0 auto; padding: 2rem; background-color: #f7f7f7; border-radius: 8px;">
 
         <!-- Page Title -->
-        <h1 style="text-align: center; font-weight: bold;font-size:20px; margin-bottom: 1rem;">
+        <h1 style="text-align: center; font-weight: bold; font-size:20px; margin-bottom: 1rem;">
             Billing
         </h1>
 
@@ -21,7 +19,7 @@
             <div class="error-messages">
                 <ul>
                     @foreach($errors->all() as $error)
-                        <li>{{$error}}</li>
+                        <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -48,35 +46,29 @@
 
         <!-- Price Information -->
         @if ($price)
-        <table class="table"
-        style="border-collapse: collapse;
-               table-layout: fixed;
-               width: 100%;
-               background-color: #ffffff;
-               border-radius: 8px;
-               overflow: hidden;">
-     <thead style="background-color: #e2e2e2;">
-         <tr>
-             <th style="padding: 0.75rem; border: 0px solid #ccc; ">Seat Type</th>
-             <th style="padding: 0.75rem; border: 0px solid #ccc; ">Full Price</th>
-             <th style="padding: 0.75rem; border: 0px solid #ccc; ">Half Price</th>
-         </tr>
-     </thead>
-     <tbody>
-         <tr>
-             <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
-                 {{ $price->seat_type }}
-             </td>
-             <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
-                 Rs:{{ number_format($price->full_price, 2) }}
-             </td>
-             <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
-                 Rs:{{ number_format($price->half_price, 2) }}
-             </td>
-         </tr>
-     </tbody>
- </table>
- 
+            <table class="table"
+                   style="border-collapse: collapse; table-layout: fixed; width: 100%; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <thead style="background-color: #e2e2e2;">
+                <tr>
+                    <th style="padding: 0.75rem; border: 0px solid #ccc;">Seat Type</th>
+                    <th style="padding: 0.75rem; border: 0px solid #ccc;">Full Price</th>
+                    <th style="padding: 0.75rem; border: 0px solid #ccc;">Half Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
+                        {{ $price->seat_type }}
+                    </td>
+                    <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
+                        Rs:{{ number_format($price->full_price, 2) }}
+                    </td>
+                    <td style="padding: 0.75rem; border: 0px solid #ccc; text-align: center;">
+                        Rs:{{ number_format($price->half_price, 2) }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         @else
             <div style="background-color: #ffffff; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
                 <p>No price information available.</p>
@@ -143,13 +135,29 @@
                 </button>
             </form>            
             
-            <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
-                <label for="seat_codes">Select Seats for Re-Print:</label>
-                <input type="text" name="seat_codes" placeholder="Enter seat codes (e.g., A1,A2)" style="margin-bottom: 10px;">
-                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
-                    Re-Print
-                </button>
-            </form>
+            <!-- Toggle Reprint Section -->
+            <button id="toggle-reprint" 
+                    style="background-color: #007bff; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1.5rem;">
+                Show Reprint Options
+            </button>
+
+            <!-- Reprint Options -->
+            <div id="reprint-options" style="display: none; margin-top: 1.5rem;">
+                @foreach(session('created_booking_ids', []) as $bookingId)
+                    @php $booking = \App\Models\Booking::find($bookingId); @endphp
+                    @if($booking)
+                        <div class="ticket-preview" style="margin-bottom: 1rem; border: 1px solid #ccc; padding: 1rem;">
+                            <p><strong>Movie:</strong> {{ $booking->movie_name }}</p>
+                            <p><strong>Seat:</strong> {{ $booking->seat_no }}</p>
+                            <form action="{{ route('billing.generateTickets', ['bookingIds' => $bookingId]) }}" method="GET" target="_blank">
+                                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                                    Re-Print
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -206,6 +214,14 @@
         // Initial calculation on page load
         calculateTotal();
 
+        // Toggle Reprint Options
+        document.getElementById('toggle-reprint').addEventListener('click', function () {
+            const reprintOptions = document.getElementById('reprint-options');
+            const isVisible = reprintOptions.style.display === 'block';
+
+            reprintOptions.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? 'Show Reprint Options' : 'Hide Reprint Options';
+        });
+
     </script>
-    
-@endsection
+</x-app-layout>
