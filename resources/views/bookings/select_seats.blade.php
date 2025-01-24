@@ -1,26 +1,24 @@
-@extends('layouts.app')
+<x-app-layout>
+    <div class="container">
+        <h1>Select Your Seats</h1>
 
-@section('content')
-<div class="container">
-    <h1>Select Your Seats</h1>
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <!-- Success Message -->
-    @if(session()->has('success'))
-    <div class="success-message">
-        {{ session('success') }}
-    </div>
-@endif
-
-<!-- Error Messages -->
-@if($errors->any())
-    <div class="error-messages">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
     <!-- Seat Type Selection -->
     <div id="seat-types">
@@ -608,4 +606,4 @@
         font-weight: bold;
     }
 </style>
-@endsection
+</x-app-layout>
