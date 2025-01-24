@@ -1,26 +1,24 @@
-@extends('layouts.app')
+<x-app-layout>
+    <div class="container">
+        <h1>Select Your Seats</h1>
 
-@section('content')
-<div class="container">
-    <h1>Select Your Seats</h1>
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <!-- Success Message -->
-    @if(session()->has('success'))
-    <div class="success-message">
-        {{ session('success') }}
-    </div>
-@endif
-
-<!-- Error Messages -->
-@if($errors->any())
-    <div class="error-messages">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
     <!-- Seat Type Selection -->
     <div id="seat-types">
@@ -462,12 +460,12 @@
     <form action="{{ route('booking.store') }}" method="POST">
         @csrf
         @method('post')
-        {{-- <input id="selected-seats" name="selected_seats" > --}}
+            <input type="hidden" id="selected-seats" name="selected_seats" >
             <input id="selected-date" name="selected_date" value="{{ $show->date }}" >
             <input id="time" name="time" value="{{ $show->time }}" >
-            {{-- <input id="selected-movie-id" name="movie_id" value="{{ $show->id }}" > --}}
+            <input type="hidden" id="selected-movie-id" name="movie_id" value="{{ $show->id }}" >
             <input id="selected-movie-name" name="movie_name" value="{{ $show->movie_name }}" >
-            {{-- <input id="selected-seat-type" name="seat_type" > --}}
+            <input type="hidden" id="selected-seat-type" name="seat_type" >
         <button type="submit" name="reserve_seats" class="button">Reserve Seats</button>
         <button type="submit" name="confirm_booking" id="confirm-booking" class="button">Confirm Booking</button>
     </form>
@@ -608,4 +606,4 @@
         font-weight: bold;
     }
 </style>
-@endsection
+</x-app-layout>

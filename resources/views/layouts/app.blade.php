@@ -35,9 +35,63 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                @yield('content')
-            </main>
+            <!-- Sidebar and Main Content -->
+        <div class="min-h-screen flex">
+            <!-- Sidebar -->
+            <aside class="w-1/7 bg-white shadow-md min-h-screen">
+                {{-- <h3 class="text-lg font-semibold text-gray-800 mb-4">Sidebar</h3> --}}
+                <ul class="space-y-4">
+                    @if(Auth::user()->usertype === 'admin')
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-tachometer-alt mr-2"></i>
+                                Admin Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-users mr-2"></i>
+                                Manage Users
+                            </a>
+                        </li>
+                    @elseif(Auth::user()->usertype === 'super_admin')
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-tools mr-2"></i>
+                                Super Admin Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-cogs mr-2"></i>
+                                Settings
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-user mr-2"></i>
+                                User Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" class="flex items-center text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                Edit Profile
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="w-6/7 p-6">
+                <main>
+                    {{ $slot }}
+                </main>
+            </div>
+        </div>
+            
         </div>
     </body>
 </html>
