@@ -28,7 +28,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            {{-- @include('layouts.navigation') --}}
+            @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)
@@ -40,11 +40,11 @@
             @endisset
 
             <!-- TOP BAR (with user icon on the right) -->
-            <div class="flex items-center justify-end bg-white h-16 px-4 shadow">
+            {{-- <div class="flex items-center justify-end bg-white h-16 px-4 shadow">
                 <button class="text-gray-600 hover:text-gray-800 focus:outline-none">
                     <i class="fas fa-user-circle text-2xl"></i>
                 </button>
-            </div>
+            </div> --}}
 
             <!-- Page Content -->
             <!-- Sidebar and Main Content -->
@@ -55,7 +55,7 @@
                     :class="isOpen ? 'w-1/7' : 'w-20'">
                     
                     <!-- Sidebar Header + Toggle Button -->
-                    <div class="flex items-center justify-between p-4 border-b">
+                    {{-- <div class="flex items-center justify-between p-4 border-b">
                         <!-- Logo/Text (only show when open) -->
                         <div x-show="isOpen" class="text-lg font-semibold text-gray-800">
                             <img src="{{ asset('/icons/logo.jpg') }}" alt="Logo" class="block h-14 w-auto ml-5">
@@ -70,7 +70,7 @@
                                :class="{'rotate-180': !isOpen, 'rotate-0': isOpen}"
                                style="transition: transform .2s;"></i>
                         </button>
-                    </div>
+                    </div> --}}
 
                     <ul class="space-y-4 mt-4">
                         @if(Auth::user()->usertype === 'admin')
@@ -107,7 +107,7 @@
                                 </a>
                             </li>
                             <li class="mt-5 mx-5">
-                                <a href="/booking" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <a href="/booking/show" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
                                     <i class="fas fa-user-edit mr-2"></i>
                                     <span x-show="isOpen" x-transition>Pre Book</span>
                                 </a>

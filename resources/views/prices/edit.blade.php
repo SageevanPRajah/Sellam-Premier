@@ -179,15 +179,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="active">Active</label>
-                            <label class="toggle-switch">
-                                <input type="hidden" name="active" value="0">
-                                <input type="checkbox" name="active" id="active" value="1" {{ $price->active ? 'checked' : '' }}>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
                             <input type="submit" value="Update the Seat Price" />
                         </div>
                     </form>
