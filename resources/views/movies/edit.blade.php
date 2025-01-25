@@ -1,284 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Movie</title>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Edit Movie') }}
+        </h2>
+    </x-slot>
 
-    <!-- Font Awesome for icons (if needed) -->
-    <link 
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-p6qD4WmF1g4p8qPQ5cM+PEOj8EeA0bg65dwZ2rBt+9v9V/GMq3O36RlhjzQpYYzTCnzqqe/GJZy43k5BSYyxzg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-    />
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-gray-900 overflow-hidden shadow-xl sm:rounded-lg p-6 text-white">
+                <h1 class="text-2xl font-bold text-center mb-6">Edit Movie</h1>
 
-    <style>
-        /* CSS Variables for Neumorphic Black and Gray Theme */
-        :root {
-            --background-color: #121212;
-            --primary-color: #1e1e1e;
-            --secondary-color: #2e2e2e;
-            --text-color: #e0e0e0;
-            --accent-color: #4CAF50;
-            --button-color: #2e2e2e;
-            --button-hover-color: #3e3e3e;
-            --border-color: #555;
-            --success-color: #4CAF50;
-            --danger-color: #FF5555;
-            --info-color: #2196F3;
-            --muted-color: #777;
-            --shadow-light: #2b2b2b;
-            --shadow-dark: #0c0c0c;
-        }
+                <!-- Success Message -->
+                @if(session()->has('success'))
+                    <div class="bg-green-500 text-center text-white p-2 rounded-lg mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: rgb(41, 43, 44);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+                <!-- Error Messages -->
+                @if($errors->any())
+                    <div class="bg-red-500 text-white p-3 rounded-lg mb-4">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-        .container {
-            background-color: rgb(40, 42, 42);
-            padding: 0px 40px;
-            border-radius: 15px;
-            box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
-            width: 100%;
-            max-width: 600px; /* Set a max width for responsiveness */
-            color: var(--text-color);
-            margin-top: 40px;
-            margin-bottom: 100px;
-        }
+                <form method="POST" action="{{ route('movie.update', ['movie' => $movie]) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-        h1 {
-            margin-bottom: 10px;
-            text-align: center;
-            color: var(--text-color);
-        }
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            id="name" 
+                            class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
+                            value="{{ $movie->name }}" 
+                            required 
+                        />
+                    </div>
 
-        .error-messages {
-            color: var(--danger-color);
-            list-style-type: none;
-            margin-bottom: 15px;
-        }
+                    <!-- Poster -->
+                    <div class="mb-4">
+                        <label for="poster" class="block text-sm font-medium text-gray-300 mb-1">Poster</label>
+                        <input 
+                            type="file" 
+                            name="poster" 
+                            id="poster" 
+                            class="block w-full text-sm text-gray-300 bg-gray-800 rounded-lg border-gray-700" 
+                            accept="image/*" 
+                        />
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-400">Current Poster:</p>
+                            <img 
+                                src="{{ asset('storage/' . $movie->poster) }}" 
+                                alt="Poster" 
+                                class="w-32 rounded-lg mt-2"
+                            />
+                        </div>
+                    </div>
 
-        .error-messages li {
-            margin-bottom: 5px;
-        }
+                    <!-- Trailer Link -->
+                    <div class="mb-4">
+                        <label for="trailer_link" class="block text-sm font-medium text-gray-300 mb-1">Trailer Link</label>
+                        <input 
+                            type="text" 
+                            name="trailer_link" 
+                            id="trailer_link" 
+                            class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
+                            value="{{ $movie->trailer_link }}" 
+                            required 
+                        />
+                    </div>
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--text-color);
-        }
+                    <!-- Duration -->
+                    <div class="mb-4">
+                        <label for="duration" class="block text-sm font-medium text-gray-300 mb-1">Duration (in minutes)</label>
+                        <input 
+                            type="number" 
+                            name="duration" 
+                            id="duration" 
+                            class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
+                            value="{{ $movie->duration }}" 
+                            required 
+                        />
+                    </div>
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        input[type="file"],
-        select,
-        input[type="submit"] {
-            width: 100%;
-            padding: 9px 10px;
-            border: none;
-            border-radius: 20px;
-            background-color: rgb(47, 48, 49);
-            color: var(--text-color);
-            box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light);
-            font-size: 12px;
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-        }
+                    <!-- Release Date -->
+                    <div class="mb-4">
+                        <label for="release_date" class="block text-sm font-medium text-gray-300 mb-1">Release Date</label>
+                        <input 
+                            type="date" 
+                            name="release_date" 
+                            id="release_date" 
+                            class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
+                            value="{{ $movie->release_date }}" 
+                            required 
+                        />
+                    </div>
 
-        input[type="text"]::placeholder,
-        input[type="number"]::placeholder,
-        input[type="date"]::placeholder,
-        input[type="file"]::placeholder,
-        select::placeholder {
-            color: #aaa;
-        }
+                    <!-- IMDB Link -->
+                    <div class="mb-4">
+                        <label for="imdb_link" class="block text-sm font-medium text-gray-300 mb-1">IMDB Link</label>
+                        <input 
+                            type="text" 
+                            name="imdb_link" 
+                            id="imdb_link" 
+                            class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
+                            value="{{ $movie->imdb_link }}" 
+                            required 
+                        />
+                    </div>
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="date"]:focus,
-        input[type="file"]:focus,
-        select:focus {
-            box-shadow: 0 0 10px var(--info-color);
-            outline: none;
-            background-color: var(--button-hover-color);
-        }
+                    <!-- Active Toggle -->
+                    <div class="mb-4">
+                        <label for="active" class="block text-sm font-medium text-gray-300 mb-1">Active</label>
+                        <label class="flex items-center">
+                            <input 
+                                type="checkbox" 
+                                name="active" 
+                                id="active" 
+                                value="1" 
+                                {{ $movie->active ? 'checked' : '' }} 
+                                class="form-checkbox h-5 w-5 text-green-600"
+                            />
+                            <span class="ml-2 text-sm text-gray-300">Set as active</span>
+                        </label>
+                    </div>
 
-        input[type="submit"] {
-            background-color: var(--accent-color);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 30px;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: darken(var(--accent-color), 10%);
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .current-poster {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .current-poster img {
-            max-width: 150px;
-            border-radius: 10px;
-            box-shadow: 3px 3px 10px var(--shadow-dark), -3px -3px 10px var(--shadow-light);
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--secondary-color);
-            transition: 0.4s;
-            border-radius: 34px;
-            /* box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light); */
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--primary-color);
-            transition: 0.4s;
-            border-radius: 50%;
-            /* box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light); */
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent-color);
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--accent-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .container {
-                padding: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Edit Movie</h1>
-
-        <!-- Success Message -->
-        @if(session()->has('success'))
-            <div class="success-message">
-                {{ session('success') }}
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button 
+                            type="submit" 
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg"
+                        >
+                            Update Movie
+                        </button>
+                    </div>
+                </form>
             </div>
-        @endif
-
-        <!-- Error Messages -->
-        @if($errors->any())
-            <div class="error-messages">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{$error}}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <div>
-            @if($errors->any())
-                <ul class="error-messages">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
         </div>
-        <form method="post" action="{{ route('movie.update', ['movie' => $movie]) }}" enctype="multipart/form-data">
-            @csrf
-            @method('put')    
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" placeholder="Enter New Name" value="{{ $movie->name }}" required />
-            </div>
-            <div class="form-group">
-                <label for="poster">Poster</label>
-                <input type="file" name="poster" id="poster" accept="image/*" />
-                <div class="current-poster">
-                    <p>Current Poster:</p>
-                    <img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="trailer_link">Trailer Link</label>
-                <input type="text" name="trailer_link" id="trailer_link" placeholder="Enter New Trailer Link" value="{{ $movie->trailer_link }}" required />
-            </div>
-            <div class="form-group">
-                <label for="duration">Duration (in minutes)</label>
-                <input type="text" name="duration" id="duration" placeholder="Enter New Duration" value="{{ $movie->duration }}" required />
-            </div>
-            <div class="form-group">
-                <label for="release_date">Release Date</label>
-                <input type="date" name="release_date" id="release_date" placeholder="Enter New Release Date" value="{{ $movie->release_date }}" required />
-            </div>
-            <div class="form-group">
-                <label for="imdb_link">IMDB Link</label>
-                <input type="text" name="imdb_link" id="imdb_link" placeholder="Enter New IMDB Link" value="{{ $movie->imdb_link }}" required />
-            </div>
-            <div class="form-group">
-                <label for="active">Active</label>
-                <label class="toggle-switch">
-                    <!-- Hidden field to handle unchecked state -->
-                    <input type="hidden" name="active" value="0">
-                    <input type="checkbox" name="active" id="active" value="1" {{ $movie->active ? 'checked' : '' }}>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Update the Movie"/>
-            </div>
-        </form>
     </div>
-</body>
-</html>
+</x-app-layout>

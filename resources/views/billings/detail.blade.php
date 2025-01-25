@@ -1,104 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Billing</title>
-
-    <!-- Font Awesome for icons -->
-    <link 
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-p6qD4WmF1g4p8qPQ5cM+PEOj8EeA0bg65dwZ2rBt+9v9V/GMq3O36RlhjzQpYYzTCnzqqe/GJZy43k5BSYyxzg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-    />
-
-    <style>
-        /* Similar styling as the provided example */
-        :root {
-            --background-color: #121212;
-            --primary-color: #1e1e1e;
-            --secondary-color: #2e2e2e;
-            --text-color: #e0e0e0;
-            --accent-color: #4CAF50;
-            --danger-color: #FF5555;
-            --shadow-light: #2b2b2b;
-            --shadow-dark: #0c0c0c;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: var(--primary-color);
-            padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .error-messages {
-            color: var(--danger-color);
-            list-style-type: none;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-
-        input[type="submit"] {
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: darken(var(--accent-color), 10%);
-        }
-    </style>
-</head>
-<body>
+<x-app-layout>
     <div class="container">
         <h1>Edit Billing</h1>
+
         @if($errors->any())
             <ul class="error-messages">
                 @foreach($errors->all() as $error)
@@ -106,6 +9,8 @@
                 @endforeach
             </ul>
         @endif
+
+        <!-- Display billing details -->
         <form method="post" action="">
             @csrf
             @method('PUT')
@@ -145,18 +50,108 @@
                 <input type="date" name="created_at" id="created_at" value="{{ $billing->created_at->format('Y-m-d') }}" disabled>
             </div>
         </form>
+
+        <!-- Edit Button -->
         <form method="GET" action="{{ route('billing.edit', $billing->id) }}" style="display:inline;">
-            <button type="submit" class="action-button btn-delete">
-                 Edit
-             </button>
-         </form>
+            <button type="submit" class="action-button btn-edit">
+                Edit
+            </button>
+        </form>
+
+        <!-- Delete Button -->
         <form method="POST" action="{{ route('billing.destroy', $billing->id) }}" style="display:inline;">
             @csrf
             @method('DELETE')
             <button type="submit" class="action-button btn-delete">
-                 Delete
+                Delete
             </button>
         </form>
     </div>
-</body>
-</html>
+
+    <style>
+        :root {
+            --background-color: #121212;
+            --primary-color: #1e1e1e;
+            --secondary-color: #2e2e2e;
+            --text-color: #e0e0e0;
+            --accent-color: #4CAF50;
+            --danger-color: #FF5555;
+            --shadow-light: #2b2b2b;
+            --shadow-dark: #0c0c0c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: var(--primary-color);
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 3px 3px 9px var(--shadow-dark), -3px -3px 9px var(--shadow-light);
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .error-messages {
+            color: var(--danger-color);
+            list-style-type: none;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .action-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-edit {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</x-app-layout>
