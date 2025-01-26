@@ -210,14 +210,14 @@
         // Setup QZ Tray
         qz.api.setCertificatePromise(function(resolve) {
             resolve(`-----BEGIN CERTIFICATE-----
-
+YOUR_CERTIFICATE_HERE
 -----END CERTIFICATE-----`);
         });
 
         qz.api.setSignaturePromise(function(toSign) {
             return function(resolve, reject) {
                 const pk = `-----BEGIN PRIVATE KEY-----
-
+YOUR_PRIVATE_KEY_HERE
 -----END PRIVATE KEY-----`;
                 const sig = signData(toSign, pk);
                 resolve(sig);
