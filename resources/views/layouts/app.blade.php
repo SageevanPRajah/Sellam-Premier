@@ -48,11 +48,14 @@
 
             <!-- Page Content -->
             <!-- Sidebar and Main Content -->
-            <div class="min-h-screen flex">
+            <div class="min-h-screen flex bg-gray-800"
+            {{-- style="background-color: #333030;" --}}
+            >
                 <!-- Sidebar -->
                 <aside 
                     class="bg-white shadow-md min-h-screen transition-all duration-300"
-                    :class="isOpen ? 'w-1/7' : 'w-20'">
+                    :class="isOpen ? 'w-1/7' : 'w-20'"
+                    style="background-color: #212121;">
                     
                     <!-- Sidebar Header + Toggle Button -->
                     {{-- <div class="flex items-center justify-between p-4 border-b">
@@ -135,8 +138,10 @@
                 </aside>
 
                 <!-- Main Content -->
-                <div class="p-6 transition-all duration-300"
-                     :class="isOpen ? 'w-6/7' : 'flex-1'">
+                <div class="p-6 transition-all duration-300 bg-gray-800"
+                     :class="isOpen ? 'w-6/7' : 'flex-1'"
+                     {{-- style="background-color: #333030;" --}}
+                     >
                     <main>
                         {{ $slot }}
                     </main>
