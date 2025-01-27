@@ -71,6 +71,12 @@ Route::get('/sellam', function () {
     Route::post('/booking/shows', [BookingController::class, 'getShows'])->name('booking.getShows');
     Route::post('/booking/seats', [BookingController::class, 'getSeats'])->name('booking.getSeats');
 
+    // Route for the booking overview page
+    Route::get('/booking/overview', [BookingController::class, 'overview'])->name('booking.overview');
+    // Route to fetch seat counts for a specific show
+    Route::post('/booking/overview/get-seat-counts', [BookingController::class, 'getSeatCounts'])->name('booking.getSeatCounts');
+
+
     //Route Billing
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');

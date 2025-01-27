@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div>
-        <h1>Resereved Seats</h1>
+    <div >
+        <h1> <B> Resereved Seats </B> </h1>
 
         <!-- Success Message -->
         @if(session()->has('success'))
@@ -41,6 +41,7 @@
                         id="timeInput" 
                         placeholder="am/pm" 
                         aria-label="Filter by Time"
+                        class=" border-radius-10"
                         >
                             @php
                                 $start = strtotime('00:00'); // Start time (12:00 AM)
@@ -56,16 +57,16 @@
         </div>
     
         <!-- Search Bar with Filters -->
-        <div class="search-bar">
+        <div class="search-bar ">
             <!-- General Search -->
-            <div class="filter-group">
+            <div class="filter-group ">
                 <label for="searchInput">Search</label>
                 <input type="text" id="searchInput" placeholder="Search by Phone Number" aria-label="Search Phone Number">
             </div>
         </div>
     
         <!-- Shows Table -->
-        <table id="showTable">
+        <table id="showTable" >
             <thead>
                 <tr>
                     <th>ID</th>
@@ -99,8 +100,8 @@
         </table>
     
         <div class="action-buttons">
-            <button type="submit" name="action" value="confirm" class="btn btn-primary">Confirm Booking</button>
-            <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel Booking</button>
+            <button type="submit" name="action" value="confirm" class="btn btn-primary mt-10">Confirm Booking</button>
+            <button type="submit" name="action" value="cancel" class="btn btn-danger mx-10 mt-10">Cancel Booking</button>
         </div>
     </form>
     </div>
@@ -128,15 +129,15 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: rgb(40, 43, 46);
-            color: var(--text-color);
+            background-color: rgb(116, 116, 116);
+            color: black;
             font-family: Arial, sans-serif;
         }
 
         h1 {
             margin: 20px 0;
             text-align: center;
-            color: var(--text-color);
+            color: black;
         }
 
         /* Success Message */
@@ -171,7 +172,7 @@
 
         .add-link a:hover {
             background-color: #333;
-            color: #fff;
+            color: #ffffff;
         }
 
         .add-link a img {
@@ -206,7 +207,7 @@
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
-            background-color: rgb(53, 53, 53);
+            background-color: rgb(215, 215, 215);
             color: var(--text-color);
             font-size: 16px;
             outline: none;
@@ -219,7 +220,7 @@
         }
 
         .search-bar input[type="text"]::placeholder {
-            color: #aaa;
+            color: #000000;
         }
 
         /* Table */
@@ -229,22 +230,23 @@
             width: 80%;
             font-size: 16px;
             text-align: center;
-            background-color: rgb(41, 43, 44);
+            background-color: rgb(245, 245, 245);
             box-shadow: 0 0 10px var(--shadow-dark);
             border-radius: 15px;
             overflow: hidden;
+            
         }
 
         th,
         td {
             padding: 15px;
-            color: var(--text-color);
+            color: #000000;
         }
 
         th {
-            background-color: rgb(35, 36, 36);
+            background-color: rgb(225, 225, 225);
             font-weight: bold;
-            color: #ffffff;
+            
         }
 
         /* Buttons (View) */
