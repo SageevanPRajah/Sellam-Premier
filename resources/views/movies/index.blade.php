@@ -6,7 +6,7 @@
     </x-slot>
 
     {{-- <div class="py-6"> --}}
-        <h1>Movie</h1>
+        <h1> <b> Movie </b> </h1>
 
     @if(session()->has('success'))
         <div class="success-message">
@@ -218,15 +218,16 @@
         body {
             margin: 0;
             padding: 0;
-            background-color:rgb(40, 43, 46);
-            color: var(--text-color);
+            background-color:rgb(116, 116, 116);
+            color: black;
             font-size:12px;
         }
 
         h1 {
             margin: 20px 0;
             text-align: center;
-            color: var(--text-color);
+            color: black;
+            font-size: 20px;
         }
 
         /* Success Message */
@@ -377,8 +378,8 @@
             padding: 8px 12px;
             border: none;
             border-radius: 20px;
-            background-color: rgb(53, 53, 53); 
-            color: var(--text-color);
+            background-color: rgb(215, 215, 215); 
+            color: black;
             /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             font-size: 14px;
             outline: none;
@@ -386,7 +387,7 @@
         }
 
         .search-bar input::placeholder {
-            color: #aaa;
+            color: black;
         }
 
         a:-webkit-any-link {
@@ -416,7 +417,7 @@
             width: 80%;
             font-size: 16px;
             text-align: center;
-            background-color:rgb(41, 43, 44);
+            background-color:rgb(245, 245, 245);
             box-shadow: 0 0 10px var(--shadow-dark);
             border-radius: 15px;
             overflow: hidden;
@@ -424,14 +425,14 @@
 
         th, td {
             padding: 10px;
-            color: var(--text-color);
+            color: black;
         }
 
         th {
-            background-color: rgb(35, 36, 36);
+            background-color: rgb(88, 88, 88);
             font-weight: bold;
             text-align: center;
-            color: #ffffff;
+            color: black;
         }
 
         /* Status Badge */
@@ -439,11 +440,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color:rgb(37, 39, 39);
+            background-color:rgb(210, 210, 210);
             padding: 5px 10px;
             border-radius: 20px;
             text-align: center;
-            color: #ffffff;
+            color: black;
             position: relative;
         }
 
@@ -476,7 +477,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s;
             color: #ffffff;
             margin: 0 auto; /* Center the button within the cell */
@@ -608,9 +609,9 @@
             padding: 8px 12px;
             border: none;
             border-radius: 20px;
-            background-color: var(--secondary-color);
+            background-color: rgb(88, 88, 88);
             color: var(--text-color);
-            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
+            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             font-size: 16px;
             outline: none;
             transition: box-shadow 0.3s;
@@ -640,11 +641,11 @@
         .pagination button.active {
             background-color: #2196F3;
             color: #ffffff;
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
         }
 
         .pagination button:hover:not(.active) {
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             background-color: #555555;
         }
 
