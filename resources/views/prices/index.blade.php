@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-white">
+            <div class=" overflow-hidden shadow-sm sm:rounded-lg p-6 text-white">
                 <style>
                     /* All your existing CSS styles go here */
                     /* CSS Variables for Neumorphic Black and Gray Theme */
@@ -31,7 +31,7 @@
                     /* Add your CSS styles here */
                     body {
                         font-size: 14px;
-                        background-color: var(--background-color);
+                        background-color: rgb(35, 36, 36);;
                     }
 
                     table {
@@ -39,7 +39,7 @@
                         border-collapse: collapse;
                         width: 100%;
                         text-align: center;
-                        background-color: var(--primary-color);
+                        background-color: rgb(35, 36, 36);;
                         box-shadow: 0 0 10px var(--shadow-dark);
                         border-radius: 15px;
                         overflow: hidden;
@@ -153,10 +153,9 @@
                                 <td>{{ $price->half_price }}</td>
                                 <td>
                                     <form method="GET" action="{{ route('price.edit', ['price' => $price]) }}">
-                                        <button type="submit" aria-label="Edit Price">
+                                        <button type="submit" aria-label="Edit Price" class="w-12 h-8 mt-1">
                                             <img src="icons/icons8-edit-50.png" alt="Edit"
-                                                class="inline-block mr-2" />
-                                            Edit
+                                                class="inline-block w-3 mb-6" />
                                         </button>
                                     </form>
                                 </td>
