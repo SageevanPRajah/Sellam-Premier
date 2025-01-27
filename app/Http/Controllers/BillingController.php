@@ -239,7 +239,7 @@ class BillingController extends Controller
                     <p style='font-size: 12px; padding-left:20px; margin:0; text-align: left;'>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
                     <p style='font-size: 12px; padding-left:20px; margin:0; text-align: left;'>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
                     <hr style='border: 1px dashed #000;'>
-                    <p style='font-size: 10px; margin:0;'>Software Developed By : ForgeTech Crafters</p>
+                    <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
                     <p style='font-size: 10px; margin:0;'>076-2646376</p>
                 </div>";
 
