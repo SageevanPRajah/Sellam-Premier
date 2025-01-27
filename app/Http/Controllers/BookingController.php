@@ -218,4 +218,60 @@ class BookingController extends Controller
         return view('bookings.detail');
     }
 
+    public function overview(){
+        return view('bookings.overview');
+    }
+
+    public function getSeatCounts(Request $request)
+{
+    $showId = $request->input('show_id');
+
+    if (!$showId) {
+        return response()->json(['error' => 'Show ID is required.'], 400);
+    }
+
+    // Define total seats for each type
+    $totalSeats = [
+        'Gold' => 182,
+        'Silver' => 50,
+        'Platinum' => 19,
+    ];
+
+    // Fetch booked seats
+    $bookedSeats = Booking::where('movie_id', $showId)
+        ->select('seat_code', 'seat_type')
+        ->get()
+        ->groupBy('seat_type')
+        ->map(function ($group) {
+            return $group->count();
+        });
+
+    // Fetch reserved seats
+    $reservedSeats = Seat::where('movie_id', $showId)
+        ->select('seat_code', 'seat_type')
+        ->get()
+        ->groupBy('seat_type')
+        ->map(function ($group) {
+            return $group->count();
+        });
+
+    // Calculate available seats
+    $seatCounts = [];
+    foreach ($totalSeats as $type => $total) {
+        $booked = $bookedSeats[$type] ?? 0;
+        $reserved = $reservedSeats[$type] ?? 0;
+        $available = $total - $booked - $reserved;
+
+        $seatCounts[$type] = [
+            'booked' => $booked,
+            'reserved' => $reserved,
+            'available' => $available,
+        ];
+    }
+
+    return response()->json($seatCounts, 200);
+}
+
+
+
 }

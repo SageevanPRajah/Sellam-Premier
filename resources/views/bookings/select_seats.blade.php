@@ -1,7 +1,5 @@
 <x-app-layout>
-    <div class="container">
-        <h1>Select Your Seats</h1>
-
+    <div class="booking-container">
         <!-- Success Message -->
         @if(session()->has('success'))
             <div class="success-message">
@@ -20,27 +18,47 @@
             </div>
         @endif
 
-    <!-- Seat Type Selection -->
-    <div id="seat-types">
-        <h3>Select Seat Type</h3>
-        <button class="button" data-type="Silver">Silver</button>
-        <button class="button" data-type="Gold">Gold</button>
-        <button class="button" data-type="Platinum">Platinum</button>
-    </div>
+        <!-- Top Section: Seat Type Buttons & Movie Info -->
+        <div class="top-section">
+            <!-- Seat Type Selection -->
+            <div id="seat-types" class="seat-types">
+                <button class="button silver-btn" data-type="Silver">Silver</button>
+                <button class="button gold-btn" data-type="Gold">Gold</button>
+                <button class="button platinum-btn" data-type="Platinum">Platinum</button>
+            </div>
 
-    <!-- Theater Layout -->
-    <div id="theater-layout">
-        <!-- Silver Section -->
-        <div class="seat-type-layout-section" id="gold-layout" style="display: none;">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="14">Gold Class</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>SL</td>
+            <!-- Movie Details on the Right -->
+            <div class="movie-details">
+                <div>
+                    <label>Date:</label>
+                    <span>{{ $show->date }}</span>
+                </div>
+                <div>
+                    <label>Time:</label>
+                    <span>{{ $show->time }}</span>
+                </div>
+                <div>
+                    <label>Movie:</label>
+                    <span>{{ $show->movie_name }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theater Layout on the right side -->
+        <div class="theater-layout-wrapper">
+            <div id="theater-layout">
+
+                <!-- GOLD Section (hidden by default) -->
+                <div class="seat-type-layout-section" id="gold-layout" style="display: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="14">Gold Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SL</td>
                         <td><button class="seat available" data-seat-code="G-SL-1">SL1</button></td>
                         <td><button class="seat available" data-seat-code="G-SL-2">SL2</button></td>
                         <td><button class="seat available" data-seat-code="G-SL-3">SL3</button></td>
@@ -315,22 +333,24 @@
                         <td><button class="seat available" data-seat-code="G-AR-7">AR7</button></td>
                         <td><button class="seat available" data-seat-code="G-AR-8">AR8</button></td>
                         <td>AR</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </tr>
+                            <!-- ( Remaining rows for Gold layout go here ) -->
+                            <!-- ... -->
+                        </tbody>
+                    </table>
+                </div>
 
-        <!-- Gold Section -->
-        <div class="seat-type-layout-section" id="silver-layout" style="display: none;">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="14">Silver Class</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>EL</td>
+                <!-- SILVER Section (visible by default) -->
+                <div class="seat-type-layout-section" id="silver-layout" style="display: block;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="14">Silver Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>EL</td>
                         <td><button class="seat available" data-seat-code="S-EL-1">EL1</button></td>
                         <td><button class="seat available" data-seat-code="S-EL-2">EL2</button></td>
                         <td><button class="seat available" data-seat-code="S-EL-3">EL3</button></td>
@@ -403,22 +423,19 @@
                         <td><button class="seat available" data-seat-code="S-AR-9">AR9</button></td>
                         <td><button class="seat available" data-seat-code="S-AR-10">AR10</button></td>
                         <td>AR</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </tr>
+                            <!-- ( Remaining rows for Silver layout go here ) -->
+                            <!-- ... -->
+                        </tbody>
+                    </table>
+                </div>
 
-        <!-- Platinum Section -->
-        <div class="seat-type-layout-section" id="platinum-layout" style="display: none;">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="14">Platinum Class</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
+                <!-- PLATINUM Section (hidden by default) -->
+                <div class="seat-type-layout-section" id="platinum-layout" style="display: none;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
                         <td><button class="seat available" data-seat-code="P-X-19">X19</button></td>
                         <td><button class="seat available" data-seat-code="P-X-18">X18</button></td>
                         <td><button class="seat available" data-seat-code="P-X-17">X17</button></td>
@@ -451,103 +468,168 @@
                         <td><button class="seat available" data-seat-code="P-X-2">X2</button></td>
                         <td><button class="seat available" data-seat-code="P-X-1">X1</button></td>
                         <td></td><td ></td><td ></td><td ></td>
-                    </tr>
-                </tbody>
-            </table>
+                            </tr>
+                            <!-- ( Remaining rows for Platinum layout go here ) -->
+                            <!-- ... -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
+        <!-- Booking Form & Buttons -->
+        <form action="{{ route('booking.store') }}" method="POST" class="booking-form">
+                    @csrf
+                    @method('post')
+
+                    <input type="hidden" id="selected-seats" name="selected_seats">
+                    <!-- Hidden fields (still needed by your logic) -->
+                    <input type="hidden" id="selected-date" name="selected_date" value="{{ $show->date }}">
+                    <input type="hidden" id="time" name="time" value="{{ $show->time }}">
+                    <input type="hidden" id="selected-movie-id" name="movie_id" value="{{ $show->id }}">
+                    <input type="hidden" id="selected-movie-name" name="movie_name" value="{{ $show->movie_name }}">
+                    <!-- Default seat type set to Silver -->
+                    <input type="hidden" id="selected-seat-type" name="seat_type" value="Silver">
+
+                    <div class="form-buttons">
+                        <button type="submit" name="reserve_seats" class="button reserve-btn">Reserve Seats</button>
+                        <button type="submit" name="confirm_booking" id="confirm-booking" class="button confirm-btn">Confirm Booking</button>
+                    </div>
+                </form>
     </div>
 
-    <form action="{{ route('booking.store') }}" method="POST">
-        @csrf
-        @method('post')
-            <input type="hidden" id="selected-seats" name="selected_seats" >
-            <input id="selected-date" name="selected_date" value="{{ $show->date }}" >
-            <input id="time" name="time" value="{{ $show->time }}" >
-            <input type="hidden" id="selected-movie-id" name="movie_id" value="{{ $show->id }}" >
-            <input id="selected-movie-name" name="movie_name" value="{{ $show->movie_name }}" >
-            <input type="hidden" id="selected-seat-type" name="seat_type" >
-        <button type="submit" name="reserve_seats" class="button">Reserve Seats</button>
-        <button type="submit" name="confirm_booking" id="confirm-booking" class="button">Confirm Booking</button>
-    </form>
-</div>
+    <script>
+        let selectedSeats = []; // Array to hold selected seats.
+        // Use booked seats passed from the backend
+        const bookedSeats = @json($bookedSeats); // This array is injected from the backend
 
-<script>
-    let selectedSeats = []; // Array to hold selected seats.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mark booked seats dynamically
+            document.querySelectorAll('.seat').forEach(seat => {
+                const seatCode = seat.getAttribute('data-seat-code');
 
-    // Use booked seats passed from the backend
-    const bookedSeats = @json($bookedSeats); // This array is injected from the backend
+                if (bookedSeats.hasOwnProperty(seatCode)) {
+                    // If seat is fully booked or reserved (from backend data)
+                    if (bookedSeats[seatCode]) {
+                        // If true => booked
+                        seat.classList.add('booked');
+                        seat.disabled = true;
+                    } else {
+                        // If false => reserved
+                        seat.classList.add('reserved');
+                        seat.disabled = true;
+                    }
+                }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Mark booked seats dynamically
-        document.querySelectorAll('.seat').forEach(seat => {
-    const seatCode = seat.getAttribute('data-seat-code'); // Get the seat code from the button
+                // Only add click event if seat is neither booked nor reserved
+                if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
+                    seat.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleSeatSelection(seatCode, seat);
+                    });
+                }
+            });
 
-    if (bookedSeats.hasOwnProperty(seatCode)) {
-        if (bookedSeats[seatCode]) {
-            // If the status is true, mark as booked
-            seat.classList.add('booked'); // Add 'booked' class for styling
-            seat.disabled = true; // Disable button (optional for accessibility)
-        } else {
-            // If the status is false, mark as reserved
-            seat.classList.add('reserved'); // Add 'reserved' class for styling
-            seat.disabled = true; // Disable button
-        }
-    }
+            // Event listeners for seat type selection
+            document.querySelectorAll('#seat-types button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const seatType = button.dataset.type;
 
-    // Add click event for non-booked and non-reserved seats
-    if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
-        seat.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleSeatSelection(seatCode, seat);
-        });
-    }
-});
+                    // Hide all seat layouts
+                    document.querySelectorAll('.seat-type-layout-section').forEach(section => {
+                        section.style.display = 'none';
+                    });
 
-        // Event listeners for seat type selection
-        document.querySelectorAll('#seat-types button').forEach(button => {
-            button.addEventListener('click', () => {
-                const seatType = button.dataset.type;
+                    // Show the chosen seat layout
+                    document.getElementById(seatType.toLowerCase() + '-layout').style.display = 'block';
 
-                // Hide all layouts
-                document.querySelectorAll('.seat-type-layout-section').forEach(section => {
-                    section.style.display = 'none';
+                    // Update hidden input
+                    document.getElementById('selected-seat-type').value = seatType;
                 });
-
-                // Show the selected layout
-                document.getElementById(`${seatType.toLowerCase()}-layout`).style.display = 'block';
-
-                // Set the selected seat type in the hidden input field
-                document.getElementById('selected-seat-type').value = seatType;
             });
         });
-    });
 
-    function toggleSeatSelection(seatCode, seatButton) {
-        if (!seatCode) {
-            console.error('No seat code provided');
-            return;
+        function toggleSeatSelection(seatCode, seatButton) {
+            if (!seatCode) return;
+
+            if (selectedSeats.includes(seatCode)) {
+                // Remove seat from selected
+                selectedSeats = selectedSeats.filter(s => s !== seatCode);
+                seatButton.classList.remove('selected');
+            } else {
+                // Add seat to selected
+                selectedSeats.push(seatCode);
+                seatButton.classList.add('selected');
+            }
+
+            // Update hidden input with current selection
+            document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
+        }
+    </script>
+
+    <style>
+        /* Make the page take full screen (reset default body margin/padding) */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
         }
 
-        // Toggle seat selection
-        if (selectedSeats.includes(seatCode)) {
-            // If already selected, remove from the array
-            selectedSeats = selectedSeats.filter(seat => seat !== seatCode);
-            seatButton.classList.remove('selected');
-        } else {
-            // Add to the array if not selected
-            selectedSeats.push(seatCode);
-            seatButton.classList.add('selected');
+        /* Container to fill the viewport */
+        .booking-container {
+            width: 100%;
+            min-height: 100vh; /* Occupy full vertical space */
+            background-color: #ffffff;
+            padding: 20px;
+            box-sizing: border-box; /* Ensure padding doesn't add to total width */
         }
 
-        // Update the hidden input with selected seats
-        document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
-        console.log(`Currently selected seats: ${selectedSeats}`);
-    }
+        /* Top Section: Buttons & Movie Info */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
 
-</script>
+        /* Seat Type Buttons Container */
+        .seat-types {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            max-width: 500px; /* Adjust as needed */
+        }
 
-<style>
+        /* Align Silver button left, Gold center, Platinum right */
+        .seat-types .silver-btn {
+            margin-right: auto; /* push left */
+        }
+        .seat-types .gold-btn {
+            margin: 0 auto;     /* center */
+        }
+        .seat-types .platinum-btn {
+            margin-left: auto;  /* push right */
+        }
 
+        /* Movie details on the right */
+        .movie-details {
+            text-align: right;
+        }
+        .movie-details div {
+            margin: 5px 0;
+        }
+        .movie-details label {
+            font-weight: bold;
+        }
+
+        /* Theater layout container – align to the right */
+        .theater-layout-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
         table {
             margin: 10px auto;
             border-collapse: collapse;
@@ -561,49 +643,79 @@
             height: 30px;
         }
 
-    .seat-type-layout-section {
-        margin-top: 20px;
-    }
+        .seat-type-layout-section table {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        .seat-type-layout-section th {
+            text-align: center;
+            font-weight: bold;
+        }
 
-    .seat {
-        width: 40px;
-        height: 30px;
-        margin: 0px;
-        font-size: 10px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        /* Seat styles */
+        .seat {
+            width: 40px;
+            height: 30px;
+            margin: 0;
+            font-size: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .seat:hover {
+            background-color: #ddd;
+        }
+        .seat.selected {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #0056b3;
+        }
+        .seat.booked {
+            background-color: #e81414;
+            cursor: not-allowed;
+        }
+        .seat.reserved {
+            background-color: #ffc107;
+            cursor: not-allowed;
+        }
 
-    .seat:hover {
-        background-color: #ddd;
-    }
+        /* Form Buttons at the bottom */
+        .form-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .form-buttons .button {
+            margin-left: 10px;
+        }
 
-    .seat.selected {
-        background-color: #007bff;
-        color: white;
-        border: 1px solid #0056b3;
-    }
+        /* Success & Error Messages */
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .error-messages {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
 
-    .seat.booked {
-        background-color: #e81414;
-        cursor: not-allowed;
-    }
-
-    .seat.reserved {
-    background-color: #ffc107; /* Yellow for reserved */
-    cursor: not-allowed;
-}
-
-    .seat-type-layout-section table {
-        margin: 0 auto;
-        border-collapse: collapse;
-    }
-
-    .seat-type-layout-section th {
-        text-align: center;
-        font-weight: bold;
-    }
-</style>
+        /* Basic button style */
+        .button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #333;
+        }
+    </style>
 </x-app-layout>
