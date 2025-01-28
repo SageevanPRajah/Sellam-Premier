@@ -218,6 +218,15 @@ class BillingController extends Controller
                     'R' => 'MATURASC_1.ttf', // Regular font
                 ],
 
+                'Montserratt' => [
+                    'R' => 'Montserratt.ttf', // Regular font
+                ],
+
+                'Cinzel' => [
+                    'R' => 'Cinzel.ttf', // Regular font
+                ],
+                
+
                 'latha' => [
                     'R' => 'latha.ttf',
                 ],
@@ -230,6 +239,10 @@ class BillingController extends Controller
         $ticketHtml = '';
 
         foreach ($bookings as $booking) {
+
+            // Path to the image
+            $logoPath = public_path('icons/alertmsg.png'); 
+
             $html = "
                 <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
                     <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
@@ -247,17 +260,13 @@ class BillingController extends Controller
                     <p style='font-size: 14px; margin: 5px;'><strong>Movie Time:</strong> {$booking->time}</p>
                     <hr style='border: 1px dashed #000; margin:0;'>
 
-                    <p style='font-size: 20px; margin: 5px; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
-                    <p style='font-size: 24px; margin: 5px; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
+                    <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
+                    <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
                     <hr style='border: 1px dashed #000;'>
 
                     <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
                     <hr style='border: 1px dashed #000;'>
-
-                    <p style='font-size: 10px; padding-left:30px; margin:5px; text-align: left; font-family: latha;'><strong>அறிவித்தல்:</strong></p>
-                    <p style='font-size: 10px; padding-left:20px; margin:0; text-align: left; font-family: latha;'>வெளியில் இருந்து கொண்டுவரும்<br/> உணவுப்பண்டங்கள் குளிர்பானங்கள் மதுபானங்கள் <br/>அரங்கினுள் கொண்டு வர முற்றாகத் தடை.</p>
-                    <p style='font-size: 10px; padding-left:20px; margin:0; text-align: left; font-family: latha;'>குறித்த காட்சிக்கு மட்டுமே<br/> இந்த டிக்கட் செல்லுபடியாகும்.</p>
-                    <p style='font-size: 10px; padding-left:20px; margin:0; text-align: left; font-family: latha;'>புகைத்தல் முற்றாக தடை செய்யப்பட்டுள்ளது.</p>
+                    <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 10px;' />
                     <hr style='border: 1px dashed #000;'>
 
                     <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
