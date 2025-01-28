@@ -130,7 +130,7 @@
                 </button>
             </form>
             <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
-                <button type="submit" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                <button type="submit" id="generate-tickets-btn" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
                     Print
                 </button>
             </form>            
@@ -150,7 +150,7 @@
                             <p><strong>Movie:</strong> {{ $booking->movie_name }}</p>
                             <p><strong>Seat:</strong> {{ $booking->seat_no }}</p>
                             <form action="{{ route('billing.generateTickets', ['bookingIds' => $bookingId]) }}" method="GET" target="_blank">
-                                <button type="submit" class="button" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                                <button type="submit" class="button" id="generate-tickets-btn" style="background-color: #dace23; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
                                     Re-Print
                                 </button>
                             </form>
@@ -222,6 +222,40 @@
             reprintOptions.style.display = isVisible ? 'none' : 'block';
             this.textContent = isVisible ? 'Show Reprint Options' : 'Hide Reprint Options';
         });
+
+        // Print Alert
+        document.getElementById('generate-tickets-btn').addEventListener('click', function () {
+            const bookingIds = "{{ implode(',', session('created_booking_ids', [])) }}"; // Replace with actual booking IDs
+            const url = `/billing/generate-tickets/${bookingIds}`; // Update the route accordingly
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => {
+                    console.log(response); // Log the full response for debugging
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json(); // Parse JSON
+                })
+                .then((data) => {
+                    console.log(data); // Log the parsed response
+                    if (data.success) {
+                        alert(data.success); // Display success message
+                    } else if (data.error) {
+                        alert(data.error); // Display error message
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred while generating tickets.');
+                });
+        });
+
 
     </script>
 </x-app-layout>
