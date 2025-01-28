@@ -214,6 +214,10 @@ class BillingController extends Controller
                 public_path('fonts'),
             ]),
             'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], [
+                'maturascript' => [
+                    'R' => 'MATURASC_1.ttf', // Regular font
+                ],
+
                 'latha' => [
                     'R' => 'latha.ttf',
                 ],
@@ -228,8 +232,8 @@ class BillingController extends Controller
         foreach ($bookings as $booking) {
             $html = "
                 <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
-                    <p style='font-size: 10px; margin: 5px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
-                    <h2 style='margin: 5px 0;'>Sellam Premier</h2>
+                    <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
+                    <h2 style='font-size: 18px; font-family: maturascript; margin:0;'>Sellam Premier</h2>
                     <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
                     <p style='margin: 5px 0; margin:0;'>Chenkalady, Batticaloa</p>
                     <p style='margin: 5px 0; margin:0;'>TP: 065-2240064</p>
@@ -247,7 +251,7 @@ class BillingController extends Controller
                     <p style='font-size: 24px; margin: 5px; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
                     <hr style='border: 1px dashed #000;'>
 
-                    <p style='font-size: 20px; margin: 5px;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
+                    <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
                     <hr style='border: 1px dashed #000;'>
 
                     <p style='font-size: 10px; padding-left:30px; margin:5px; text-align: left; font-family: latha;'><strong>அறிவித்தல்:</strong></p>
