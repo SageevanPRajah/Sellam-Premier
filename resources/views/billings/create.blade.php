@@ -224,37 +224,37 @@
         });
 
         // Print Alert
-        document.getElementById('generate-tickets-btn').addEventListener('click', function () {
-            const bookingIds = "{{ implode(',', session('created_booking_ids', [])) }}"; // Replace with actual booking IDs
-            const url = `/billing/generate-tickets/${bookingIds}`; // Update the route accordingly
+        document.getElementById('generate-tickets-btn').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default form submission
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => {
-                    console.log(response); // Log the full response for debugging
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json(); // Parse JSON
-                })
-                .then((data) => {
-                    console.log(data); // Log the parsed response
-                    if (data.success) {
-                        alert(data.success); // Display success message
-                    } else if (data.error) {
-                        alert(data.error); // Display error message
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('An unexpected error occurred while generating tickets.');
-                });
-        });
+    const bookingIds = "{{ implode(',', session('created_booking_ids', [])) }}";
+    const url = `/billing/generate-tickets/${bookingIds}`; // Ensure this matches the Laravel route
+
+    fetch(url, {
+        method: 'GET',  // Change from POST to GET
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        if (data.success) {
+            alert(data.success);
+        } else if (data.error) {
+            alert(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An unexpected error occurred while generating tickets.');
+    });
+});
 
 
     </script>
