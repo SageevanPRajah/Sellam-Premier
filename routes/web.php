@@ -87,7 +87,7 @@ Route::get('/sellam', function () {
     Route::get('/billing/{billing}/detail', [BillingController::class, 'detail'])->name('billing.detail');
 
     //Route Billing Generate Tickets
-    Route::get('/generate-tickets/{bookingIds}', [BillingController::class, 'generateTickets'])->name('billing.generateTickets');
+    Route::get('/billing/generate-tickets/{bookingIds}', [BillingController::class, 'generateTickets'])->name('billing.generateTickets');
 
     //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');

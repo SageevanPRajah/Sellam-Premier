@@ -279,17 +279,27 @@ class BillingController extends Controller
 
         $mpdf->WriteHTML($ticketHtml);
 
-        // Save the PDF to a temporary location
+        // Save the PDF
         $tempFilePath = storage_path('app/temp_tickets.pdf');
         $mpdf->Output($tempFilePath, 'F');
 
-        // Use `ShellExecute` via PHP
-        exec("start /min /wait $tempFilePath > NUL");
+        // Ensure file path uses double backslashes for Windows
+        $windowsFilePath = str_replace('/', '\\', $tempFilePath);
 
-        // Delete the temporary file after printing
-        if (file_exists($tempFilePath)) {
-            unlink($tempFilePath);
+        // PowerShell Command for Printing
+        $command = "cmd /c powershell -Command \"Start-Process -FilePath '$windowsFilePath' -Verb Print\"";
+
+        // Execute print command
+        exec($command, $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            throw new \Exception("Printing failed: " . implode("\n", $output));
         }
+
+        // Delete the file after printing
+        // if (file_exists($tempFilePath)) {
+        //     unlink($tempFilePath);
+        // }
 
         return response()->json(['success' => 'Tickets printed successfully!'], 200);
     } catch (\Exception $e) {
