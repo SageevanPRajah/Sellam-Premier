@@ -130,14 +130,14 @@
                 </button>
             </form>
             <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
-                <button type="submit" id="generate-tickets-btn" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                <button type="submit" id="generate-tickets-btn" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1rem;">
                     Print
                 </button>
             </form>            
             
             <!-- Toggle Reprint Section -->
             <button id="toggle-reprint" 
-                    style="background-color: #007bff; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1.5rem;">
+                    style="background-color: #007bff; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1rem;">
                 Show Reprint Options
             </button>
 
@@ -243,11 +243,11 @@
         return response.json();
     })
     .then(data => {
-        console.log(data);
-        if (data.success) {
-            alert(data.success);
-        } else if (data.error) {
-            alert(data.error);
+        if (data.success && data.filePath) {
+            console.log("Printing started:", data.filePath);
+            deleteTicket(data.filePath); // Delete the ticket AFTER printing
+        } else {
+            alert("Error: " + data.error);
         }
     })
     .catch(error => {
@@ -255,6 +255,30 @@
         alert('An unexpected error occurred while generating tickets.');
     });
 });
+
+function deleteTicket(filePath) {
+    setTimeout(() => {
+        fetch(`/billing/delete-ticket`, {
+            method: 'DELETE',
+            headers: { 
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ filePath })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Ticket deleted successfully.");
+            } else {
+                console.error("Failed to delete ticket:", data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting ticket:', error);
+        });
+    }, 5000); // 5-second delay to ensure the file is no longer in use
+}
 
 
     </script>
