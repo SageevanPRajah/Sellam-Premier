@@ -187,127 +187,152 @@ class BillingController extends Controller
     }
 
     public function generateTickets(Request $request, $bookingIds)
+    {
+        try {
+            $seatFilter = $request->input('seat_codes', []);
+            $bookingIdsArray = explode(',', $bookingIds);
+
+            $bookings = Booking::whereIn('id', $bookingIdsArray)
+                ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
+                    $query->whereIn('seat_code', $seatFilter);
+                })
+                ->get();
+
+            if ($bookings->isEmpty()) {
+                return response()->json(['error' => 'No bookings found.'], 404);
+            }
+
+            // Configure mPDF with custom font directory
+            $mpdfConfig = [
+                'format' => [80, 150],
+                'margin_top' => 0,
+                'margin_right' => 0,
+                'margin_bottom' => 0,
+                'margin_left' => 0,
+                'tempDir' => storage_path('app/mpdf'), // Temporary directory for mPDF
+                'fontDir' => array_merge((new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'], [
+                    public_path('fonts'),
+                ]),
+                'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], [
+                    'maturascript' => [
+                        'R' => 'MATURASC_1.ttf', // Regular font
+                    ],
+
+                    'Montserratt' => [
+                        'R' => 'Montserratt.ttf', // Regular font
+                    ],
+
+                    'Cinzel' => [
+                        'R' => 'Cinzel.ttf', // Regular font
+                    ],
+                    
+
+                    'latha' => [
+                        'R' => 'latha.ttf',
+                    ],
+                ]),
+                'default_font' => 'latha',
+            ];
+
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+
+            $ticketHtml = '';
+
+            foreach ($bookings as $booking) {
+
+                // Path to the image
+                $logoPath = public_path('icons/alertmsg.png'); 
+
+                $html = "
+                    <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
+                        <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
+                        <h2 style='font-size: 18px; font-family: maturascript; margin:0;'>Sellam Premier</h2>
+                        <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
+                        <p style='margin: 5px 0; margin:0;'>Chenkalady, Batticaloa</p>
+                        <p style='margin: 5px 0; margin:0;'>TP: 065-2240064</p>
+                        <hr style='border: 1px dashed #000; margin:5px;'>
+
+                        <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id}</p>
+                        <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>Date: " . date('d-M-Y h:i A') . "</p>
+                        <hr style='border: 1px dashed #000; margin:0;'>
+
+                        <p style='font-size: 14px; margin: 5px;'><strong>Movie Date:</strong> {$booking->date}</p>
+                        <p style='font-size: 14px; margin: 5px;'><strong>Movie Time:</strong> {$booking->time}</p>
+                        <hr style='border: 1px dashed #000; margin:0;'>
+
+                        <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
+                        <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
+                        <hr style='border: 1px dashed #000;'>
+
+                        <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
+                        <hr style='border: 1px dashed #000;'>
+                        <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 10px;' />
+                        <hr style='border: 1px dashed #000;'>
+
+                        <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
+                        <p style='font-size: 10px; margin:0;'>076-2646376</p>
+                    </div>";
+
+                $ticketHtml .= $html;
+                $ticketHtml .= "<div></div>";
+            }
+
+            $mpdf->WriteHTML($ticketHtml);
+
+            // Save the PDF
+            $tempFilePath = storage_path('app/temp_tickets.pdf');
+            $mpdf->Output($tempFilePath, 'F');
+
+            // Ensure file path uses double backslashes for Windows
+            $windowsFilePath = str_replace('/', '\\', $tempFilePath);
+
+            // PowerShell Command for Printing
+            $command = "cmd /c powershell -Command \"Start-Process -FilePath '$windowsFilePath' -Verb Print -ArgumentList 'NoScaling'\"";
+
+            // Execute print command
+            exec($command, $output, $returnVar);
+
+            if ($returnVar !== 0) {
+                throw new \Exception("Printing failed: " . implode("\n", $output));
+            }
+
+            // Delete the file after printing
+            // if (file_exists($tempFilePath)) {
+            //     unlink($tempFilePath);
+            // }
+
+            return response()->json([
+                'success' => 'Tickets printed successfully!',
+                'filePath' => realpath($tempFilePath) // Ensure full file path is returned
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to generate tickets: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+    public function deleteTicket(Request $request)
 {
     try {
-        $seatFilter = $request->input('seat_codes', []);
-        $bookingIdsArray = explode(',', $bookingIds);
+        $filePath = $request->input('filePath'); // Get file path from request
 
-        $bookings = Booking::whereIn('id', $bookingIdsArray)
-            ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
-                $query->whereIn('seat_code', $seatFilter);
-            })
-            ->get();
-
-        if ($bookings->isEmpty()) {
-            return response()->json(['error' => 'No bookings found.'], 404);
+        if (!$filePath || !file_exists($filePath)) {
+            return response()->json(['error' => 'File not found'], 404);
         }
 
-        // Configure mPDF with custom font directory
-        $mpdfConfig = [
-            'format' => [80, 150],
-            'margin_top' => 0,
-            'margin_right' => 0,
-            'margin_bottom' => 0,
-            'margin_left' => 0,
-            'tempDir' => storage_path('app/mpdf'), // Temporary directory for mPDF
-            'fontDir' => array_merge((new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'], [
-                public_path('fonts'),
-            ]),
-            'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], [
-                'maturascript' => [
-                    'R' => 'MATURASC_1.ttf', // Regular font
-                ],
+        // Ensure the file is not in use before deleting
+        sleep(3); // Add a short delay to prevent deletion errors
 
-                'Montserratt' => [
-                    'R' => 'Montserratt.ttf', // Regular font
-                ],
+        unlink($filePath); // Delete the file
 
-                'Cinzel' => [
-                    'R' => 'Cinzel.ttf', // Regular font
-                ],
-                
-
-                'latha' => [
-                    'R' => 'latha.ttf',
-                ],
-            ]),
-            'default_font' => 'latha',
-        ];
-
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-
-        $ticketHtml = '';
-
-        foreach ($bookings as $booking) {
-
-            // Path to the image
-            $logoPath = public_path('icons/alertmsg.png'); 
-
-            $html = "
-                <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
-                    <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
-                    <h2 style='font-size: 18px; font-family: maturascript; margin:0;'>Sellam Premier</h2>
-                    <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
-                    <p style='margin: 5px 0; margin:0;'>Chenkalady, Batticaloa</p>
-                    <p style='margin: 5px 0; margin:0;'>TP: 065-2240064</p>
-                    <hr style='border: 1px dashed #000; margin:5px;'>
-
-                    <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id}</p>
-                    <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>Date: " . date('d-M-Y h:i A') . "</p>
-                    <hr style='border: 1px dashed #000; margin:0;'>
-
-                    <p style='font-size: 14px; margin: 5px;'><strong>Movie Date:</strong> {$booking->date}</p>
-                    <p style='font-size: 14px; margin: 5px;'><strong>Movie Time:</strong> {$booking->time}</p>
-                    <hr style='border: 1px dashed #000; margin:0;'>
-
-                    <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
-                    <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
-                    <hr style='border: 1px dashed #000;'>
-
-                    <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
-                    <hr style='border: 1px dashed #000;'>
-                    <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 10px;' />
-                    <hr style='border: 1px dashed #000;'>
-
-                    <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
-                    <p style='font-size: 10px; margin:0;'>076-2646376</p>
-                </div>";
-
-            $ticketHtml .= $html;
-            $ticketHtml .= "<div style='page-break-after: always;'></div>";
-        }
-
-        $mpdf->WriteHTML($ticketHtml);
-
-        // Save the PDF
-        $tempFilePath = storage_path('app/temp_tickets.pdf');
-        $mpdf->Output($tempFilePath, 'F');
-
-        // Ensure file path uses double backslashes for Windows
-        $windowsFilePath = str_replace('/', '\\', $tempFilePath);
-
-        // PowerShell Command for Printing
-        $command = "cmd /c powershell -Command \"Start-Process -FilePath '$windowsFilePath' -Verb Print\"";
-
-        // Execute print command
-        exec($command, $output, $returnVar);
-
-        if ($returnVar !== 0) {
-            throw new \Exception("Printing failed: " . implode("\n", $output));
-        }
-
-        // Delete the file after printing
-        // if (file_exists($tempFilePath)) {
-        //     unlink($tempFilePath);
-        // }
-
-        return response()->json(['success' => 'Tickets printed successfully!'], 200);
+        return response()->json(['success' => 'Ticket file deleted successfully!'], 200);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Failed to generate tickets: ' . $e->getMessage()], 500);
+        return response()->json(['error' => 'Failed to delete ticket: ' . $e->getMessage()], 500);
     }
 }
 
 
+    
 
 
 //     public function generateTickets(Request $request, $bookingIds)

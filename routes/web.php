@@ -23,6 +23,15 @@ Route::get('/sellam', function () {
     return view('sellam');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     //Route Movie
     Route::get('/movie',[MovieController::class, 'index'])->name('movie.index');
     Route::get('/movie/create',[MovieController::class, 'create'])->name('movie.create');
@@ -88,21 +97,12 @@ Route::get('/sellam', function () {
 
     //Route Billing Generate Tickets
     Route::get('/billing/generate-tickets/{bookingIds}', [BillingController::class, 'generateTickets'])->name('billing.generateTickets');
+    Route::delete('/billing/delete-ticket', [BillingController::class, 'deleteTicket']);
+
 
     //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');
 
-
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');

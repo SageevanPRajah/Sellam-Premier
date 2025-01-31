@@ -224,52 +224,72 @@ class BookingController extends Controller
 
     public function getSeatCounts(Request $request)
 {
-    $showId = $request->input('show_id');
+    try {
+        $showId = $request->input('show_id');
 
-    if (!$showId) {
-        return response()->json(['error' => 'Show ID is required.'], 400);
-    }
+        if (!$showId) {
+            return response()->json(['error' => 'Show ID is required.'], 400);
+        }
 
-    // Define total seats for each type
-    $totalSeats = [
-        'Gold' => 182,
-        'Silver' => 50,
-        'Platinum' => 19,
-    ];
+        // Debugging: Log received show ID
+        Log::info("Fetching seat counts for show_id: $showId");
 
-    // Fetch booked seats
-    $bookedSeats = Booking::where('movie_id', $showId)
-        ->select('seat_code', 'seat_type')
-        ->get()
-        ->groupBy('seat_type')
-        ->map(function ($group) {
-            return $group->count();
-        });
-
-    // Fetch reserved seats
-    $reservedSeats = Seat::where('movie_id', $showId)
-        ->select('seat_code', 'seat_type')
-        ->get()
-        ->groupBy('seat_type')
-        ->map(function ($group) {
-            return $group->count();
-        });
-
-    // Calculate available seats
-    $seatCounts = [];
-    foreach ($totalSeats as $type => $total) {
-        $booked = $bookedSeats[$type] ?? 0;
-        $reserved = $reservedSeats[$type] ?? 0;
-        $available = $total - $booked - $reserved;
-
-        $seatCounts[$type] = [
-            'booked' => $booked,
-            'reserved' => $reserved,
-            'available' => $available,
+        // Define total seats for each type
+        $totalSeats = [
+            'Gold' => 182,
+            'Silver' => 50,
+            'Platinum' => 19,
         ];
-    }
 
-    return response()->json($seatCounts, 200);
+        // Fetch booked seats
+        $bookedSeats = Booking::where('movie_id', $showId)
+            ->select('seat_code', 'seat_type')
+            ->get()
+            ->groupBy('seat_type')
+            ->map(function ($group) {
+                return $group->count();
+            });
+
+        // Debugging: Log booked seats data
+        Log::info("Booked seats data: ", $bookedSeats->toArray());
+
+        // Check if the Seat model exists
+        if (!class_exists(Seat::class)) {
+            Log::error("Error: Seat model does not exist.");
+            return response()->json(['error' => 'Seat model not found.'], 500);
+        }
+
+        // Fetch reserved seats
+        $reservedSeats = Seat::where('movie_id', $showId)
+            ->select('seat_code', 'seat_type')
+            ->get()
+            ->groupBy('seat_type')
+            ->map(function ($group) {
+                return $group->count();
+            });
+
+        // Debugging: Log reserved seats data
+        Log::info("Reserved seats data: ", $reservedSeats->toArray());
+
+        // Calculate available seats
+        $seatCounts = [];
+        foreach ($totalSeats as $type => $total) {
+            $booked = $bookedSeats[$type] ?? 0;
+            $reserved = $reservedSeats[$type] ?? 0;
+            $available = $total - $booked - $reserved;
+
+            $seatCounts[$type] = [
+                'booked' => $booked,
+                'reserved' => $reserved,
+                'available' => $available,
+            ];
+        }
+
+        return response()->json($seatCounts, 200);
+    } catch (\Exception $e) {
+        Log::error('Error in getSeatCounts: ' . $e->getMessage());
+        return response()->json(['error' => 'An error occurred while fetching seat counts.'], 500);
+    }
 }
 
 

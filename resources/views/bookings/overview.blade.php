@@ -158,6 +158,8 @@
         });
 
         function fetchSeatCounts(showId) {
+    console.log("Fetching seat counts for show:", showId);  // Debug log
+
     fetch("{{ route('booking.getSeatCounts') }}", {
         method: 'POST',
         headers: {
@@ -166,19 +168,23 @@
         },
         body: JSON.stringify({ show_id: showId })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.error); });
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log("Seat count data received:", data);
         ['Gold', 'Silver', 'Platinum'].forEach(type => {
-            const booked = data[type]?.booked || 0;
-            const reserved = data[type]?.reserved || 0;
-            const available = data[type]?.available || 0;
-
-            document.getElementById(`${type.toLowerCase()}-booked`).textContent = booked;
-            document.getElementById(`${type.toLowerCase()}-reserved`).textContent = reserved;
-            document.getElementById(`${type.toLowerCase()}-available`).textContent = available;
+            document.getElementById(`${type.toLowerCase()}-booked`).textContent = data[type]?.booked || 0;
+            document.getElementById(`${type.toLowerCase()}-reserved`).textContent = data[type]?.reserved || 0;
+            document.getElementById(`${type.toLowerCase()}-available`).textContent = data[type]?.available || 0;
         });
-
         document.getElementById('seat-count-section').style.display = 'block';
+    })
+    .catch(error => {
+        console.error("Error fetching seat counts:", error);
     });
 }
 
