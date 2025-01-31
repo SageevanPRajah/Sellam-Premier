@@ -1,9 +1,41 @@
-php:
-  preset: laravel
-  disabled:
-    - no_unused_imports
-  finder:
-    not-name:
-      - index.php
-js: true
-css: true
+# Laravel Specific
+/vendor/
+/node_modules/
+
+# Laravel Environment & Config
+.env
+.env.*.backup
+.env.production
+.phpunit.result.cache
+.phpunit.cache
+
+# Laravel Storage & Cache
+/storage/
+public/storage
+bootstrap/cache/
+
+# Compiled & Generated Files
+/public/hot
+/public/build
+/public/mix-manifest.json
+/public/js/*.map
+/public/css/*.map
+
+# IDE & Editor Files
+/.vscode/
+/.idea/
+/.fleet/
+/.zed/
+
+# PHP & Laravel Debugging Files
+Homestead.json
+Homestead.yaml
+.env.testing
+.env.local
+auth.json
+
+# Logs & Debug Files
+*.log
+npm-debug.log
+yarn-error.log
+*.lock
