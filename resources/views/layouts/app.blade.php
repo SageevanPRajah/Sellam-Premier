@@ -78,18 +78,42 @@
 
                     <ul class="space-y-4 mt-4">
                         @if(Auth::user()->usertype === 'admin')
-                            <li>
-                                <a href="" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
-                                    <i class="fas fa-tachometer-alt mr-2"></i>
-                                    <span x-show="isOpen" x-transition>Admin Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span x-show="isOpen" x-transition>Manage Users</span>
-                                </a>
-                            </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/booking/create" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user mr-2"></i>
+                                <span x-show="isOpen" x-transition>Booking</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/booking/show" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Pre Book</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/movie" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Movie</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/show" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Show</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/price" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Price</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/billing" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Billing</span>
+                            </a>
+                        </li>
                         @elseif(Auth::user()->usertype === 'super_admin')
                             <li>
                                 <a href="" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
