@@ -174,7 +174,7 @@ class BookingController extends Controller
 
     // Get shows based on the selected date helping seat selection
     public function getShows(Request $request){
-        $date = $request->input('date'); // Use date from the shows table
+        $date = $request->input('date'); // Use `date` from the `shows` table
         $shows = Show::where('date', $date)->get();
 
         if ($shows->isEmpty()) {
@@ -186,13 +186,13 @@ class BookingController extends Controller
 
     // Get seats based on the selected show and seat type helping seat selecting 
     public function getSeats(Request $request){
-        $showId = $request->input('show_id'); // Match show_id
-        $seatType = $request->input('seat_type'); // Match seat_type
+        $showId = $request->input('show_id'); // Match `show_id`
+        $seatType = $request->input('seat_type'); // Match `seat_type`
 
         $seats = Seat::where('seat_type', $seatType)->get(); // Filter seats by type
-        $bookedSeats = Booking::where('movie_id', $showId) // Match movie_id as per bookings
+        $bookedSeats = Booking::where('movie_id', $showId) // Match `movie_id` as per `bookings`
                             ->where('seat_type', $seatType)
-                            ->pluck('seat_code'); // Fetch booked seat_code
+                            ->pluck('seat_code'); // Fetch booked `seat_code`
 
         return response()->json(['seats' => $seats, 'bookedSeats' => $bookedSeats]);
     }

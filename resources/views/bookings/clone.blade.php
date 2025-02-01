@@ -99,14 +99,14 @@
                 showList.innerHTML = '';
                 data.forEach(show => {
                     const li = document.createElement('li');
-                    li.textContent = ${show.time} - ${show.movie_name};
+                    li.textContent = `${show.time} - ${show.movie_name}`;
                     li.dataset.showId = show.id;
 
                     const button = document.createElement('button');
                     button.textContent = 'Select Show';
                     button.classList.add('button');
                     button.addEventListener('click', () => {
-                        window.location.href = /booking/create/clone/${show.id};
+                        window.location.href = `/booking/create/clone/${show.id}`;
                     });
 
                     li.appendChild(button);
