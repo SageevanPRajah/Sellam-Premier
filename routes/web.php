@@ -104,6 +104,8 @@ Route::middleware('auth')->group(function () {
     //Route Booking Select Seats
     Route::get('/booking/create/{id}', [BookingController::class, 'selectSeats'])->name('booking.selectSeats');
     Route::get('/booking/create/clone/{id}', [BookingController::class, 'cloneSeats'])->name('booking.cloneSeats');
+    Route::get('/booking/create/platinum/{id}', [BookingController::class, 'platinumSeats'])->name('booking.platinumSeats');
+    Route::get('/booking/create/gold/{id}', [BookingController::class, 'goldSeats'])->name('booking.goldSeats');
 });
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');

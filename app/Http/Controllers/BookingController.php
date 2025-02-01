@@ -311,4 +311,34 @@ public function cloneSeats($id){
     return view('bookings.clone_seats', compact('show', 'bookedSeats'));
 }
 
+public function platinumSeats($id){
+    $show = Show::findOrFail($id);
+
+    // Fetch booked seats with status for the selected show
+    $bookedSeats = Booking::where('movie_id', $show->id)
+        ->select('seat_code', 'status') // Fetch seat_code and status
+        ->get()
+        ->mapWithKeys(function ($item) {
+            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+        })
+        ->toArray();
+
+    return view('bookings.platinum_seats', compact('show', 'bookedSeats'));
+}
+
+public function goldSeats($id){
+    $show = Show::findOrFail($id);
+
+    // Fetch booked seats with status for the selected show
+    $bookedSeats = Booking::where('movie_id', $show->id)
+        ->select('seat_code', 'status') // Fetch seat_code and status
+        ->get()
+        ->mapWithKeys(function ($item) {
+            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+        })
+        ->toArray();
+
+    return view('bookings.gold_seats', compact('show', 'bookedSeats'));
+}
+
 }
