@@ -21,10 +21,10 @@
         <!-- Top Section: Seat Type Buttons & Movie Info -->
         <div class="top-section">
             <!-- Seat Type Selection -->
-            <div id="seat-types" class="seat-types">
-                <button class="button silver-btn" data-type="Silver">Silver</button>
-                <button class="button gold-btn" data-type="Gold">Gold</button>
-                <button class="button platinum-btn" data-type="Platinum">Platinum</button>
+            <div class="seat-types">
+                <a href="{{ url('/booking/create/clone/' . $show->id) }}" class="button silver-btn">Silver</a>
+                <a href="{{ url('/booking/create/gold/' . $show->id) }}" class="button gold-btn">Gold</a>
+                <a href="{{ url('/booking/create/platinum/' . $show->id) }}" class="button platinum-btn">Platinum</a>
             </div>
 
             <!-- Movie Details on the Right -->
@@ -49,11 +49,11 @@
             <div id="theater-layout">
 
                 <!-- GOLD Section (hidden by default) -->
-                <div class="seat-type-layout-section" id="gold-layout" style="display: none;">
+                <div class="seat-type-layout-section" id="gold-layout" >
                     <table>
                         <thead>
                             <tr>
-                                <th colspan="14">Gold Class</th>
+                                <th colspan="14">SCREEN</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -334,151 +334,15 @@
                         <td><button class="seat available" data-seat-code="G-AR-8">AR8</button></td>
                         <td>AR</td>
                             </tr>
-                            <!-- ( Remaining rows for Gold layout go here ) -->
-                            <!-- ... -->
+                            
                         </tbody>
                     </table>
                 </div>
 
-                <!-- SILVER Section (visible by default) -->
-                <div class="seat-type-layout-section" id="silver-layout" style="display: block;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="14">Silver Class</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>EL</td>
-                        <td><button class="seat available" data-seat-code="S-EL-1">EL1</button></td>
-                        <td><button class="seat available" data-seat-code="S-EL-2">EL2</button></td>
-                        <td><button class="seat available" data-seat-code="S-EL-3">EL3</button></td>
-                        <td><button class="seat available" data-seat-code="S-EL-4">EL4</button></td>
-                        <td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="S-ER-5">ER5</button></td>
-                        <td><button class="seat available" data-seat-code="S-ER-6">ER6</button></td>
-                        <td><button class="seat available" data-seat-code="S-ER-7">ER7</button></td>
-                        <td><button class="seat available" data-seat-code="S-ER-8">ER8</button></td>
-                        <td><button class="seat available" data-seat-code="S-ER-9">ER9</button></td>
-                        <td><button class="seat available" data-seat-code="S-ER-10">ER10</button></td>
-                        <td>ER</td>
-                    </tr>
-                    <tr>
-                        <td>DL</td>
-                        <td><button class="seat available" data-seat-code="S-DL-1">DL1</button></td>
-                        <td><button class="seat available" data-seat-code="S-DL-2">DL2</button></td>
-                        <td><button class="seat available" data-seat-code="S-DL-3">DL3</button></td>
-                        <td><button class="seat available" data-seat-code="S-DL-4">DL4</button></td>
-                        <td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="S-DR-5">DR5</button></td>
-                        <td><button class="seat available" data-seat-code="S-DR-6">DR6</button></td>
-                        <td><button class="seat available" data-seat-code="S-DR-7">DR7</button></td>
-                        <td><button class="seat available" data-seat-code="S-DR-8">DR8</button></td>
-                        <td><button class="seat available" data-seat-code="S-DR-9">DR9</button></td>
-                        <td><button class="seat available" data-seat-code="S-DR-10">DR10</button></td>
-                        <td>DR</td>
-                    </tr>
-                    <tr>
-                        <td>CL</td>
-                        <td><button class="seat available" data-seat-code="S-CL-1">CL1</button></td>
-                        <td><button class="seat available" data-seat-code="S-CL-2">CL2</button></td>
-                        <td><button class="seat available" data-seat-code="S-CL-3">CL3</button></td>
-                        <td><button class="seat available" data-seat-code="S-CL-4">CL4</button></td>
-                        <td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="S-CR-5">CR5</button></td>
-                        <td><button class="seat available" data-seat-code="S-CR-6">CR6</button></td>
-                        <td><button class="seat available" data-seat-code="S-CR-7">CR7</button></td>
-                        <td><button class="seat available" data-seat-code="S-CR-8">CR8</button></td>
-                        <td><button class="seat available" data-seat-code="S-CR-9">CR9</button></td>
-                        <td><button class="seat available" data-seat-code="S-CR-10">CR10</button></td>
-                        <td>CR</td>
-                    </tr>
-                    <tr>
-                        <td>BL</td>
-                        <td><button class="seat available" data-seat-code="S-BL-1">BL1</button></td>
-                        <td><button class="seat available" data-seat-code="S-BL-2">BL2</button></td>
-                        <td><button class="seat available" data-seat-code="S-BL-3">BL3</button></td>
-                        <td><button class="seat available" data-seat-code="S-BL-4">BL4</button></td>
-                        <td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="S-BR-5">BR5</button></td>
-                        <td><button class="seat available" data-seat-code="S-BR-6">BR6</button></td>
-                        <td><button class="seat available" data-seat-code="S-BR-7">BR7</button></td>
-                        <td><button class="seat available" data-seat-code="S-BR-8">BR8</button></td>
-                        <td><button class="seat available" data-seat-code="S-BR-9">BR9</button></td>
-                        <td><button class="seat available" data-seat-code="S-BR-10">BR10</button></td>
-                        <td>BR</td>
-                    </tr>
-                    <tr>
-                        <td>AL</td>
-                        <td><button class="seat available" data-seat-code="S-AL-1">AL1</button></td>
-                        <td><button class="seat available" data-seat-code="S-AL-2">AL2</button></td>
-                        <td><button class="seat available" data-seat-code="S-AL-3">AL3</button></td>
-                        <td><button class="seat available" data-seat-code="S-AL-4">AL4</button></td>
-                        <td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="S-AR-5">AR5</button></td>
-                        <td><button class="seat available" data-seat-code="S-AR-6">AR6</button></td>
-                        <td><button class="seat available" data-seat-code="S-AR-7">AR7</button></td>
-                        <td><button class="seat available" data-seat-code="S-AR-8">AR8</button></td>
-                        <td><button class="seat available" data-seat-code="S-AR-9">AR9</button></td>
-                        <td><button class="seat available" data-seat-code="S-AR-10">AR10</button></td>
-                        <td>AR</td>
-                            </tr>
-                            <!-- ( Remaining rows for Silver layout go here ) -->
-                            <!-- ... -->
-                        </tbody>
-                    </table>
-                </div>
+                
 
                 <!-- PLATINUM Section (hidden by default) -->
-                <div class="seat-type-layout-section" id="platinum-layout" style="display: none;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="14">Platinum Class</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="P-X-19">X19</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-18">X18</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-17">X17</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-16">X16</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-15">X15</button></td>
-                        <td></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="P-X-14">X14</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-13">X13</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-12">X12</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-11">X11</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-10">X10</button></td>
-                        <td></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td></td>
-                        <td><button class="seat available" data-seat-code="P-X-9">X9</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-8">X8</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-7">X7</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-6">X6</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-5">X5</button></td>
-                        <td ></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td></td>
-                        <td><button class="seat available" data-seat-code="P-X-4">X4</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-3">X3</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-2">X2</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-1">X1</button></td>
-                        <td></td><td ></td><td ></td><td ></td>
-                            </tr>
-                            <!-- ( Remaining rows for Platinum layout go here ) -->
-                            <!-- ... -->
-                        </tbody>
-                    </table>
-                </div>
+               
             </div>
         </div>
 
@@ -496,10 +360,10 @@
                     <!-- Default seat type set to Silver -->
                     <input type="hidden" id="selected-seat-type" name="seat_type" value="Silver">
 
-                    <div class="form-buttons">
+                    {{-- <div class="form-buttons">
                         <button type="submit" name="reserve_seats" class="button reserve-btn">Reserve Seats</button>
                         <button type="submit" name="confirm_booking" id="confirm-booking" class="button confirm-btn">Confirm Booking</button>
-                    </div>
+                    </div> --}}
                 </form>
     </div>
 
@@ -570,6 +434,10 @@
             // Update hidden input with current selection
             document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
         }
+
+        setTimeout(function() {
+        location.reload();
+    }, 10000); // Reloads the page every 10 seconds
     </script>
 
     <style>
@@ -646,6 +514,10 @@
             text-align: center;
             width: 30px;
             height: 30px;
+        }
+
+        table thead th {
+            border-top: 5px solid black;
         }
 
         .seat-type-layout-section table {

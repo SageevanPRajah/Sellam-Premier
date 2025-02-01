@@ -109,6 +109,12 @@
                             </a>
                         </li>
                         <li class="mt-5 mx-5">
+                            <a href="/booking/create/clone" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user mr-2"></i>
+                                <span x-show="isOpen" x-transition>Front View</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
                             <a href="/billing" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
                                 <i class="fas fa-user-edit mr-2"></i>
                                 <span x-show="isOpen" x-transition>Billing</span>
@@ -156,6 +162,12 @@
                                 <a href="/price" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
                                     <i class="fas fa-user-edit mr-2"></i>
                                     <span x-show="isOpen" x-transition>Price</span>
+                                </a>
+                            </li>
+                            <li class="mt-5 mx-5">
+                                <a href="/booking/create/clone" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span x-show="isOpen" x-transition>Front View</span>
                                 </a>
                             </li>
                         @endif
