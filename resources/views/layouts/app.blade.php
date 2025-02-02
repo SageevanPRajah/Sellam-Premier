@@ -79,6 +79,18 @@
                     <ul class="space-y-4 mt-4">
                         @if(Auth::user()->usertype === 'admin')
                         <li class="mt-5 mx-5">
+                            <a href="/booking/overview" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Overview</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
+                            <a href="/billing" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user-edit mr-2"></i>
+                                <span x-show="isOpen" x-transition>Billing</span>
+                            </a>
+                        </li>
+                        <li class="mt-5 mx-5">
                             <a href="/booking/create" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
                                 <i class="fas fa-user mr-2"></i>
                                 <span x-show="isOpen" x-transition>Booking</span>
@@ -112,12 +124,6 @@
                             <a href="/booking/create/clone" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
                                 <i class="fas fa-user mr-2"></i>
                                 <span x-show="isOpen" x-transition>Front View</span>
-                            </a>
-                        </li>
-                        <li class="mt-5 mx-5">
-                            <a href="/billing" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
-                                <i class="fas fa-user-edit mr-2"></i>
-                                <span x-show="isOpen" x-transition>Billing</span>
                             </a>
                         </li>
                         @elseif(Auth::user()->usertype === 'super_admin')
@@ -177,9 +183,9 @@
                 <!-- Main Content -->
                 <div class="p-6 transition-all duration-300 "
                      :class="isOpen ? 'w-6/7' : 'flex-1'"
-                     style="background-color: rgb(255, 255, 255);"
+                     style="background-color: #f7f9f9; "
                      >
-                    <main>
+                    <main class="w-[1200px] mx-auto">
                         {{ $slot }}
                     </main>
                 </div>
