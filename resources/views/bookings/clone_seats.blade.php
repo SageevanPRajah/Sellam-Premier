@@ -261,23 +261,23 @@
         /* Top Section: Buttons & Movie Info */
         .top-section {
             display: flex;
-            flex-wrap: wrap; /* Ensures proper wrapping on smaller screens */
-            justify-content: center; /* Centers the buttons horizontally */
-            align-items: center; /* Centers vertically */
-            gap: 25px; /* Adds spacing between buttons */
-            margin: 0 auto 20px auto; /* Centers horizontally */
+            flex-wrap: wrap;/* Ensures proper wrapping on smaller screens */
+            justify-content: left;/* Centers the buttons horizontally */
+            align-items: left;/* Centers vertically */
+            gap: 25px;/* Adds spacing between buttons */
+            margin: 0 auto 20px 100px;/* Centers horizontally */
         }
 
         /* Seat Type Buttons Container */
         .seat-types {
             display: flex;
             flex: 1;
-            justify-content: center; /* Centers the buttons horizontally */
-            align-items: center; /* Centers vertically */
-            gap: 15px; /* Adds spacing between buttons */
-            max-width: 500px; /* Adjust as needed */
-            margin: 0 auto 20px auto; /* Centers horizontally */
-            
+            justify-content: center;/* Centers the buttons horizontally */
+            align-items: center;/* Centers vertically */
+            gap: 15px;/* Adds spacing between buttons */
+            max-width: 500px;/* Adjust as needed */
+            margin: 0 10px 20px 65px;/* Centers horizontally */
+
         }
 
         /* Align Silver button left, Gold center, Platinum right */
@@ -310,7 +310,7 @@
         /* Theater layout container – align to the right */
         .theater-layout-wrapper {
             display: flex;
-            justify-content: flex-end;
+            justify-content: left;
             margin-bottom: 20px;
         }
 

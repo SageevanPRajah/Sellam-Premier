@@ -13,11 +13,7 @@
         <!-- Movie Name Filter -->
         <div class="filter-group">
             <label for="movieNameFilter">Movie Name:</label>
-            <input
-                type="text"
-                id="movieNameFilter"
-                placeholder="Search movie name..."
-            />
+            <input type="text" id="movieNameFilter" placeholder="Search movie name..." />
         </div>
 
         <!-- Start Date Filter -->
@@ -51,86 +47,89 @@
     </div>
 
     <!-- Billing Table -->
-    <table id="billingTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Movie Name</th>
-                <th>Date</th>
-                <th>Time (AM/PM)</th>
-                <th>Seat Type</th>
-                <th>Total Tickets</th>
-                <th>Full Tickets</th>
-                <th>Half Tickets</th>
-                <th>Total Price</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($billings as $billing)
-            <tr>
-                <td>{{ $billing->id }}</td>
-                <td>{{ $billing->movie_name }}</td>
-                <td>{{ $billing->date }}</td>
-                <td>{{ $billing->time }}</td>
-                <td>{{ $billing->seat_type }}</td>
-                <td>{{ $billing->total_tickets }}</td>
-                <td>{{ $billing->full_tickets }}</td>
-                <td>{{ $billing->half_tickets }}</td>
-                <td>Rs. {{ number_format($billing->total_price, 2) }}</td>
-                <td>{{ $billing->created_at }}</td>
-                <td>
-                    <form method="GET" action="{{ route('billing.detail', $billing->id) }}" style="display:inline;">
-                        <button type="submit" class="action-button btn-delete">
-                            Detail
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div id="billingTableContainer">
+        <table id="billingTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Movie Name</th>
+                    <th>Date</th>
+                    <th>Time (AM/PM)</th>
+                    <th>Seat Type</th>
+                    <th>Total Tickets</th>
+                    <th>Full Tickets</th>
+                    <th>Half Tickets</th>
+                    <th>Total Price</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($billings as $billing)
+                    <tr>
+                        <td>{{ $billing->id }}</td>
+                        <td>{{ $billing->movie_name }}</td>
+                        <td>{{ $billing->date }}</td>
+                        <td>{{ $billing->time }}</td>
+                        <td>{{ $billing->seat_type }}</td>
+                        <td>{{ $billing->total_tickets }}</td>
+                        <td>{{ $billing->full_tickets }}</td>
+                        <td>{{ $billing->half_tickets }}</td>
+                        <td>Rs. {{ number_format($billing->total_price, 2) }}</td>
+                        <td>{{ $billing->created_at }}</td>
+                        <td>
+                            <form method="GET" action="{{ route('billing.detail', $billing->id) }}"
+                                style="display:inline;">
+                                <button type="submit" class="action-button btn-delete">
+                                    Detail
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-    <!-- Summary Section -->
-    <div class="summary-section">
-        <div class="summary-item">
-            <strong>Total Full Tickets: </strong>
-            <span id="totalFullTickets">0</span>
-        </div>
-        <div class="summary-item">
-            <strong>Total Half Tickets: </strong>
-            <span id="totalHalfTickets">0</span>
-        </div>
-        <div class="summary-item">
-            <strong>Total Seats: </strong>
-            <span id="totalSeats">0</span>
-        </div>
-        <div class="summary-item">
-            <strong>Total Amount: </strong>
-            <span id="totalAmount">Rs. 0.00</span>
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-item">
+                <strong>Total Full Tickets: </strong>
+                <span id="totalFullTickets">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Total Half Tickets: </strong>
+                <span id="totalHalfTickets">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Total Seats: </strong>
+                <span id="totalSeats">0</span>
+            </div>
+            <div class="summary-item">
+                <strong>Total Amount: </strong>
+                <span id="totalAmount">Rs. 0.00</span>
+            </div>
         </div>
     </div>
 
     <!-- PDF Generation Button -->
-    <div style="text-align: center; margin: 20px;">
+    <div style="text-align: center; margin: 20px; background-color: gray; padding: 10px; border-radius: 10px; max-width: 200px; margin: 0 auto; height: 50px;">
         <button id="generatePdfButton" class="action-button">Generate PDF</button>
     </div>
 
     <!-- JavaScript -->
     <script>
         // Grab all filter inputs
-        const movieNameFilter  = document.getElementById('movieNameFilter');
-        const startDateFilter  = document.getElementById('startDateFilter');
-        const endDateFilter    = document.getElementById('endDateFilter');
-        const timeFilter       = document.getElementById('timeFilter');
-        const seatTypeFilter   = document.getElementById('seatTypeFilter');
+        const movieNameFilter = document.getElementById('movieNameFilter');
+        const startDateFilter = document.getElementById('startDateFilter');
+        const endDateFilter = document.getElementById('endDateFilter');
+        const timeFilter = document.getElementById('timeFilter');
+        const seatTypeFilter = document.getElementById('seatTypeFilter');
 
         // Summary fields
         const totalFullTicketsEl = document.getElementById('totalFullTickets');
         const totalHalfTicketsEl = document.getElementById('totalHalfTickets');
-        const totalSeatsEl       = document.getElementById('totalSeats');
-        const totalAmountEl      = document.getElementById('totalAmount');
+        const totalSeatsEl = document.getElementById('totalSeats');
+        const totalAmountEl = document.getElementById('totalAmount');
 
         // Convert "HH:MM AM/PM" to "HH:MM" in 24-hour format
         function parseTime12to24(twelveHourTime) {
@@ -163,39 +162,39 @@
             // Gather filter values
             const selectedMovieName = movieNameFilter.value.trim().toLowerCase();
             const selectedStartDate = startDateFilter.value; // "YYYY-MM-DD"
-            const selectedEndDate   = endDateFilter.value;   // "YYYY-MM-DD"
-            const selectedTime      = timeFilter.value;      // "HH:MM" (24-hour)
-            const selectedSeatType  = seatTypeFilter.value;  // "silver", "gold", "platinum", or ""
+            const selectedEndDate = endDateFilter.value; // "YYYY-MM-DD"
+            const selectedTime = timeFilter.value; // "HH:MM" (24-hour)
+            const selectedSeatType = seatTypeFilter.value; // "silver", "gold", "platinum", or ""
 
             // Reset totals
             let totalFullTickets = 0;
             let totalHalfTickets = 0;
-            let totalSeats       = 0;
-            let totalAmount      = 0;
+            let totalSeats = 0;
+            let totalAmount = 0;
 
             const rows = document.querySelectorAll('#billingTable tbody tr');
             rows.forEach((row) => {
                 // Extract row data
                 const rowMovieNameRaw = row.querySelector('td:nth-child(2)')?.textContent || "";
-                const rowMovieName    = rowMovieNameRaw.trim().toLowerCase();
+                const rowMovieName = rowMovieNameRaw.trim().toLowerCase();
 
-                const rowTimeRaw      = row.querySelector('td:nth-child(4)')?.textContent.trim() || "";
-                const rowTime24       = parseTime12to24(rowTimeRaw);
+                const rowTimeRaw = row.querySelector('td:nth-child(4)')?.textContent.trim() || "";
+                const rowTime24 = parseTime12to24(rowTimeRaw);
 
-                const rowSeatTypeRaw  = row.querySelector('td:nth-child(5)')?.textContent.trim() || "";
-                const rowSeatType     = rowSeatTypeRaw.toLowerCase();
+                const rowSeatTypeRaw = row.querySelector('td:nth-child(5)')?.textContent.trim() || "";
+                const rowSeatType = rowSeatTypeRaw.toLowerCase();
 
-                const fullTickets     = parseInt(row.querySelector('td:nth-child(7)')?.textContent.trim()) || 0;
-                const halfTickets     = parseInt(row.querySelector('td:nth-child(8)')?.textContent.trim()) || 0;
+                const fullTickets = parseInt(row.querySelector('td:nth-child(7)')?.textContent.trim()) || 0;
+                const halfTickets = parseInt(row.querySelector('td:nth-child(8)')?.textContent.trim()) || 0;
 
-                let priceText         = row.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
-                priceText             = priceText.replace("Rs. ", "").replace(",", "");
-                const rowPrice        = parseFloat(priceText) || 0;
+                let priceText = row.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
+                priceText = priceText.replace("Rs. ", "").replace(",", "");
+                const rowPrice = parseFloat(priceText) || 0;
 
                 // Created At is in the 10th column
-                let rowCreatedAtRaw   = row.querySelector('td:nth-child(10)')?.textContent.trim() || "";
+                let rowCreatedAtRaw = row.querySelector('td:nth-child(10)')?.textContent.trim() || "";
                 // Substring only "YYYY-MM-DD" from e.g. "2024-01-31 13:45:22"
-                let rowCreatedAtDate  = rowCreatedAtRaw.substring(0, 10);
+                let rowCreatedAtDate = rowCreatedAtRaw.substring(0, 10);
 
                 // Filters:
                 // 1) Movie name (partial match)
@@ -204,7 +203,7 @@
                 // 2) Date range filter based on Created At column
                 const dateMatches =
                     (!selectedStartDate || rowCreatedAtDate >= selectedStartDate) &&
-                    (!selectedEndDate   || rowCreatedAtDate <= selectedEndDate);
+                    (!selectedEndDate || rowCreatedAtDate <= selectedEndDate);
 
                 // 3) Time (24-hour match) from the "Time (AM/PM)" column
                 const timeMatches = (!selectedTime || selectedTime === rowTime24);
@@ -222,8 +221,8 @@
                     row.style.display = '';
                     totalFullTickets += fullTickets;
                     totalHalfTickets += halfTickets;
-                    totalSeats       += (fullTickets + halfTickets);
-                    totalAmount      += rowPrice;
+                    totalSeats += (fullTickets + halfTickets);
+                    totalAmount += rowPrice;
                 } else {
                     row.style.display = 'none';
                 }
@@ -232,8 +231,8 @@
             // Update summary
             totalFullTicketsEl.textContent = totalFullTickets;
             totalHalfTicketsEl.textContent = totalHalfTickets;
-            totalSeatsEl.textContent       = totalSeats;
-            totalAmountEl.textContent      = "Rs. " + totalAmount.toFixed(2);
+            totalSeatsEl.textContent = totalSeats;
+            totalAmountEl.textContent = "Rs. " + totalAmount.toFixed(2);
         }
     </script>
 
@@ -244,8 +243,8 @@
     <!-- JavaScript -->
     <script>
         // PDF Generation
-        document.getElementById('generatePdfButton').addEventListener('click', function () {
-            const table = document.getElementById('billingTable');
+        document.getElementById('generatePdfButton').addEventListener('click', function() {
+            const table = document.getElementById('billingTableContainer');
             html2canvas(table).then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
@@ -326,8 +325,8 @@
             padding: 10px 15px;
             border: none;
             border-radius: 20px;
-            background-color: rgb(53, 53, 53);
-            color: var(--text-color);
+            background-color: rgb(212, 212, 212);
+            color: black;
             font-size: 16px;
             outline: none;
             transition: box-shadow 0.3s;
@@ -351,8 +350,8 @@
             width: 80%;
             font-size: 16px;
             text-align: center;
-            background-color: rgb(41, 43, 44);
-            box-shadow: 0 0 10px var(--shadow-dark);
+            background-color: rgb(255, 255, 255);
+            /* box-shadow: 0 0 10px var(--shadow-dark); */
             border-radius: 15px;
             overflow: hidden;
         }
@@ -360,13 +359,13 @@
         th,
         td {
             padding: 15px;
-            color: var(--text-color);
+            color:black;
         }
 
         th {
-            background-color: rgb(35, 36, 36);
+            background-color: rgb(175, 175, 175);
             font-weight: bold;
-            color: #ffffff;
+            color: #000000;
         }
 
         /* Buttons (Detail, etc.) */
@@ -380,15 +379,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 5px 5px 15px var(--shadow-dark),
-                        -5px -5px 15px var(--shadow-light);
+            /* box-shadow: 5px 5px 15px var(--shadow-dark),
+                -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s;
             color: #ffffff;
-            margin: 0 auto; /* Center the button within the cell */
+            margin: 0 auto;
+            /* Center the button within the cell */
         }
 
         .btn-delete {
-            background-color: #343a40; /* Dark Gray */
+            background-color: #343a40;
+            /* Dark Gray */
         }
 
         .btn-delete:hover {
@@ -408,14 +409,14 @@
         .summary-section {
             width: 80%;
             margin: 20px auto;
-            color: var(--text-color);
+            color:black;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            background-color: rgb(53, 53, 53);
+            background-color: rgb(175, 175, 175);
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 0 10px var(--shadow-dark);
+            /* box-shadow: 0 0 10px var(--shadow-dark); */
             gap: 20px;
         }
 
