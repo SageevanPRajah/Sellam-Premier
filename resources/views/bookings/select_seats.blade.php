@@ -20,12 +20,7 @@
 
         <!-- Top Section: Seat Type Buttons & Movie Info -->
         <div class="top-section">
-            <!-- Seat Type Selection -->
-            <div id="seat-types" class="seat-types">
-                <button class="button silver-btn" data-type="Silver">Silver</button>
-                <button class="button gold-btn" data-type="Gold">Gold</button>
-                <button class="button platinum-btn" data-type="Platinum">Platinum</button>
-            </div>
+            
 
             <!-- Movie Details on the Right -->
             <div class="movie-details">
@@ -42,6 +37,13 @@
                     <span>{{ $show->movie_name }}</span>
                 </div>
             </div>
+        </div>
+
+        <!-- Seat Type Selection -->
+        <div id="seat-types" class="seat-types">
+            <button class="button silver-btn" data-type="Silver">Silver</button>
+            <button class="button gold-btn" data-type="Gold">Gold</button>
+            <button class="button platinum-btn" data-type="Platinum">Platinum</button>
         </div>
 
         <!-- Theater Layout on the right side -->
@@ -592,17 +594,23 @@
         /* Top Section: Buttons & Movie Info */
         .top-section {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
+            flex-wrap: wrap;/* Ensures proper wrapping on smaller screens */
+            justify-content: left;/* Centers the buttons horizontally */
+            align-items: left;/* Centers vertically */
+            gap: 25px;/* Adds spacing between buttons */
+            margin: 0 auto 20px 100px;/* Centers horizontally */
         }
 
         /* Seat Type Buttons Container */
         .seat-types {
             display: flex;
             flex: 1;
-            justify-content: space-between;
-            max-width: 500px; /* Adjust as needed */
+            justify-content: center;/* Centers the buttons horizontally */
+            align-items: center;/* Centers vertically */
+            gap: 15px;/* Adds spacing between buttons */
+            max-width: 500px;/* Adjust as needed */
+            margin: 0 10px 20px 65px;/* Centers horizontally */
+
         }
 
         /* Align Silver button left, Gold center, Platinum right */
@@ -617,8 +625,11 @@
         }
 
         /* Movie details on the right */
+        /* Ensure Movie Details are aligned in one line */
         .movie-details {
-            text-align: right;
+            display: flex;
+            gap: 30px; /* Adds spacing between Date, Time, and Movie */
+            align-items: center;
         }
         .movie-details div {
             margin: 5px 0;
@@ -630,7 +641,7 @@
         /* Theater layout container – align to the right */
         .theater-layout-wrapper {
             display: flex;
-            justify-content: flex-end;
+            justify-content: left;
             margin-bottom: 20px;
         }
 
@@ -685,6 +696,12 @@
             cursor: not-allowed;
         }
 
+        .booking-form {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            margin-right: 220px;
+        }
         /* Form Buttons at the bottom */
         .form-buttons {
             text-align: right;
