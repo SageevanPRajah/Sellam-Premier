@@ -1,209 +1,233 @@
-<x-app-layout>
-    <div class="booking-container">
-        <!-- Success Message -->
-        @if(session()->has('success'))
-            <div class="success-message">
-                {{ session('success') }}
-            </div>
-        @endif
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+      x-data="{ isOpen: true }"  {{-- Alpine.js state for toggling sidebar --}}
+      x-cloak>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Error Messages -->
-        @if($errors->any())
-            <div class="error-messages">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Top Section: Seat Type Buttons & Movie Info -->
-        <div class="top-section">
-            
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4MNol7QzPxwOWa5t4lRDs9C4vGdAN3E6bOozcKW7v1z4+pbjMZtm2VWwg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
 
-            <!-- Movie Details on the Right -->
-            <div class="movie-details">
-                <div>
-                    <label>Date:</label>
-                    <span>{{ $show->date }}</span>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Alpine.js -->
+        <script src="//unpkg.com/alpinejs" defer></script>
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            <!-- 
+                We are NOT including the usual layouts.navigation 
+                because we want a custom sidebar for this page.
+            -->
+
+            <!-- Full page container with the custom background -->
+            <div class="min-h-screen flex"
+                 style="background-image: url('/icons/back.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;"
+            >
+                <!-- BEGIN: CUSTOM SIDEBAR FOR PLATINUM PAGE -->
+                <aside 
+                    class="bg-white shadow-md min-h-screen transition-all duration-300"
+                    :class="isOpen ? 'w-1/18' : 'w-10'"
+                    style="background-color: #f7f9f9;"
+                >
+                    <ul class="space-y-4 mt-4">
+                        <!-- Customize sidebar links as needed -->
+                        <li class="mt-5 mx-5">
+                            <a href="/booking/create/clone" class="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2">
+                                <i class="fas fa-user mr-2"></i>
+                                <span x-show="isOpen" x-transition>O</span>
+                            </a>
+                        </li>
+                        <!-- Add or remove sidebar items as you wish -->
+                    </ul>
+                </aside>
+                <!-- END: CUSTOM SIDEBAR -->
+
+                <!-- BEGIN: MAIN CONTENT AREA -->
+                <div class="p-6 transition-all duration-300"
+                     :class="isOpen ? 'w-17/18' : 'flex-1'"
+                     style="background-color: #f7f9f9;"
+                >
+                    <main class="w-[1200px] mx-auto">
+
+                        <div class="booking-container">
+                            <!-- Success Message -->
+                            @if(session()->has('success'))
+                                <div class="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            <!-- Error Messages -->
+                            @if($errors->any())
+                                <div class="error-messages">
+                                    <ul>
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Top Section: Movie Info -->
+                            <div class="top-section">
+                                <div class="movie-details">
+                                    <div>
+                                        <label>Date:</label>
+                                        <span>{{ $show->date }}</span>
+                                    </div>
+                                    <div>
+                                        <label>Time:</label>
+                                        <span>{{ $show->time }}</span>
+                                    </div>
+                                    <div>
+                                        <label>Movie:</label>
+                                        <span>{{ $show->movie_name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seat Type Buttons -->
+                            <div class="seat-types">
+                                <a href="{{ url('/booking/create/clone/' . $show->id) }}" class="button silver-btn">Silver</a>
+                                <a href="{{ url('/booking/create/gold/' . $show->id) }}" class="button gold-btn">Gold</a>
+                                <a href="{{ url('/booking/create/platinum/' . $show->id) }}" class="button platinum-btn">Platinum</a>
+                            </div>
+
+                            <!-- Theater Layout -->
+                            <div class="theater-layout-wrapper">
+                                <div id="theater-layout">
+                                    <!-- PLATINUM Section -->
+                                    <div class="seat-type-layout-section" id="platinum-layout">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="14">PLATINUM</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-19">X19</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-18">X18</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-17">X17</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-16">X16</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-15">X15</button></td>
+                                                    <td></td><td></td><td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-14">X14</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-13">X13</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-12">X12</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-11">X11</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-10">X10</button></td>
+                                                    <td></td><td></td><td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-9">X9</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-8">X8</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-7">X7</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-6">X6</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-5">X5</button></td>
+                                                    <td></td><td></td><td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-4">X4</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-3">X3</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-2">X2</button></td>
+                                                    <td><button class="seat available" data-seat-code="P-X-1">X1</button></td>
+                                                    <td></td><td></td><td></td><td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Booking Form -->
+                            <form action="{{ route('booking.store') }}" method="POST" class="booking-form">
+                                @csrf
+                                @method('post')
+                                <input type="hidden" id="selected-seats" name="selected_seats">
+                                <input type="hidden" name="selected_date" value="{{ $show->date }}">
+                                <input type="hidden" name="time" value="{{ $show->time }}">
+                                <input type="hidden" name="movie_id" value="{{ $show->id }}">
+                                <input type="hidden" name="movie_name" value="{{ $show->movie_name }}">
+                                <input type="hidden" id="selected-seat-type" name="seat_type" value="Silver">
+                            </form>
+                        </div>
+                    </main>
                 </div>
-                <div>
-                    <label>Time:</label>
-                    <span>{{ $show->time }}</span>
-                </div>
-                <div>
-                    <label>Movie:</label>
-                    <span>{{ $show->movie_name }}</span>
-                </div>
+                <!-- END: MAIN CONTENT AREA -->
             </div>
-
-            
         </div>
 
-        <!-- Seat Type Selection -->
-            <div class="seat-types">
-                <a href="{{ url('/booking/create/clone/' . $show->id) }}" class="button silver-btn">Silver</a>
-                <a href="{{ url('/booking/create/gold/' . $show->id) }}" class="button gold-btn">Gold</a>
-                <a href="{{ url('/booking/create/platinum/' . $show->id) }}" class="button platinum-btn">Platinum</a>
-            </div>
+        <!-- JavaScript for seat selection -->
+        <script>
+            let selectedSeats = []; 
+            const bookedSeats = @json($bookedSeats); // from the controller
 
-        <!-- Theater Layout on the right side -->
-        <div class="theater-layout-wrapper">
-            <div id="theater-layout">
-
-                
-
-                <!-- PLATINUM Section (hidden by default) -->
-                <div class="seat-type-layout-section" id="platinum-layout" >
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="14">PLATINUM</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="P-X-19">X19</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-18">X18</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-17">X17</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-16">X16</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-15">X15</button></td>
-                        <td></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td ></td>
-                        <td><button class="seat available" data-seat-code="P-X-14">X14</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-13">X13</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-12">X12</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-11">X11</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-10">X10</button></td>
-                        <td></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td></td>
-                        <td><button class="seat available" data-seat-code="P-X-9">X9</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-8">X8</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-7">X7</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-6">X6</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-5">X5</button></td>
-                        <td ></td><td ></td><td ></td>
-                    </tr>
-                    <tr>
-                        <td></td><td ></td><td ></td><td ></td><td ></td><td></td>
-                        <td><button class="seat available" data-seat-code="P-X-4">X4</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-3">X3</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-2">X2</button></td>
-                        <td><button class="seat available" data-seat-code="P-X-1">X1</button></td>
-                        <td></td><td ></td><td ></td><td ></td>
-                            </tr>
-                           
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- PLATINUM Section (hidden by default) -->
-               
-            </div>
-        </div>
-
-        <!-- Booking Form & Buttons -->
-        <form action="{{ route('booking.store') }}" method="POST" class="booking-form">
-                    @csrf
-                    @method('post')
-
-                    <input type="hidden" id="selected-seats" name="selected_seats">
-                    <!-- Hidden fields (still needed by your logic) -->
-                    <input type="hidden" id="selected-date" name="selected_date" value="{{ $show->date }}">
-                    <input type="hidden" id="time" name="time" value="{{ $show->time }}">
-                    <input type="hidden" id="selected-movie-id" name="movie_id" value="{{ $show->id }}">
-                    <input type="hidden" id="selected-movie-name" name="movie_name" value="{{ $show->movie_name }}">
-                    <!-- Default seat type set to Silver -->
-                    <input type="hidden" id="selected-seat-type" name="seat_type" value="Silver">
-
-                    {{-- <div class="form-buttons">
-                        <button type="submit" name="reserve_seats" class="button reserve-btn">Reserve Seats</button>
-                        <button type="submit" name="confirm_booking" id="confirm-booking" class="button confirm-btn">Confirm Booking</button>
-                    </div> --}}
-                </form>
-    </div>
-
-    <script>
-        let selectedSeats = []; // Array to hold selected seats.
-        // Use booked seats passed from the backend
-        const bookedSeats = @json($bookedSeats); // This array is injected from the backend
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mark booked seats dynamically
-            document.querySelectorAll('.seat').forEach(seat => {
-                const seatCode = seat.getAttribute('data-seat-code');
-
-                if (bookedSeats.hasOwnProperty(seatCode)) {
-                    // If seat is fully booked or reserved (from backend data)
-                    if (bookedSeats[seatCode]) {
-                        // If true => booked
-                        seat.classList.add('booked');
-                        seat.disabled = true;
-                    } else {
-                        // If false => reserved
-                        seat.classList.add('reserved');
-                        seat.disabled = true;
+            document.addEventListener('DOMContentLoaded', () => {
+                // Mark booked seats
+                document.querySelectorAll('.seat').forEach(seat => {
+                    const seatCode = seat.getAttribute('data-seat-code');
+                    if (bookedSeats.hasOwnProperty(seatCode)) {
+                        if (bookedSeats[seatCode]) {
+                            seat.classList.add('booked');
+                            seat.disabled = true;
+                        } else {
+                            seat.classList.add('reserved');
+                            seat.disabled = true;
+                        }
                     }
-                }
 
-                // Only add click event if seat is neither booked nor reserved
-                if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
-                    seat.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        toggleSeatSelection(seatCode, seat);
-                    });
-                }
-            });
-
-            // Event listeners for seat type selection
-            document.querySelectorAll('#seat-types button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const seatType = button.dataset.type;
-
-                    // Hide all seat layouts
-                    document.querySelectorAll('.seat-type-layout-section').forEach(section => {
-                        section.style.display = 'none';
-                    });
-
-                    // Show the chosen seat layout
-                    document.getElementById(seatType.toLowerCase() + '-layout').style.display = 'block';
-
-                    // Update hidden input
-                    document.getElementById('selected-seat-type').value = seatType;
+                    // Enable click if not booked/reserved
+                    if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
+                        seat.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            toggleSeatSelection(seatCode, seat);
+                        });
+                    }
                 });
             });
-        });
 
-        function toggleSeatSelection(seatCode, seatButton) {
-            if (!seatCode) return;
-
-            if (selectedSeats.includes(seatCode)) {
-                // Remove seat from selected
-                selectedSeats = selectedSeats.filter(s => s !== seatCode);
-                seatButton.classList.remove('selected');
-            } else {
-                // Add seat to selected
-                selectedSeats.push(seatCode);
-                seatButton.classList.add('selected');
+            function toggleSeatSelection(seatCode, seatButton) {
+                if (!seatCode) return;
+                if (selectedSeats.includes(seatCode)) {
+                    selectedSeats = selectedSeats.filter(s => s !== seatCode);
+                    seatButton.classList.remove('selected');
+                } else {
+                    selectedSeats.push(seatCode);
+                    seatButton.classList.add('selected');
+                }
+                document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
             }
 
-            // Update hidden input with current selection
-            document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
-        }
+            // Optional auto reload every 10 seconds if you want
+            setTimeout(function() {
+                location.reload();
+            }, 10000);
+        </script>
 
-        setTimeout(function() {
-        location.reload();
-    }, 10000); // Reloads the page every 5 seconds
-    </script>
-
-    <style>
-        /* Make the page take full screen (reset default body margin/padding) */
+        <!-- Custom styles for seats, etc. (copy from your original platinum_seats.blade) -->
+        <style>
+            /* Make the page take full screen (reset default body margin/padding) */
         html, body {
             margin: 0;
             padding: 0;
@@ -214,7 +238,7 @@
         .booking-container {
             width: 100%;
             min-height: 100vh; /* Occupy full vertical space */
-            background-color: #ffffff;
+            background-color: #f7f9f9;
             padding: 20px;
             box-sizing: border-box; /* Ensure padding doesn't add to total width */
         }
@@ -364,5 +388,7 @@
         .button:hover {
             background-color: #333;
         }
-    </style>
-</x-app-layout>
+            /* etc. */
+        </style>
+    </body>
+</html>
