@@ -5,7 +5,6 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             min-height: 100vh;
             display: flex;
@@ -14,17 +13,14 @@
             align-items: center;
             text-align: center;
         }
-
         .success-message {
             color: green;
             margin-bottom: 1em;
         }
-
         .error-messages {
             color: red;
             margin-bottom: 1em;
         }
-
         .button {
             margin: 0.5em;
             padding: 0.5em 1em;
@@ -33,19 +29,16 @@
             border: none;
             cursor: pointer;
         }
-
         .seat-count-table {
             margin-top: 2em;
             border-collapse: collapse;
             width: 60%;
         }
-
         .seat-count-table th, .seat-count-table td {
             border: 1px solid #999;
             padding: 8px;
             text-align: center;
         }
-
         .seat-count-table th {
             background-color: #333;
             color: #fff;
@@ -125,6 +118,7 @@
     </div>
 
     <script>
+        // 1) Fetch shows for the selected date
         document.getElementById('fetch-shows').addEventListener('click', function () {
             const date = document.getElementById('date').value;
 
@@ -140,6 +134,8 @@
             .then(data => {
                 const showList = document.getElementById('show-list');
                 showList.innerHTML = '';
+
+                // Populate the list of shows
                 data.forEach(show => {
                     const li = document.createElement('li');
                     li.textContent = `${show.time} - ${show.movie_name}`;
@@ -148,6 +144,7 @@
                     const button = document.createElement('button');
                     button.textContent = 'Select Show';
                     button.classList.add('button');
+                    // On click, fetch seat counts for that show
                     button.addEventListener('click', () => fetchSeatCounts(show.id));
 
                     li.appendChild(button);
@@ -157,36 +154,39 @@
             });
         });
 
+        // 2) Fetch seat counts for a selected show
         function fetchSeatCounts(showId) {
-    console.log("Fetching seat counts for show:", showId);  // Debug log
+            console.log("Fetching seat counts for show:", showId);
 
-    fetch("{{ route('booking.getSeatCounts') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ show_id: showId })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.error); });
+            fetch("{{ route('booking.getSeatCounts') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ show_id: showId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Seat count data received:", data);
+
+                // For each seat type in data, update the table
+                ['Gold', 'Silver', 'Platinum'].forEach(type => {
+                    document.getElementById(`${type.toLowerCase()}-booked`).textContent = data[type]?.booked || 0;
+                    document.getElementById(`${type.toLowerCase()}-reserved`).textContent = data[type]?.reserved || 0;
+                    document.getElementById(`${type.toLowerCase()}-available`).textContent = data[type]?.available || 0;
+                });
+
+                document.getElementById('seat-count-section').style.display = 'block';
+            })
+            .catch(error => {
+                console.error("Error fetching seat counts:", error);
+            });
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Seat count data received:", data);
-        ['Gold', 'Silver', 'Platinum'].forEach(type => {
-            document.getElementById(`${type.toLowerCase()}-booked`).textContent = data[type]?.booked || 0;
-            document.getElementById(`${type.toLowerCase()}-reserved`).textContent = data[type]?.reserved || 0;
-            document.getElementById(`${type.toLowerCase()}-available`).textContent = data[type]?.available || 0;
-        });
-        document.getElementById('seat-count-section').style.display = 'block';
-    })
-    .catch(error => {
-        console.error("Error fetching seat counts:", error);
-    });
-}
-
     </script>
 </x-app-layout>

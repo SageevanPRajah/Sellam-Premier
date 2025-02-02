@@ -106,7 +106,7 @@
                     button.textContent = 'Select Show';
                     button.classList.add('button');
                     button.addEventListener('click', () => {
-                        window.location.href = `/booking/create/clone/${show.id}`;
+                        window.location.href = `/booking/create/gold/${show.id}`;
                     });
 
                     li.appendChild(button);
