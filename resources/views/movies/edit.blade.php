@@ -120,6 +120,7 @@
                     <!-- Active Toggle -->
                     <div class="mb-4">
                         <label for="active" class="block text-sm font-medium text-gray-300 mb-1">Active</label>
+                        <input type="hidden" name="active" value="0">
                         <label class="flex items-center">
                             <input 
                                 type="checkbox" 
