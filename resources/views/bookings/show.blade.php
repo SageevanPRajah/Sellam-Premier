@@ -100,8 +100,10 @@
         </table>
     
         <div class="action-buttons">
-            <button type="submit" name="action" value="confirm" class="btn btn-primary mt-10">Confirm Booking</button>
-            <button type="submit" name="action" value="cancel" class="btn btn-danger mx-10 mt-10">Cancel Booking</button>
+            <button type="submit" name="action" value="confirm" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
+                Confirm Booking</button>
+            <button type="submit" name="action" value="cancel" class="btn bg-black text-white mx-10 mt-10 px-4 py-2 rounded-md hover:bg-red-800 transition">
+                Cancel Booking</button>
         </div>
     </form>
     </div>

@@ -105,7 +105,11 @@ class BookingController extends Controller
 
         if ($validated['action'] === 'confirm') {
             // Update the status of selected bookings
-            Booking::whereIn('id', $bookingIds)->update(['status' => true]);
+            Booking::whereIn('id', $bookingIds)->update([
+                'status' => true,
+                // If you want a fallback when name is NULL, use COALESCE:
+                'name' => DB::raw("CONCAT(COALESCE(name, ''), ' | ', '" . Auth::user()->name . "')")
+            ]);
             
             // Redirect to billing page with the count of selected tickets
             $selectedSeatsCount = count($bookingIds);
@@ -153,13 +157,13 @@ class BookingController extends Controller
             // Update all selected bookings with the same values
             Booking::whereIn('id', $bookingIds)->update([
                 'phone' => $validated['phone'] ?? 'Counter booking',
-                'name' => $validated['name'] ?? 'Counter booking',
+                'name'  => ($validated['name'] ?? 'Counter booking') . ' | ' . Auth::user()->name,
                 'status' => $validated['status'] ?? true,
             ]);
 
             // Redirect to the 'selectSeats' route with the movie_id
             return redirect()->route('booking.selectSeats', ['id' => $movieId])
-            ->with('success', 'Bookings updated successfully!');
+            ->with('success', 'Seats reserved successfully!');
         } catch (\Exception $e) {
             Log::error('Bulk Update Error: ' . $e->getMessage());
             return redirect()->back()->withErrors('Failed to update bookings: ' . $e->getMessage());

@@ -58,12 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/price/{price}/edit',[PriceController::class, 'edit'])->name('price.edit');
     Route::put('/price/{price}/update',[PriceController::class, 'update'])->name('price.update');
 
-    //Route Seat
-    Route::get('/seat',[SeatController::class, 'index'])->name('seat.index');
-    Route::get('/seat/create',[SeatController::class, 'create'])->name('seat.create');
-    Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
-    Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
-
     //Route Booking
     Route::get('/booking',[BookingController::class, 'index'])->name('booking.index');
     Route::get('/booking/create',[BookingController::class, 'create'])->name('booking.create');
@@ -90,10 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
     Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
-    Route::get('/billing/{billing}/edit', [BillingController::class, 'edit'])->name('billing.edit');
-    Route::put('/billing/{billing}/update', [BillingController::class, 'update'])->name('billing.update');
-    Route::delete('/billing/{billing}/destroy', [BillingController::class, 'destroy'])->name('billing.destroy');
-    Route::get('/billing/{billing}/detail', [BillingController::class, 'detail'])->name('billing.detail');
+    
 
     //Route Billing Generate Tickets
     Route::get('/billing/generate-tickets/{bookingIds}', [BillingController::class, 'generateTickets'])->name('billing.generateTickets');
@@ -116,7 +107,22 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['
 Route::middleware(['auth', 'admin'])->group(function (){
 
     //Only admin and superadmin can access this route
-    
+
+    //Route Seat
+    Route::get('/seat',[SeatController::class, 'index'])->name('seat.index');
+    Route::get('/seat/create',[SeatController::class, 'create'])->name('seat.create');
+    Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
+    Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
+
+    //reaction of cancel or reprint
+    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
+    Route::post('/bookings/action-selected', [BookingController::class, 'actionSelected'])->name('bookings.actionSelected');
+
+    //Route Billing 
+    Route::get('/billing/{billing}/edit', [BillingController::class, 'edit'])->name('billing.edit');
+    Route::put('/billing/{billing}/update', [BillingController::class, 'update'])->name('billing.update');
+    Route::delete('/billing/{billing}/destroy', [BillingController::class, 'destroy'])->name('billing.destroy');
+    Route::get('/billing/{billing}/detail', [BillingController::class, 'detail'])->name('billing.detail');
     
 });
 
