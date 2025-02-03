@@ -86,7 +86,6 @@ Route::middleware('auth')->group(function () {
     // Route to fetch seat counts for a specific show
     Route::post('/booking/overview/get-seat-counts', [BookingController::class, 'getSeatCounts'])->name('booking.getSeatCounts');
 
-
     //Route Billing
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
@@ -106,6 +105,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/booking/create/clone/{id}', [BookingController::class, 'cloneSeats'])->name('booking.cloneSeats');
     Route::get('/booking/create/platinum/{id}', [BookingController::class, 'platinumSeats'])->name('booking.platinumSeats');
     Route::get('/booking/create/gold/{id}', [BookingController::class, 'goldSeats'])->name('booking.goldSeats');
+
+    //reaction of cancel or reprint
+    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
+    Route::post('/bookings/action-selected', [BookingController::class, 'actionSelected'])->name('bookings.actionSelected');
 });
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');

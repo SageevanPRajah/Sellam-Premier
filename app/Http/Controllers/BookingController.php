@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -48,6 +49,7 @@ class BookingController extends Controller
                         'seat_code' => $seatCode,
                         'seat_no' => $seat->seat_no,
                         'date' => $request->selected_date,
+                        'name' => Auth::user()->name,
                         'time' => $request->time,
                     ]);
     
@@ -275,53 +277,87 @@ class BookingController extends Controller
         }
     }
 
-public function clone(){
-    return view('bookings.clone');
-}
+    public function clone(){
+        return view('bookings.clone');
+    }
 
-public function cloneSeats($id){
-    $show = Show::findOrFail($id);
+    public function cloneSeats($id){
+        $show = Show::findOrFail($id);
 
-    // Fetch booked seats with status for the selected show
-    $bookedSeats = Booking::where('movie_id', $show->id)
-        ->select('seat_code', 'status') // Fetch seat_code and status
-        ->get()
-        ->mapWithKeys(function ($item) {
-            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
-        })
-        ->toArray();
+        // Fetch booked seats with status for the selected show
+        $bookedSeats = Booking::where('movie_id', $show->id)
+            ->select('seat_code', 'status') // Fetch seat_code and status
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+            })
+            ->toArray();
 
-    return view('bookings.clone_seats', compact('show', 'bookedSeats'));
-}
+        return view('bookings.clone_seats', compact('show', 'bookedSeats'));
+    }
 
-public function platinumSeats($id){
-    $show = Show::findOrFail($id);
+    public function platinumSeats($id){
+        $show = Show::findOrFail($id);
 
-    // Fetch booked seats with status for the selected show
-    $bookedSeats = Booking::where('movie_id', $show->id)
-        ->select('seat_code', 'status') // Fetch seat_code and status
-        ->get()
-        ->mapWithKeys(function ($item) {
-            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
-        })
-        ->toArray();
+        // Fetch booked seats with status for the selected show
+        $bookedSeats = Booking::where('movie_id', $show->id)
+            ->select('seat_code', 'status') // Fetch seat_code and status
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+            })
+            ->toArray();
 
-    return view('bookings.platinum_seats', compact('show', 'bookedSeats'));
-}
+        return view('bookings.platinum_seats', compact('show', 'bookedSeats'));
+    }
 
-public function goldSeats($id){
-    $show = Show::findOrFail($id);
+    public function goldSeats($id){
+        $show = Show::findOrFail($id);
 
-    // Fetch booked seats with status for the selected show
-    $bookedSeats = Booking::where('movie_id', $show->id)
-        ->select('seat_code', 'status') // Fetch seat_code and status
-        ->get()
-        ->mapWithKeys(function ($item) {
-            return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
-        })
-        ->toArray();
+        // Fetch booked seats with status for the selected show
+        $bookedSeats = Booking::where('movie_id', $show->id)
+            ->select('seat_code', 'status') // Fetch seat_code and status
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->seat_code => $item->status]; // Example: ["A1" => true, "A2" => false]
+            })
+            ->toArray();
 
-    return view('bookings.gold_seats', compact('show', 'bookedSeats'));
-}
+        return view('bookings.gold_seats', compact('show', 'bookedSeats'));
+    }
+
+    // view reaction of cancel or reprint
+    public function reaction(){
+        $bookings = Booking::all();
+        return view('bookings.reaction', compact('bookings'));
+    }
+
+    //reaction of cancel or reprint
+    public function actionSelected(Request $request){
+        $validated = $request->validate([
+            'booking_ids' => 'required|array',
+            'action' => 'required|string', // Either 'confirm' or 'cancel'
+        ]);
+
+        $bookingIds = $validated['booking_ids'];
+
+        if ($validated['action'] === 'confirm') {
+            // Update the status of selected bookings
+            Booking::whereIn('id', $bookingIds)->update(['status' => true]);
+            
+            // Redirect to billing page with the count of selected tickets
+            $selectedSeatsCount = count($bookingIds);
+            session(['selected_seats_count' => $selectedSeatsCount]);
+
+            return redirect()->route('billing.create')->with('success', 'Booking confirmed.');
+        } elseif ($validated['action'] === 'cancel') {
+            // Delete the selected bookings
+            Booking::whereIn('id', $bookingIds)->delete();
+
+            return redirect()->route('bookings.reaction')->with('success', 'Selected bookings have been canceled.');
+        }
+
+        return redirect()->back()->withErrors(['error' => 'Invalid action.']);
+    }
 
 }

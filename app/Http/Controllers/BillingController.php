@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -64,6 +65,7 @@ class BillingController extends Controller
         'full_tickets' => 'required|integer|min:0',
         'half_tickets' => 'required|integer|min:0',
         'total_price' => 'required|numeric|min:0',
+        'bookingIds'     => 'nullable',
     ]);
 
     try {
@@ -79,11 +81,22 @@ class BillingController extends Controller
             'full_tickets' => $validated['full_tickets'],
             'half_tickets' => $validated['half_tickets'],
             'total_price' => $validated['total_price'],
+             
         ]);
+
+        if (!empty($validated['bookingIds'])) {
+            try {
+                // Make sure bookingIds is a string for your existing signature
+                $this->generateTickets($request, $validated['bookingIds']);
+            } catch (\Exception $printEx) {
+                // Log error, but don't break the billing flow
+                Log::error("Ticket printing failed: " . $printEx->getMessage());
+            }
+        }
 
         // Redirect to the 'selectSeats' route
         return redirect()->route('booking.selectSeats', ['id' => $validated['movie_id']])
-            ->with('success', 'Billing data stored successfully. Please proceed to select your seats.');
+            ->with('success', 'Booking confirmed and tickets printed!. Please proceed to select your seats.');
     } catch (\Exception $e) {
         // Log error and redirect back with an error message
         Log::error('Billing Store Error: ', [
@@ -245,6 +258,7 @@ class BillingController extends Controller
 
                 $html = "
                     <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
+                        <p style='font-size: 8px; margin:0;'>.</p>    
                         <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
                         <h2 style='font-size: 18px; font-family: maturascript; margin:0;'>Sellam Premier</h2>
                         <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
@@ -252,12 +266,12 @@ class BillingController extends Controller
                         <p style='margin: 5px 0; margin:0;'>TP: 065-2240064</p>
                         <hr style='border: 1px dashed #000; margin:5px;'>
 
-                        <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id}</p>
+                        <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id} - - - - - Issued by: " . Auth::user()->name . "</p>
                         <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>Date: " . date('d-M-Y h:i A') . "</p>
                         <hr style='border: 1px dashed #000; margin:0;'>
 
                         <p style='font-size: 14px; margin: 5px;'><strong>Movie Date:</strong> {$booking->date}</p>
-                        <p style='font-size: 14px; margin: 5px;'><strong>Movie Time:</strong> {$booking->time}</p>
+                        <p style='font-size: 14px; margin: 0;'><strong>Movie Time:</strong> {$booking->time}</p>
                         <hr style='border: 1px dashed #000; margin:0;'>
 
                         <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
@@ -266,7 +280,7 @@ class BillingController extends Controller
 
                         <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
                         <hr style='border: 1px dashed #000;'>
-                        <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 10px;' />
+                        <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 5px;' />
                         <hr style='border: 1px dashed #000;'>
 
                         <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
@@ -295,11 +309,6 @@ class BillingController extends Controller
             if ($returnVar !== 0) {
                 throw new \Exception("Printing failed: " . implode("\n", $output));
             }
-
-            // Delete the file after printing
-            // if (file_exists($tempFilePath)) {
-            //     unlink($tempFilePath);
-            // }
 
             return response()->json([
                 'success' => 'Tickets printed successfully!',
@@ -331,44 +340,6 @@ class BillingController extends Controller
     }
 }
 
-
-    
-
-
-//     public function generateTickets(Request $request, $bookingIds)
-// {
-//     try {
-//         $seatFilter = $request->input('seat_codes', []); 
-//         $bookingIdsArray = explode(',', $bookingIds);
-
-//         $bookings = Booking::whereIn('id', $bookingIdsArray)
-//             ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
-//                 $query->whereIn('seat_code', $seatFilter);
-//             })
-//             ->get();
-
-//         if ($bookings->isEmpty()) {
-//             return response()->json(['error' => 'No bookings found.'], 404);
-//         }
-
-//         $tickets = $bookings->map(function ($booking) {
-//             return [
-//                 'movie_name' => $booking->movie_name,
-//                 'date' => $booking->date,
-//                 'time' => $booking->time,
-//                 'seat_no' => $booking->seat_no,
-//                 'seat_type' => $booking->seat_type,
-//             ];
-//         });
-
-//         return response()->json(['success' => true, 'tickets' => $tickets], 200);
-
-//     } catch (\Exception $e) {
-//         return response()->json(['success' => false, 'message' => 'Failed to generate tickets: ' . $e->getMessage()], 500);
-//     }
-// }
-
-    
 
 
 }

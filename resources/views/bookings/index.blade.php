@@ -40,13 +40,10 @@
         <div class="filter-group">
             <label for="movieCodeSelect">Show Type</label>
             <select id="movieCodeSelect" aria-label="Select Show Type">
-                <option value="all">All Show Types</option>
-                <option value="Morning Show">Morning Show</option>
-                <option value="Matinee Show">Matinee Show</option>
-                <option value="Night Show">Night Show</option>
-                <option value="Midnight Show">Midnight Show</option>
-                <option value="Special Show">Special Show</option>
-                <option value="Premiere Show">Premiere Show</option>
+                <option value="">Select Price Type</option>
+                <option value="Price 1">Price 1</option>
+                <option value="Price 2">Price 2</option>
+                <option value="Price 3">Price 3</option>
             </select>
         </div>
 
@@ -88,7 +85,6 @@
                 <th>Name</th>
                 <th>PhoneNumber</th>
                 <th>Status</th>
-                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -105,15 +101,6 @@
                     <td>{{ $booking->name }}</td>
                     <td>{{ $booking->phone }}</td>
                     <td>{{ $booking->status }}</td>
-                    <td>
-                        <form method="GET" action="{{ route('booking.detail', ['booking' => $booking]) }}">
-                            <button type="submit" class="action-button btn-view">
-                                <img src="icons/icons8-eye-32.png" alt="View"
-                                    style="width: 17px; height: 17px; margin-right: 5px;" />
-                                View
-                            </button>
-                        </form>
-                    </td>
                 </tr>
             @endforeach
         </tbody>
