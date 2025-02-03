@@ -114,8 +114,8 @@ Route::middleware(['auth', 'admin'])->group(function (){
     Route::post('/seat',[SeatController::class, 'store'])->name('seat.store');
     Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
 
-    //reaction of cancel or reprint
-    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
+    // reaction of cancel or reprint
+    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('bookings.reaction');
     Route::post('/bookings/action-selected', [BookingController::class, 'actionSelected'])->name('bookings.actionSelected');
 
     //Route Billing 
