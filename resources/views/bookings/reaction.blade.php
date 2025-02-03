@@ -6,7 +6,7 @@
     </x-slot>
 
     <div >
-        <h1> <B> Resereved Seats </B> </h1>
+        <h1> <B> Cancel booked seats </B> </h1>
 
         <!-- Success Message -->
         @if(session()->has('success'))
@@ -26,7 +26,7 @@
         </div>
     @endif
     
-        <form action="{{ route('bookings.updateSelected') }}" method="POST">
+        <form action="{{ route('bookings.actionSelected') }}" method="POST">
             @csrf
             @method('POST')
     
@@ -81,7 +81,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bookings->where('status', '0') as $booking)
+                @foreach ($bookings->where('status', '1') as $booking)
                     <tr>
                         <td>{{ $booking->id }}</td>
                         <td>{{ $booking->date }}</td>
@@ -100,8 +100,8 @@
         </table>
     
         <div class="action-buttons">
-            <button type="submit" name="action" value="confirm" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
-                Confirm Booking</button>
+            {{-- <button type="submit" name="action" value="" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
+                Re-Print Ticket</button> --}}
             <button type="submit" name="action" value="cancel" class="btn bg-black text-white mx-10 mt-10 px-4 py-2 rounded-md hover:bg-red-800 transition">
                 Cancel Booking</button>
         </div>

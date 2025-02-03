@@ -49,14 +49,14 @@
                 </div>
             </form>
             <form method="GET" action="{{ route('billing.edit', $billing->id) }}" style="display:inline;">
-                <button type="submit" class="action-button btn-delete">
+                <button type="submit" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
                      Edit
                  </button>
              </form>
             <form method="POST" action="{{ route('billing.destroy', $billing->id) }}" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="action-button btn-delete">
+                <button type="submit" class="btn bg-black text-white mx-10 mt-10 px-4 py-2 rounded-md hover:bg-red-800 transition">
                      Delete
                 </button>
             </form>
