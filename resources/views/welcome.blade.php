@@ -21,7 +21,7 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 min-h-screen flex"
-     style="background-image: url('/icons/back.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;">
+     style="background-image: url('/icons/sdvs.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;">
             <div class="rounded-md px-3 py-2 bg-white relative flex items-center justify-center"
             style="height: 50vh; margin: auto; width: 50%; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                 <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
