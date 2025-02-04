@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <form action="{{ route('bookings.actionSelected') }}" method="POST">
+        <form action="{{ route('booking.actionSelected') }}" method="POST">
             @csrf
             @method('POST')
 
