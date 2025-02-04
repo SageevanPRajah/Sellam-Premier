@@ -35,7 +35,7 @@
 
             <!-- Full page container with the custom background -->
             <div class="min-h-screen flex"
-                 style="background-image: url('/icons/back.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;"
+                 style="background-image: url('/icons/sdvs.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;"
             >
                 <!-- BEGIN: CUSTOM SIDEBAR FOR PLATINUM PAGE -->
                 <aside 
@@ -107,9 +107,18 @@
                     
                             <!-- Seat Type Selection -->
                             <div class="seat-types">
-                                <a href="{{ url('/booking/create/clone/' . $show->id) }}" class="button silver-btn ">Silver</a>
-                                <a href="{{ url('/booking/create/gold/' . $show->id) }}" class="button gold-btn">Gold</a>
-                                <a href="{{ url('/booking/create/platinum/' . $show->id) }}" class="button platinum-btn">Platinum</a>
+                                <a href="{{ route('booking.cloneSeats', $show->id) }}" 
+                                   class="button silver-btn {{ Route::is('booking.cloneSeats') ? 'active' : '' }}">
+                                    Silver
+                                </a>
+                                <a href="{{ route('booking.goldSeats', $show->id) }}" 
+                                   class="button gold-btn {{ Route::is('booking.goldSeats') ? 'active' : '' }}">
+                                    Gold
+                                </a>
+                                <a href="{{ route('booking.platinumSeats', $show->id) }}" 
+                                   class="button platinum-btn {{ Route::is('booking.platinumSeats') ? 'active' : '' }}">
+                                    Platinum
+                                </a>
                             </div>
                     
                             <!-- Theater Layout on the right side -->
@@ -700,6 +709,12 @@
 
         .button:hover {
             background-color: #333;
+        }
+
+        .button.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #0056b3;
         }
 
             /* etc. */
