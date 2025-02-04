@@ -5,8 +5,7 @@
         </h2>
     </x-slot>
 
-    {{-- <div class="py-6"> --}}
-        <h1> <b> Movie </b> </h1>
+    <h1><b> Movie </b></h1>
 
     @if(session()->has('success'))
         <div class="success-message">
@@ -14,17 +13,16 @@
         </div>
     @endif
 
-
-<!-- Error Messages -->
-@if($errors->any())
-    <div class="error-messages">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="error-messages">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <!-- Slider Controls Container -->
     <div class="slider-controls">
@@ -107,7 +105,8 @@
         </thead>
         <tbody>
             @foreach($movies as $movie)
-                <tr data-status="{{ $movie->active ? 'active' : 'inactive' }}">
+                <!-- Added data-release attribute with release date in Y-m-d format -->
+                <tr data-status="{{ $movie->active ? 'active' : 'inactive' }}" data-release="{{ \Carbon\Carbon::parse($movie->release_date)->format('Y-m-d') }}">
                     <td>{{ $movie->id }}</td>
                     <td class="movie-name">{{ $movie->name }}</td>
                     <td>
@@ -121,6 +120,7 @@
                         <a href="{{ $movie->trailer_link }}" target="_blank">Watch Trailer</a>
                     </td>
                     <td>{{ $movie->duration }} minutes</td>
+                    <!-- Display the formatted release date -->
                     <td>{{ \Carbon\Carbon::parse($movie->release_date)->format('F d, Y') }}</td>
                     <td>
                         <a href="{{ $movie->imdb_link }}" target="_blank">IMDB Link</a>
@@ -183,7 +183,9 @@
         <div class="modal-content">
             <span class="close-button" aria-label="Close Modal">&times;</span>
             <p>Are you sure you want to delete this movie?</p>
-            <div><img src="icons/icons8-delete (1).gif" alt="Delete" style="width: 25px; height: 25px; margin-right: 5px;" /></div>
+            <div>
+                <img src="icons/icons8-delete (1).gif" alt="Delete" style="width: 25px; height: 25px; margin-right: 5px;" />
+            </div>
             <div class="modal-actions">
                 <button id="confirmDelete" class="btn-delete">Confirm</button>
                 <button id="cancelDelete" class="btn-view">Cancel</button>
@@ -191,11 +193,7 @@
         </div>
     </div>
 
-        
-    </div>
-
-
-    <!-- Style for this script -->
+    <!-- Styles -->
     <style>
         /* CSS Variables for Neumorphic Black and Gray Theme */
         :root {
@@ -227,6 +225,7 @@
             margin: 20px 0;
             text-align: center;
             color: black;
+            font-size: 20px;
         }
 
         /* Success Message */
@@ -249,7 +248,6 @@
         .slider-container {
             width: 100%;
             overflow: hidden;
-            /* Hides overflow for slider effect */
             border: 1px solid var(--border-color);
             border-radius: 15px;
             background-color: var(--primary-color);
@@ -269,7 +267,6 @@
             flex: 1 1 auto;
             width: 180px;
             margin: 10px 5px;
-            /* gap between items */
             text-align: center;
             background-color: var(--primary-color);
             border-radius: 15px;
@@ -297,11 +294,10 @@
             text-decoration: underline;
         }
 
-        /* Slider Control Buttons (Neumorphic Gray and Black) */
+        /* Slider Control Buttons */
         .slider-control-btn {
             background-color: var(--button-color);
             border-radius: 50%;
-            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             color: var(--text-color);
             border: none;
             width: 50px;
@@ -324,7 +320,7 @@
             cursor: not-allowed;
         }
 
-        /* Add New Movie Button (Neumorphic Gray and Black) */
+        /* Add New Movie Button */
         .add-link {
             text-align: center;
             margin: 20px 0;
@@ -338,7 +334,6 @@
             color: var(--text-color);
             text-decoration: none;
             border-radius: 30px;
-            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
             cursor: pointer;
             font-weight: bold;
@@ -346,7 +341,6 @@
         }
 
         .add-link a:hover {
-            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             background-color: #333;
             color: #fff;
         }
@@ -354,7 +348,6 @@
         .add-link a img {
             margin-right: 10px;
             filter: brightness(0) invert(1);
-            /* Invert icon colors for visibility */
         }
 
         /* Search Bar with Status and Date Range Filter */
@@ -365,9 +358,7 @@
             justify-content: flex-end;
             align-items: center;
             gap: 15px;
-            /* Adds space between elements */
             flex-wrap: wrap;
-            /* Allows wrapping on smaller screens */
         }
 
         .search-bar .filter-group {
@@ -384,7 +375,6 @@
             border-radius: 20px;
             background-color: rgb(53, 53, 53);
             color: var(--text-color);
-            /* box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); */
             font-size: 14px;
             outline: none;
             transition: box-shadow 0.3s;
@@ -473,7 +463,6 @@
         /* Buttons in table (Neumorphic Gray and Black) */
         .action-button {
             width: 100px;
-            /* height: 40px; */
             padding: 7px 0;
             border: none;
             border-radius: 30px;
@@ -486,78 +475,59 @@
             transition: box-shadow 0.3s, background-color 0.3s;
             color: #ffffff;
             margin: 0 auto;
-            /* Center the button within the cell */
         }
 
         .btn-edit {
             background-color: rgb(81, 88, 94);
-            /* Gray */
         }
 
         .btn-delete {
             background-color: #343a40;
-            /* Dark Gray */
         }
 
         .btn-view {
             background-color: #495057;
-            /* Medium Gray */
         }
 
         .btn-edit:hover,
         .btn-delete:hover,
         .btn-view:hover {
-            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             color: black;
-
         }
 
         .btn-edit:hover img,
         .btn-delete:hover img,
         .btn-view:hover img {
             filter: brightness(0) invert(0);
-            /* Remove inversion to make the image black */
         }
-
-        /* .btn-edit img, .btn-delete img, .btn-view img:hover {
-    color: black;
-    } */
 
         .btn-edit img,
         .btn-delete img,
         .btn-view img {
             margin-right: 5px;
             filter: brightness(0) invert(1);
-            /* Invert icon colors for visibility */
         }
 
-        /* Modal Styles (Neumorphic Gray and Black) */
+        /* Modal Styles */
         .modal {
             display: none;
-            /* Hidden by default */
             position: fixed;
             z-index: 1000;
-            /* Sit on top */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            /* Enable scroll if needed */
             background-color: rgba(0, 0, 0, 0.7);
-            /* Black w/ opacity */
         }
 
         .modal-content {
             background-color: #ffffff;
             margin: 10% auto;
-            /* 10% from top and centered */
             padding: 20px;
             border: none;
             width: 300px;
-            /* Could be more or less, depending on screen size */
             border-radius: 20px;
-            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             text-align: center;
             color: rgb(41, 43, 44);
         }
@@ -590,23 +560,19 @@
             cursor: pointer;
             font-size: 14px;
             color: #ffffff;
-            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             transition: box-shadow 0.3s, background-color 0.3s;
         }
 
         #confirmDelete {
             background-color: #FF5555;
-            /* Danger */
         }
 
         #cancelDelete {
             background-color: #6c757d;
-            /* Gray */
         }
 
         #confirmDelete:hover,
         #cancelDelete:hover {
-            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
         }
 
         /* Pagination and Rows per Page */
@@ -658,7 +624,6 @@
             border-radius: 20px;
             background-color: var(--secondary-color);
             color: var(--text-color);
-            /* box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light); */
             cursor: pointer;
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
@@ -723,7 +688,7 @@
         }
     </style>
 
-    <!-- Slider and Search Functionality Script -->
+    <!-- Slider and Filter Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Slider Functionality
@@ -786,7 +751,7 @@
             // Initialize the slider position
             updateSlider();
 
-            // Search and Status and Date Range Filter Functionality
+            // Filter Functionality
             const searchInput = document.getElementById('searchInput');
             const statusFilter = document.getElementById('statusFilter');
             const startDateInput = document.getElementById('startDate');
@@ -812,16 +777,13 @@
                 // Filter rows based on criteria
                 const filteredRows = rows.filter(row => {
                     const nameCell = row.querySelector('.movie-name');
-                    const releaseDateCell = row.cells[5]; // 6th column: Release Date
-
                     const nameText = nameCell.textContent.trim().toLowerCase();
 
                     // Retrieve status from data attribute
                     const status = row.getAttribute('data-status');
 
-                    // Retrieve and parse release date
-                    const releaseDateText = releaseDateCell.textContent.trim();
-                    const releaseDate = new Date(releaseDateText);
+                    // Retrieve release date from data attribute (in YYYY-MM-DD)
+                    const releaseDate = row.getAttribute('data-release');
 
                     // Check search term
                     const matchesSearch = nameText.includes(searchTerm);
@@ -836,19 +798,13 @@
                         matchesStatus = true;
                     }
 
-                    // Check date range
+                    // Check date range using string comparisons (YYYY-MM-DD)
                     let matchesDate = true;
-                    if (startDate) {
-                        const start = new Date(startDate);
-                        if (releaseDate < start) {
-                            matchesDate = false;
-                        }
+                    if (startDate && releaseDate < startDate) {
+                        matchesDate = false;
                     }
-                    if (endDate) {
-                        const end = new Date(endDate);
-                        if (releaseDate > end) {
-                            matchesDate = false;
-                        }
+                    if (endDate && releaseDate > endDate) {
+                        matchesDate = false;
                     }
 
                     return matchesSearch && matchesStatus && matchesDate;
@@ -859,10 +815,8 @@
 
             // Function to paginate rows
             function paginateRows(filteredRows) {
-                // Calculate total pages
                 const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
 
-                // Adjust currentPage if out of bounds
                 if (currentPage > totalPages) {
                     currentPage = totalPages;
                 }
@@ -870,7 +824,6 @@
                     currentPage = 1;
                 }
 
-                // Determine start and end indices
                 const startIndex = (currentPage - 1) * rowsPerPage;
                 const endIndex = startIndex + rowsPerPage;
 
@@ -884,18 +837,15 @@
                     row.style.display = '';
                 });
 
-                // Update pagination controls
                 updatePaginationControls(totalPages);
             }
 
             // Function to update pagination controls
             function updatePaginationControls(totalPages) {
-                // Clear existing pagination buttons
                 paginationContainer.innerHTML = '';
 
-                if (totalPages <= 1) return; // No need for pagination
+                if (totalPages <= 1) return;
 
-                // Previous Button
                 const prevBtn = document.createElement('button');
                 prevBtn.textContent = 'Prev';
                 prevBtn.disabled = currentPage === 1;
@@ -907,7 +857,6 @@
                 });
                 paginationContainer.appendChild(prevBtn);
 
-                // Page Number Buttons (show up to 5 pages for simplicity)
                 let startPage = Math.max(1, currentPage - 2);
                 let endPage = Math.min(totalPages, currentPage + 2);
 
@@ -931,7 +880,6 @@
                     paginationContainer.appendChild(pageBtn);
                 }
 
-                // Next Button
                 const nextBtn = document.createElement('button');
                 nextBtn.textContent = 'Next';
                 nextBtn.disabled = currentPage === totalPages;
@@ -984,22 +932,19 @@
             const cancelDeleteButton = document.getElementById('cancelDelete');
             const confirmDeleteButton = document.getElementById('confirmDelete');
 
-            let formToSubmit = null; // To keep track of which form to submit
+            let formToSubmit = null;
 
-            // Function to open the modal
             function openModal(form) {
                 deleteModal.style.display = 'block';
                 formToSubmit = form;
             }
 
-            // Function to close the modal
             function closeModal() {
                 deleteModal.style.display = 'none';
                 formToSubmit = null;
-                confirmDeleteButton.disabled = false; // Re-enable the button if it was disabled
+                confirmDeleteButton.disabled = false;
             }
 
-            // Event listener for delete buttons
             const deleteButtons = document.querySelectorAll('.delete-button');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -1008,26 +953,21 @@
                 });
             });
 
-            // Event listener for confirm delete
             confirmDeleteButton.addEventListener('click', () => {
                 if (formToSubmit) {
-                    // Optionally disable the confirm button to prevent multiple clicks
                     confirmDeleteButton.disabled = true;
                     formToSubmit.submit();
                 }
             });
 
-            // Event listener for cancel delete
             cancelDeleteButton.addEventListener('click', () => {
                 closeModal();
             });
 
-            // Event listener for close button (X)
             closeButton.addEventListener('click', () => {
                 closeModal();
             });
 
-            // Close modal when clicking outside the modal content
             window.addEventListener('click', (event) => {
                 if (event.target == deleteModal) {
                     closeModal();

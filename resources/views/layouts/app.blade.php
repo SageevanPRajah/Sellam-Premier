@@ -49,7 +49,7 @@
             <!-- Page Content -->
             <!-- Sidebar and Main Content -->
             <div class="min-h-screen flex "
-            style="background-image: url('/icons/back.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;"
+            style="background-image: url('/icons/sdvs.jpg'); background-repeat: repeat; background-size: auto; background-position: center; min-height: 100vh;"
             >
             {{-- bg-gray-800 --}}
                 <!-- Sidebar -->

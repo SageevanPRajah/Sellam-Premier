@@ -287,8 +287,7 @@ class BillingController extends Controller
                         <p style='font-size: 10px; margin:0;'>076-2646376</p>
                     </div>";
 
-                $ticketHtml .= $html;
-                $ticketHtml .= "<div></div>";
+                    $ticketHtml .= $html . "<div></div>";
             }
 
             $mpdf->WriteHTML($ticketHtml);
@@ -310,10 +309,15 @@ class BillingController extends Controller
                 throw new \Exception("Printing failed: " . implode("\n", $output));
             }
 
+            // If the request is AJAX, return a JSON response; otherwise, redirect back
+        if ($request->ajax()) {
             return response()->json([
                 'success' => 'Tickets printed successfully!',
-                'filePath' => realpath($tempFilePath) // Ensure full file path is returned
+                'filePath' => realpath($tempFilePath)
             ], 200);
+        } else {
+            return redirect()->route('booking.reaction')->with('success', 'Tickets printed successfully!');
+        }
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to generate tickets: ' . $e->getMessage()], 500);
         }

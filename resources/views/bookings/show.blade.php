@@ -140,7 +140,8 @@
             margin: 20px 0;
             text-align: center;
             color: black;
-        }
+            font-size: 20px;
+        }
 
         /* Success Message */
         .success-message {

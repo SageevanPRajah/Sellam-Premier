@@ -34,6 +34,13 @@
                         background-color: rgb(35, 36, 36);;
                     }
 
+                    h1 {
+                        margin: 20px 0;
+                        text-align: center;
+                        color: black;
+                        font-size: 20px;
+                    }
+
                     table {
                         margin: 20px auto;
                         border-collapse: collapse;
