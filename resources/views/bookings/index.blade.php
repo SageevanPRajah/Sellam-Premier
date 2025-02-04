@@ -8,107 +8,139 @@
     <div class="py-6">
         <h1>Booking details</h1>
 
-   <!-- Success Message -->
-   @if(session()->has('success'))
-   <div class="success-message">
-       {{ session('success') }}
-   </div>
-@endif
+        <!-- Success Message -->
+        @if(session()->has('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
 
-<!-- Error Messages -->
-@if($errors->any())
-   <div class="error-messages">
-       <ul>
-           @foreach($errors->all() as $error)
-               <li>{{$error}}</li>
-           @endforeach
-       </ul>
-   </div>
-@endif
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    <!-- Add New Show Button -->
-    <div class="add-link">
-        <a href="{{ route('show.create') }}">
-            <img src="icons/icons8-add-24.png" alt="Add" style="width: 19px; height: 19px; margin-bottom: -3px;" />
-            Add Booking
-        </a>
-    </div>
+        <!-- Search Bar / Filters -->
+        <div class="search-bar">
+            <!-- Filter by "Show Type" (example) -->
+            <div class="filter-group">
+                <label for="movieCodeSelect">Show Type</label>
+                <select id="movieCodeSelect" aria-label="Select Show Type">
+                    <option value="">All Types</option>
+                    <option value="Price 1">Price 1</option>
+                    <option value="Price 2">Price 2</option>
+                    <option value="Price 3">Price 3</option>
+                </select>
+            </div>
 
-    <!-- Search Bar with Filters -->
-    <div class="search-bar">
-        <!-- movie_code Filter (Dropdown) -->
-        <div class="filter-group">
-            <label for="movieCodeSelect">Show Type</label>
-            <select id="movieCodeSelect" aria-label="Select Show Type">
-                <option value="">Select Price Type</option>
-                <option value="Price 1">Price 1</option>
-                <option value="Price 2">Price 2</option>
-                <option value="Price 3">Price 3</option>
-            </select>
+            <!-- Filter by Time -->
+            <div class="filter-group">
+                <label for="timeInput">Time</label>
+                <input 
+                  type="text" 
+                  id="timeInput" 
+                  placeholder="e.g. 19:30" 
+                  aria-label="Filter by Time"
+                />
+            </div>
+
+            <!-- Date Range -->
+            <div class="filter-group">
+                <label for="startDate">From Date</label>
+                <input 
+                  type="date" 
+                  id="startDate" 
+                  aria-label="Filter Shows From Date"
+                />
+            </div>
+            <div class="filter-group">
+                <label for="endDate">To Date</label>
+                <input 
+                  type="date" 
+                  id="endDate" 
+                  aria-label="Filter Shows To Date"
+                />
+            </div>
+
+            <!-- General Search (by movie name, or customer name, etc.) -->
+            <div class="filter-group">
+                <label for="searchInput">Search</label>
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="Search by Movie Name" 
+                  aria-label="Search Bookings"
+                />
+            </div>
         </div>
 
-        <!-- Filter by Time -->
-        <div class="filter-group">
-            <label for="timeInput">Time</label>
-            <input type="text" id="timeInput" placeholder="e.g. 19:30" aria-label="Filter by Time">
-        </div>
-
-        <!-- Date Range Filter -->
-        <div class="filter-group">
-            <label for="startDate">From Date</label>
-            <input type="date" id="startDate" aria-label="Filter Shows From Date">
-        </div>
-        <div class="filter-group">
-            <label for="endDate">To Date</label>
-            <input type="date" id="endDate" aria-label="Filter Shows To Date">
-        </div>
-
-        <!-- General Search -->
-        <div class="filter-group">
-            <label for="searchInput">Search</label>
-            <input type="text" id="searchInput" placeholder="Search by Movie Name" aria-label="Search Shows">
-        </div>
-    </div>
-
-    <!-- Shows Table -->
-    <table id="showTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Show Id</th>
-                <th>Movie Name</th>
-                <th>Seat Type</th>
-                <th>seat Number</th>
-                <th>seat Code</th>
-                <th>Name</th>
-                <th>PhoneNumber</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($bookings as $booking)
+        <!-- Bookings Table -->
+        <table id="showTable">
+            <thead>
                 <tr>
-                    <td>{{ $booking->id }}</td>
-                    <td>{{ $booking->date }}</td>
-                    <td>{{ $booking->time }}</td>
-                    <td>{{ $booking->movie_id }}</td>
-                    <td>{{ $booking->movie_name }}</td>
-                    <td>{{ $booking->seat_type }}</td>
-                    <td>{{ $booking->seat_no }}</td>
-                    <td>{{ $booking->seat_code }}</td>
-                    <td>{{ $booking->name }}</td>
-                    <td>{{ $booking->phone }}</td>
-                    <td>{{ $booking->status }}</td>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Show Id</th>
+                    <th>Movie Name</th>
+                    <th>Seat Type</th>
+                    <th>Seat Number</th>
+                    <th>Seat Code</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($bookings as $booking)
+                    <tr 
+                        data-showtype="{{ strtolower($booking->price_type ?? '') }}"
+                        data-time="{{ $booking->time }}"
+                        data-date="{{ $booking->date }}"
+                        data-name="{{ strtolower($booking->movie_name.' '.$booking->name) }}"
+                        data-status="{{ strtolower($booking->status) }}"
+                    >
+                        <td>{{ $booking->id }}</td>
+                        <td>{{ $booking->date }}</td>
+                        <td>{{ $booking->time }}</td>
+                        <td>{{ $booking->movie_id }}</td>
+                        <td>{{ $booking->movie_name }}</td>
+                        <td>{{ $booking->seat_type }}</td>
+                        <td>{{ $booking->seat_no }}</td>
+                        <td>{{ $booking->seat_code }}</td>
+                        <td>{{ $booking->name }}</td>
+                        <td>{{ $booking->phone }}</td>
+                        <td>{{ $booking->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <!-- Pagination and Rows-per-page -->
+        <div class="pagination-container">
+            <div class="rows-per-page">
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage" aria-label="Select number of rows per page">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                </select>
+            </div>
+            <div class="pagination" id="pagination">
+                <!-- JS will inject pagination buttons here -->
+            </div>
+        </div>
     </div>
 
+
+    <!-- Example Styling (adjust as you like) -->
     <style>
-        /* CSS Variables */
         :root {
             --background-color: #121212;
             --primary-color: #1e1e1e;
@@ -116,7 +148,6 @@
             --text-color: #e0e0e0;
             --accent-color: #4CAF50;
             --button-color: #2e2e2e;
-            --button-hover-color: #3e3e3e;
             --border-color: #555;
             --success-color: #4CAF50;
             --danger-color: #FF5555;
@@ -127,32 +158,34 @@
         }
 
         body {
+            background-color: rgb(40, 43, 46);
+            color: black;
             margin: 0;
             padding: 0;
-            background-color: rgb(40, 43, 46);
-            color: var(--text-color);
             font-family: Arial, sans-serif;
         }
 
         h1 {
             margin: 20px 0;
             text-align: center;
-            color: var(--text-color);
+            color: black;
+            font-size: 20px;
         }
 
-        /* Success Message */
         .success-message {
             text-align: center;
             color: var(--success-color);
             margin-bottom: 10px;
         }
 
-        /* Add New Show Button */
+        .error-messages li {
+            color: #ffdddd;
+        }
+
         .add-link {
             text-align: center;
             margin: 20px 0;
         }
-
         .add-link a {
             display: inline-flex;
             align-items: center;
@@ -166,19 +199,15 @@
             font-weight: bold;
             margin-left: 57%;
         }
-
         .add-link a:hover {
             background-color: #333;
             color: #fff;
         }
-
         .add-link a img {
             margin-right: 10px;
             filter: brightness(0) invert(1);
-            /* Invert icon colors for visibility */
         }
 
-        /* Search Bar */
         .search-bar {
             width: 80%;
             margin: 20px auto;
@@ -188,18 +217,14 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-
         .search-bar .filter-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
-
         .search-bar label {
             font-size: 14px;
-            color: var(--text-color);
         }
-
         .search-bar select,
         .search-bar input[type="text"],
         .search-bar input[type="date"] {
@@ -210,20 +235,16 @@
             color: var(--text-color);
             font-size: 16px;
             outline: none;
-            transition: box-shadow 0.3s;
         }
-
         .search-bar select:focus,
         .search-bar input[type="text"]:focus,
         .search-bar input[type="date"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
-
         .search-bar input[type="text"]::placeholder {
             color: #aaa;
         }
 
-        /* Table */
         table {
             margin: 0 auto;
             border-collapse: collapse;
@@ -235,136 +256,15 @@
             border-radius: 15px;
             overflow: hidden;
         }
-
-        th,
-        td {
+        th, td {
             padding: 15px;
             color: var(--text-color);
         }
-
         th {
             background-color: rgb(35, 36, 36);
             font-weight: bold;
-            color: #ffffff;
         }
 
-        /* Buttons (Edit, Delete, View) */
-        .action-button {
-            width: 100px;
-            padding: 10px 0;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
-            transition: box-shadow 0.3s, background-color 0.3s;
-            color: #ffffff;
-            margin: 0 auto;
-            /* Center the button within the cell */
-        }
-
-        .btn-edit {
-            background-color: rgb(81, 88, 94);
-            /* Gray */
-        }
-
-        .btn-delete {
-            background-color: #343a40;
-            /* Dark Gray */
-        }
-
-        .btn-view {
-            background-color: #495057;
-            /* Medium Gray */
-        }
-
-        .btn-edit:hover,
-        .btn-delete:hover,
-        .btn-view:hover {
-            color: black;
-        }
-
-        .btn-edit img,
-        .btn-delete img,
-        .btn-view img {
-            margin-right: 5px;
-            filter: brightness(0) invert(1);
-        }
-
-        .btn-edit:hover img,
-        .btn-delete:hover img,
-        .btn-view:hover img {
-            filter: brightness(0) invert(0);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: none;
-            width: 300px;
-            border-radius: 20px;
-            text-align: center;
-            color: rgb(41, 43, 44);
-        }
-
-        .close-button {
-            color: #ffffff;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #FF5555;
-            text-decoration: none;
-        }
-
-        .modal-actions {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .modal-actions button {
-            width: 100px;
-            padding: 10px 0;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #ffffff;
-            transition: box-shadow 0.3s, background-color 0.3s;
-        }
-
-        #confirmDelete {
-            background-color: #FF5555;
-        }
-
-        #cancelDelete {
-            background-color: #6c757d;
-        }
-
-        /* Pagination and Rows per Page */
         .pagination-container {
             width: 80%;
             margin: 20px auto;
@@ -373,13 +273,11 @@
             align-items: center;
             flex-wrap: wrap;
         }
-
         .rows-per-page {
             display: flex;
             align-items: center;
             gap: 5px;
         }
-
         .rows-per-page select {
             padding: 8px 12px;
             border: none;
@@ -388,19 +286,12 @@
             color: var(--text-color);
             font-size: 16px;
             outline: none;
-            transition: box-shadow 0.3s;
         }
-
-        .rows-per-page select:focus {
-            box-shadow: 0 0 10px #2196F3;
-        }
-
         .pagination {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .pagination button {
             padding: 8px 12px;
             border: none;
@@ -408,51 +299,42 @@
             background-color: var(--secondary-color);
             color: var(--text-color);
             cursor: pointer;
-            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            transition: 0.3s;
         }
-
         .pagination button.active {
             background-color: #2196F3;
-            color: #ffffff;
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            color: #fff;
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
         }
-
         .pagination button:hover:not(.active) {
             box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
             background-color: #555555;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             table {
                 font-size: 14px;
             }
-
             .add-link {
                 margin-left: 0;
                 text-align: center;
             }
-
             .search-bar {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .search-bar .filter-group {
                 width: 100%;
             }
-
             .search-bar select,
             .search-bar input[type="text"],
             .search-bar input[type="date"] {
                 width: 100%;
             }
-
             .pagination-container {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .rows-per-page,
             .pagination {
                 width: 100%;
@@ -462,4 +344,185 @@
         }
     </style>
 
+    <!-- Script for Filtering & Pagination -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          // Filters
+          const movieCodeSelect = document.getElementById('movieCodeSelect');
+          const timeInput       = document.getElementById('timeInput');
+          const startDateInput  = document.getElementById('startDate');
+          const endDateInput    = document.getElementById('endDate');
+          const searchInput     = document.getElementById('searchInput');
+
+          // Table rows
+          const table = document.getElementById('showTable');
+          const tbody = table.querySelector('tbody');
+          const rows  = Array.from(tbody.querySelectorAll('tr'));
+
+          // Pagination
+          const rowsPerPageSelect = document.getElementById('rowsPerPage');
+          const paginationContainer = document.getElementById('pagination');
+
+          let currentPage  = 1;
+          let rowsPerPage  = parseInt(rowsPerPageSelect.value);
+
+          // 1) Filtering logic
+          function filterBookings() {
+              const showTypeVal  = movieCodeSelect.value.toLowerCase().trim();
+              const timeVal      = timeInput.value.trim().toLowerCase();
+              const startDateVal = startDateInput.value;
+              const endDateVal   = endDateInput.value;
+              const searchVal    = searchInput.value.toLowerCase().trim();
+
+              return rows.filter(row => {
+                  const rowShowType = row.getAttribute('data-showtype') || '';
+                  const rowTime     = row.getAttribute('data-time') || '';
+                  const rowDate     = row.getAttribute('data-date') || '';
+                  const rowName     = row.getAttribute('data-name') || '';
+                  const rowStatus   = row.getAttribute('data-status') || '';
+
+                  // Check Show Type
+                  let matchShowType = true;
+                  if (showTypeVal && !rowShowType.includes(showTypeVal)) {
+                      matchShowType = false;
+                  }
+
+                  // Check Time
+                  let matchTime = true;
+                  if (timeVal && !rowTime.toLowerCase().includes(timeVal)) {
+                      matchTime = false;
+                  }
+
+                  // Check Date Range
+                  let matchDate = true;
+                  if (startDateVal && rowDate < startDateVal) {
+                      matchDate = false;
+                  }
+                  if (endDateVal && rowDate > endDateVal) {
+                      matchDate = false;
+                  }
+
+                  // Check Search (movie name + user name, etc.)
+                  let matchSearch = true;
+                  if (searchVal && !rowName.includes(searchVal)) {
+                      matchSearch = false;
+                  }
+
+                  // If all conditions match, keep the row
+                  return matchShowType && matchTime && matchDate && matchSearch;
+              });
+          }
+
+          // 2) Pagination logic
+          function paginateRows(filteredRows) {
+              const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+              if (currentPage > totalPages) currentPage = totalPages;
+              if (currentPage < 1) currentPage = 1;
+
+              const startIndex = (currentPage - 1) * rowsPerPage;
+              const endIndex   = startIndex + rowsPerPage;
+
+              // Hide all rows, then show only the slice for this page
+              rows.forEach(row => (row.style.display = 'none'));
+              filteredRows.slice(startIndex, endIndex).forEach(row => (row.style.display = ''));
+
+              // Update pagination buttons
+              updatePaginationControls(totalPages);
+          }
+
+          // 3) Create pagination buttons
+          function updatePaginationControls(totalPages) {
+              paginationContainer.innerHTML = '';
+
+              // No pagination needed if there's only one page
+              if (totalPages <= 1) return;
+
+              // Prev Button
+              const prevBtn = document.createElement('button');
+              prevBtn.textContent = 'Prev';
+              prevBtn.disabled = (currentPage === 1);
+              prevBtn.addEventListener('click', () => {
+                  if (currentPage > 1) {
+                      currentPage--;
+                      applyFiltersAndPagination();
+                  }
+              });
+              paginationContainer.appendChild(prevBtn);
+
+              // Numeric page buttons
+              let startPage = Math.max(1, currentPage - 2);
+              let endPage   = Math.min(totalPages, currentPage + 2);
+
+              // Adjust if near first or last pages
+              if (currentPage <= 3) {
+                  endPage = Math.min(5, totalPages);
+              }
+              if (currentPage >= totalPages - 2) {
+                  startPage = Math.max(1, totalPages - 4);
+              }
+
+              for (let i = startPage; i <= endPage; i++) {
+                  const pageBtn = document.createElement('button');
+                  pageBtn.textContent = i;
+                  if (i === currentPage) {
+                      pageBtn.classList.add('active');
+                  }
+                  pageBtn.addEventListener('click', () => {
+                      currentPage = i;
+                      applyFiltersAndPagination();
+                  });
+                  paginationContainer.appendChild(pageBtn);
+              }
+
+              // Next Button
+              const nextBtn = document.createElement('button');
+              nextBtn.textContent = 'Next';
+              nextBtn.disabled = (currentPage === totalPages);
+              nextBtn.addEventListener('click', () => {
+                  if (currentPage < totalPages) {
+                      currentPage++;
+                      applyFiltersAndPagination();
+                  }
+              });
+              paginationContainer.appendChild(nextBtn);
+          }
+
+          // 4) Master function to handle filter + pagination
+          function applyFiltersAndPagination() {
+              const filtered = filterBookings();
+              paginateRows(filtered);
+          }
+
+          // 5) Event listeners
+          movieCodeSelect.addEventListener('change', () => {
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+          timeInput.addEventListener('input', () => {
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+          startDateInput.addEventListener('change', () => {
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+          endDateInput.addEventListener('change', () => {
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+          searchInput.addEventListener('input', () => {
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+
+          rowsPerPageSelect.addEventListener('change', () => {
+              rowsPerPage = parseInt(rowsPerPageSelect.value);
+              currentPage = 1;
+              applyFiltersAndPagination();
+          });
+
+          // 6) Initialize
+          applyFiltersAndPagination();
+      });
+    </script>
 </x-app-layout>
