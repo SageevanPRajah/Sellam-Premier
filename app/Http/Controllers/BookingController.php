@@ -14,7 +14,7 @@ use App\Models\Seat;
 class BookingController extends Controller
 {
     public function index(){
-        $bookings = Booking::all();
+        $bookings = Booking::orderBy('id', 'desc')->get();
         return view('bookings.index', compact('bookings'));
     }
 
@@ -332,7 +332,9 @@ class BookingController extends Controller
 
     // view reaction of cancel or reprint
     public function reaction(){
-        $bookings = Booking::all();
+        $bookings = Booking::where('status', '1')
+        ->orderBy('id', 'desc')
+        ->get();
         return view('bookings.reaction', compact('bookings'));
     }
 

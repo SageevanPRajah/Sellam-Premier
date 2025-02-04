@@ -51,7 +51,7 @@
             <div id="theater-layout">
 
                 <!-- GOLD Section (hidden by default) -->
-                <div class="seat-type-layout-section" id="gold-layout" style="display: none;">
+                <div class="seat-type-layout-section" id="gold-layout" style="display: block;">
                     <table>
                         <thead>
                             <tr>
@@ -343,7 +343,7 @@
                 </div>
 
                 <!-- SILVER Section (visible by default) -->
-                <div class="seat-type-layout-section" id="silver-layout" style="display: block;">
+                <div class="seat-type-layout-section" id="silver-layout" style="display: none;">
                     <table>
                         <thead>
                             <tr>
