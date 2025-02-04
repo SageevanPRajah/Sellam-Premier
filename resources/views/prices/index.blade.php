@@ -108,12 +108,12 @@
 
                 <h1 class="text-center text-2xl mb-4">Ticket Prices</h1>
 
-                <div class="add-link">
+                {{-- <div class="add-link">
                     <a href="{{ route('price.create') }}">
                         <img src="icons/icons8-add-24.png" alt="Add" class="inline-block mr-2" />
                         Add New Price
                     </a>
-                </div>
+                </div> --}}
 
                 <!-- Success Message -->
                 @if(session()->has('success'))
