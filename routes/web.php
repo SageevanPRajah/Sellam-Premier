@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
 
     //reaction of cancel or reprint
     Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
-    Route::post('/bookings/action-selected', [BookingController::class, 'actionSelected'])->name('bookings.actionSelected');
+    Route::post('/booking/action-selected', [BookingController::class, 'actionSelected'])->name('booking.actionSelected');
 });
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');
@@ -115,8 +115,8 @@ Route::middleware(['auth', 'admin'])->group(function (){
     Route::get('/seat/{seat}/detail',[SeatController::class, 'detail'])->name('seat.detail');
 
     // reaction of cancel or reprint
-    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('bookings.reaction');
-    Route::post('/bookings/action-selected', [BookingController::class, 'actionSelected'])->name('bookings.actionSelected');
+    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
+    Route::post('/booking/action-selected', [BookingController::class, 'actionSelected'])->name('booking.actionSelected');
 
     //Route Billing 
     Route::get('/billing/{billing}/edit', [BillingController::class, 'edit'])->name('billing.edit');
