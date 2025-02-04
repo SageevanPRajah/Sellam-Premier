@@ -358,7 +358,7 @@ class BookingController extends Controller
             // Delete the selected bookings
             Booking::whereIn('id', $bookingIds)->delete();
 
-            return redirect()->route('bookings.reaction')->with('success', 'Selected bookings have been canceled.');
+            return redirect()->route('booking.reaction')->with('success', 'Selected bookings have been canceled.');
         }
 
         return redirect()->back()->withErrors(['error' => 'Invalid action.']);
