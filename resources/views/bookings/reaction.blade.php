@@ -118,11 +118,11 @@
             </table>
 
             <div class="action-buttons">
-                <!-- Example of a re-print button (commented out)
+                <!-- Example of a re-print button (commented out)-->
                 <button type="submit" name="action" value="reprint" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
                     Re-Print Ticket
                 </button>
-                -->
+                
                 <button type="submit" name="action" value="cancel" class="btn bg-black text-white mx-10 mt-10 px-4 py-2 rounded-md hover:bg-red-800 transition">
                     Cancel Booking
                 </button>

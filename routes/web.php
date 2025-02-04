@@ -97,9 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/booking/create/platinum/{id}', [BookingController::class, 'platinumSeats'])->name('booking.platinumSeats');
     Route::get('/booking/create/gold/{id}', [BookingController::class, 'goldSeats'])->name('booking.goldSeats');
 
-    //reaction of cancel or reprint
-    Route::get('/booking/reaction', [BookingController::class, 'reaction'])->name('booking.reaction');
-    Route::post('/booking/action-selected', [BookingController::class, 'actionSelected'])->name('booking.actionSelected');
 });
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');

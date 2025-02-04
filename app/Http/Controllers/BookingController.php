@@ -346,12 +346,8 @@ class BookingController extends Controller
         $bookingIds = $validated['booking_ids'];
 
         if ($validated['action'] === 'confirm') {
-            // Update the status of selected bookings
-            Booking::whereIn('id', $bookingIds)->update(['status' => true]);
+            //
             
-            // Redirect to billing page with the count of selected tickets
-            $selectedSeatsCount = count($bookingIds);
-            session(['selected_seats_count' => $selectedSeatsCount]);
 
             return redirect()->route('billing.create')->with('success', 'Booking confirmed.');
         } elseif ($validated['action'] === 'cancel') {
@@ -359,6 +355,11 @@ class BookingController extends Controller
             Booking::whereIn('id', $bookingIds)->delete();
 
             return redirect()->route('booking.reaction')->with('success', 'Selected bookings have been canceled.');
+        }elseif ($validated['action'] === 'reprint') {
+            // Combine the booking IDs into a string (if your generateTickets expects a comma‑separated list)
+            $bookingIdsString = implode(',', $bookingIds);
+            // Redirect to the billing generateTickets route
+            return redirect()->route('billing.generateTickets', ['bookingIds' => $bookingIdsString]);
         }
 
         return redirect()->back()->withErrors(['error' => 'Invalid action.']);
