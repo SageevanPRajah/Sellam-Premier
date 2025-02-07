@@ -27,9 +27,16 @@ class MovieController extends Controller
             'imdb_link' => 'required'
         ]);
 
-        // Handle file upload
+        // Handle file upload directly to public folder
     if ($request->hasFile('poster')) {
-        $data['poster'] = $request->file('poster')->store('posters', 'public');
+        // Create a unique filename based on time
+        $fileName = time() . '.' . $request->file('poster')->getClientOriginalExtension();
+        
+        // Move the file to public/posters
+        $request->file('poster')->move(public_path('posters'), $fileName);
+        
+        // Update the $data array to store the path or filename
+        $data['poster'] = 'posters/' . $fileName;
     }
 
     // Create a new movie with the validated data, including the poster path

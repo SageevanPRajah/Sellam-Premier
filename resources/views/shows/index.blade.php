@@ -106,8 +106,11 @@
                         <td>{{ $show->movie_code }}</td>
                         <td>{{ $show->movie_name }}</td>
                         <td>
-                            <img src="{{ $show->poster ? asset('storage/' . $show->poster) : asset('images/default-poster.jpg') }}"
-                                alt="Poster" style="max-width: 100px; height: auto; border-radius: 10px;" />
+                            <img
+                                src="{{ $show->poster ? url('storage/posters/' . basename($show->poster)) : asset('images/default-poster.jpg') }}"
+                                alt="Poster"
+                                style="max-width: 100px; height: auto; border-radius: 10px;"
+                            />
                         </td>
                         <td>
                             <form method="GET" action="{{ route('show.edit', ['show' => $show]) }}">
@@ -208,7 +211,7 @@
                 margin: 20px 0;
                 text-align: center;
                 color: black;
-                font-size: 20px;
+                font-size: 20px;
             }
 
             /* Success Message */
@@ -648,7 +651,7 @@
             .pagination button.active {
                 background-color: #2196F3;
                 color: #ffffff;
-                box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+                /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
             }
 
             .pagination button:hover:not(.active) {

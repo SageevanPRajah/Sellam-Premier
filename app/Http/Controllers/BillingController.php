@@ -202,122 +202,144 @@ class BillingController extends Controller
     public function generateTickets(Request $request, $bookingIds)
     {
         try {
+            // Retrieve the selected seat codes for re-print (if any)
             $seatFilter = $request->input('seat_codes', []);
             $bookingIdsArray = explode(',', $bookingIds);
-
+    
+            // Fetch bookings based on the provided booking IDs and optional seat filter
             $bookings = Booking::whereIn('id', $bookingIdsArray)
                 ->when(!empty($seatFilter), function ($query) use ($seatFilter) {
                     $query->whereIn('seat_code', $seatFilter);
                 })
                 ->get();
-
+    
             if ($bookings->isEmpty()) {
                 return response()->json(['error' => 'No bookings found.'], 404);
             }
-
-            // Configure mPDF with custom font directory
+    
+            // Configure mPDF with custom settings including fonts and temporary directory
             $mpdfConfig = [
-                'format' => [80, 150],
-                'margin_top' => 0,
+                'format'       => [80, 200], // Dimensions in mm (width x height)
+                'margin_top'   => 0,
                 'margin_right' => 0,
-                'margin_bottom' => 0,
-                'margin_left' => 0,
-                'tempDir' => storage_path('app/mpdf'), // Temporary directory for mPDF
-                'fontDir' => array_merge((new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'], [
-                    public_path('fonts'),
-                ]),
-                'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], [
-                    'maturascript' => [
-                        'R' => 'MATURASC_1.ttf', // Regular font
-                    ],
-
-                    'Montserratt' => [
-                        'R' => 'Montserratt.ttf', // Regular font
-                    ],
-
-                    'Cinzel' => [
-                        'R' => 'Cinzel.ttf', // Regular font
-                    ],
-                    
-
-                    'latha' => [
-                        'R' => 'latha.ttf',
-                    ],
-                ]),
-                'default_font' => 'latha',
+                'margin_bottom'=> 0,
+                'margin_left'  => 0,
+                'tempDir'      => storage_path('app/mpdf'),
+                'fontDir'      => array_merge(
+                    (new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'],
+                    [realpath(public_path('fonts'))]  // using realpath here
+                ),
+                'fontdata'     => array_merge(
+                    (new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'],
+                    [
+                        'maturascript' => [
+                            'R' =>  realpath(public_path('fonts/MATURASC_1.TTF')),
+                        ],
+                        'Montserratt'  => [
+                            'R' => 'Montserratt.ttf',
+                        ],
+                        'Cinzel'      => [
+                            'R' => 'Cinzel.ttf',
+                        ],
+                        'latha'       => [
+                            'R' => 'latha.ttf',
+                        ],
+                    ]
+                ),
+                'default_font' => 'maturascript',
             ];
-
+    
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-
+    
             $ticketHtml = '';
-
+            $index = 0;
+            $totalBookings = count($bookings);
+    
+            // Loop through each booking and build the HTML for each ticket
             foreach ($bookings as $booking) {
-
-                // Path to the image
-                $logoPath = public_path('icons/alertmsg.png'); 
-
+                $index++;
+    
+                // Use the public path for your logo image
+                $logoPath = public_path('icons/alertmsg.png');
+                $logoUrl = asset('icons/alertmsg.png');
+                $nameUrl = asset('icons/font.png');
+    
+                // HTML template for the ticket
                 $html = "
-                    <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0px;'>
-                        <p style='font-size: 8px; margin:0;'>.</p>    
+                    <div style='width: 100%; text-align: center; font-family: Arial, sans-serif; padding: 0;'>
+                        <p style='font-size: 8px; margin:0;'>.</p>
+                        <img src='{$nameUrl}' alt='Logo' style='width: 150px; height: auto; margin-bottom: 5px;' />
+                        <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
+                        <p style='font-size: 8px; margin:0;'>.</p>
+                        <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'>
+                            <strong>{$booking->seat_type}</strong>
+                        </p>
+                        <p style='font-size: 8px; margin:0;'>.</p>
+                        <p style='font-size: 20px; margin: 0;'>
+                            SEAT NO: <strong>{$booking->seat_no}</strong>
+                        </p>
+                        <p style='font-size: 12px; margin:0;'>
+                            Enjoy the movie!
+                        </p>
+                        <p style='font-size: 10px; margin:0;'>
+                            Kindly take your assigned seat as per your ticket.
+                        </p>
+                        <hr style='border: 1px dashed #000; margin:5px;'>
+                        <p style='font-size: 8px; margin:0;'>.</p>
                         <p style='font-size: 10px; margin: 3px;'>DEL LANKA ADVANCED TICKETBOOKING</p>
-                        <h2 style='font-size: 18px; font-family: maturascript; margin:0;'>Sellam Premier</h2>
+                        <img src='{$nameUrl}' alt='Logo' style='width: 150px; height: auto; margin-bottom: 5px;' />
                         <p style='margin: 5px 0; margin:0;'>3D Digital Cinema</p>
                         <p style='margin: 5px 0; margin:0;'>Chenkalady, Batticaloa</p>
                         <p style='margin: 5px 0; margin:0;'>TP: 065-2240064</p>
                         <hr style='border: 1px dashed #000; margin:5px;'>
-
-                        <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>Serial #: {$booking->id} - - - - - Issued by: " . Auth::user()->name . "</p>
-                        <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>Date: " . date('d-M-Y h:i A') . "</p>
+                        <p style='font-size: 10px; padding-left:40px; margin:0; text-align: left;'>
+                            Serial #: {$booking->id} - - - - - Issued by: " . Auth::user()->name . "
+                        </p>
+                        <p style='font-size: 10px; padding-left:40px; margin:5px; text-align: left;'>
+                            Date: " . date('d-M-Y h:i A') . "
+                        </p>
                         <hr style='border: 1px dashed #000; margin:0;'>
-
                         <p style='font-size: 14px; margin: 5px;'><strong>Movie Date:</strong> {$booking->date}</p>
                         <p style='font-size: 14px; margin: 0;'><strong>Movie Time:</strong> {$booking->time}</p>
                         <hr style='border: 1px dashed #000; margin:0;'>
-
-                        <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->movie_name}</strong></p>
-                        <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'><strong> {$booking->seat_type}</strong></p>
+                        <p style='font-size: 22px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'>
+                            <strong>{$booking->movie_name}</strong>
+                        </p>
+                        <p style='font-size: 26px; margin: 5px; font-family: Montserratt; text-transform: uppercase;'>
+                            <strong>{$booking->seat_type}</strong>
+                        </p>
                         <hr style='border: 1px dashed #000;'>
-
-                        <p style='font-size: 20px; margin: 0;'>SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID</p>
+                        <p style='font-size: 20px; margin: 0;'>
+                            SEAT NO: <strong>{$booking->seat_no}</strong> .  .  . PAID
+                        </p>
                         <hr style='border: 1px dashed #000;'>
-                        <img src='{$logoPath}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 5px;' />
+                        <img src='{$logoUrl}' alt='Logo' style='width: 300px; height: auto; margin-bottom: 5px;' />
                         <hr style='border: 1px dashed #000;'>
-
-                        <p style='font-size: 10px; margin:0;'>Software Developed By : ForcrafTech Solutions(FTS)</p>
+                        <p style='font-size: 10px; margin:0;'>
+                            Software Developed By : ForcrafTech Solutions(FTS)
+                        </p>
                         <p style='font-size: 10px; margin:0;'>076-2646376</p>
                     </div>";
-
-                    $ticketHtml .= $html . "<div></div>";
+                $ticketHtml .= $html;
+    
+                // Add a page break if this is not the last ticket
+                if ($index < $totalBookings) {
+                    $mpdf->AddPage();
+                }
             }
-
+    
+            // Write the combined HTML content to the PDF
             $mpdf->WriteHTML($ticketHtml);
-
-            // Save the PDF
-            $tempFilePath = storage_path('app/temp_tickets.pdf');
+    
+            // Save the PDF to a file in storage/app/public
+            $tempFilePath = storage_path('app/public/temp_tickets.pdf');
             $mpdf->Output($tempFilePath, 'F');
-
-            // Ensure file path uses double backslashes for Windows
-            $windowsFilePath = str_replace('/', '\\', $tempFilePath);
-
-            // PowerShell Command for Printing
-            $command = "cmd /c powershell -Command \"Start-Process -FilePath '$windowsFilePath' -Verb Print -ArgumentList 'NoScaling'\"";
-
-            // Execute print command
-            exec($command, $output, $returnVar);
-
-            if ($returnVar !== 0) {
-                throw new \Exception("Printing failed: " . implode("\n", $output));
-            }
-
-            // If the request is AJAX, return a JSON response; otherwise, redirect back
-        if ($request->ajax()) {
+    
+            // Return a JSON response with the file URL (using your updated route)
             return response()->json([
-                'success' => 'Tickets printed successfully!',
-                'filePath' => realpath($tempFilePath)
-            ], 200);
-        } else {
-            return redirect()->route('booking.reaction')->with('success', 'Tickets printed successfully!');
-        }
+                'success'  => true,
+                'filePath' => url('/storage/temp_tickets.pdf')
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to generate tickets: ' . $e->getMessage()], 500);
         }

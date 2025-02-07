@@ -31,10 +31,12 @@
 
             <!-- Poster Column (30%) -->
             <div style="flex: 0 0 30%; text-align: center;">
-                <img src="{{ $show->poster ? asset('storage/' . $show->poster) : asset('images/default-poster.jpg') }}"
-                    alt="Poster" style="max-width: 100%; height: auto; border-radius: 10px;">
+                <img
+                    src="{{ $show->poster ? url('storage/posters/' . basename($show->poster)) : asset('images/default-poster.jpg') }}"
+                    alt="Poster"
+                    style="max-width: 100%; height: auto; border-radius: 10px;"
+                />
             </div>
-
             <!-- Movie Info Column (70%) -->
             <div style="flex: 1; margin-top: 4rem; margin-left: 2rem;">
                 <p><strong>Movie:</strong> {{ $show->movie_name }}</p>
@@ -118,16 +120,12 @@
 
                 <input type="hidden" name="bookingIds" value="{{ implode(',', session('created_booking_ids', [])) }}">
 
-                <button type="submit" 
-                        style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
-                    Confirm Payment & Print
+                <button id="generate-tickets-btn" type="button" 
+                    style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                Confirm Payment & Print
                 </button>
             </form>
-            {{-- <form action="{{ route('billing.generateTickets', ['bookingIds' => implode(',', session('created_booking_ids', []))]) }}" method="GET" target="_blank">
-                <button type="submit" id="generate-tickets-btn" class="button" style="background-color: #2323da; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px; margin-top: 1rem;">
-                    Print
-                </button>
-            </form> --}}
+            
 
         </div>
     </div>
@@ -188,37 +186,59 @@
         
 
         // Print Alert
-        document.getElementById('generate-tickets-btn').addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent default form submission
+        document.getElementById('generate-tickets-btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default action if inside a form
 
-    const bookingIds = "{{ implode(',', session('created_booking_ids', [])) }}";
-    const url = `/billing/generate-tickets/${bookingIds}`; // Ensure this matches the Laravel route
+        const bookingIds = "{{ implode(',', session('created_booking_ids', [])) }}";
+        const url = `/billing/generate-tickets/${bookingIds}`; // Your route
 
-    fetch(url, {
-        method: 'GET',  // Change from POST to GET
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success && data.filePath) {
-            console.log("Printing started:", data.filePath);
-            deleteTicket(data.filePath); // Delete the ticket AFTER printing
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+           if (data.success && data.filePath) {
+            // Open the PDF URL in a new window/tab
+            var printWindow = window.open(data.filePath, '_blank');
+            
+            // When the new window loads, trigger printing
+            printWindow.onload = function() {
+                printWindow.print();
+                
+                // Fallback: After a delay, close the print window and redirect
+                setTimeout(function() {
+                    if (!printWindow.closed) {
+                        printWindow.close();
+                    }
+                    // Redirect the parent window after printing
+                    window.location.href = "{{ route('booking.selectSeats', ['id' => $show->id]) }}";
+                }, 10000); // Adjust the delay (in milliseconds) as needed
+            };
+
+            // Optionally, try to use onafterprint (may not work in all browsers)
+            printWindow.onafterprint = function() {
+                if (!printWindow.closed) {
+                    printWindow.close();
+                }
+                window.location.href = "{{ route('booking.selectSeats', ['id' => $show->id]) }}";
+            };
         } else {
-            alert("Error: " + data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An unexpected error occurred while generating tickets.');
+                alert("Error: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An unexpected error occurred while generating tickets.');
+        });
     });
-});
 
 function deleteTicket(filePath) {
     setTimeout(() => {

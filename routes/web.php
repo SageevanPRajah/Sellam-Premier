@@ -19,6 +19,26 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+Route::get('storage/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename); // Changed to check in storage/app/public
+
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+    abort(404);
+});
+
+Route::get('storage/posters/{filename}', function ($filename) {
+    $path = storage_path('app/public/posters/' . $filename);
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+    abort(404);
+});
+
+
 Route::get('/sellam', function () {
     return view('sellam');
 });
@@ -131,6 +151,7 @@ Route::middleware(['auth', 'superadmin'])->group(function (){
     
     
 });
+
 
 require __DIR__.'/auth.php';
 
