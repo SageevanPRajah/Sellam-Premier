@@ -107,8 +107,7 @@ Route::middleware('auth')->group(function () {
     
 
     //Route Billing Generate Tickets
-    Route::get('/billing/generate-tickets/{bookingIds}', [BillingController::class, 'generateTickets'])->name('billing.generateTickets');
-    Route::delete('/billing/delete-ticket', [BillingController::class, 'deleteTicket']);
+    Route::get('/billing/tickets/{bookingIds}', [BillingController::class, 'printTickets'])->name('billing.printTickets');
 
 
     //Route Booking Select Seats
