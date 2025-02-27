@@ -40,10 +40,13 @@
             <div class="slider-wrapper">
                 @foreach($movies as $movie)
                     <div class="slider-item">
-                        <img src="{{ $movie->poster ? asset('storage/' . $movie->poster) : asset('images/default-poster.jpg') }}" alt="Poster">
+                        <img 
+                            src="{{ $movie->poster ? url('storage/posters/' . basename($movie->poster)) : asset('images/default-poster.jpg') }}" 
+                            alt="Poster">
                         <a href="{{ route('movie.inspect', ['movie' => $movie]) }}">More...</a>
                     </div>
                 @endforeach
+
             </div>
         </div>
 
@@ -111,11 +114,12 @@
                     <td class="movie-name">{{ $movie->name }}</td>
                     <td>
                         <img 
-                            src="{{ $movie->poster ? asset('storage/' . $movie->poster) : asset('images/default-poster.jpg') }}" 
+                            src="{{ $movie->poster ? url('storage/posters/' . basename($movie->poster)) : asset('images/default-poster.jpg') }}" 
                             alt="Poster" 
                             style="max-width: 100px; height: auto; border-radius: 10px;" 
                         />
                     </td>
+
                     <td>
                         <a href="{{ $movie->trailer_link }}" target="_blank">Watch Trailer</a>
                     </td>
@@ -721,7 +725,7 @@
             }
 
             function updateSlider() {
-                sliderWrapper.style.transform = translateX(-${currentPosition}px);
+                sliderWrapper.style.transform = `translateX(-${currentPosition}px)`;
                 // Enable/disable Prev button
                 prevButton.disabled = (currentPosition === 0);
                 // Enable/disable Next button

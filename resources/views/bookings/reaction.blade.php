@@ -52,15 +52,13 @@
                     <label for="timeInput">Time</label>
                     <select 
                         id="timeInput"
-                        placeholder="am/pm"
                         aria-label="Filter by Time"
                         class="border-radius-10"
                     >
                         <option value="">-- All Times --</option>
                         @php
                             $start = strtotime('00:00'); // Start time (12:00 AM)
-                            $end = strtotime('23:59');   // End time (11:59 PM)
-
+                            $end   = strtotime('23:59'); // End time (11:59 PM)
                             while ($start <= $end) {
                                 $time = date('g:i A', $start); // Format time as "6:00 AM"
                                 echo "<option value=\"$time\">$time</option>";
@@ -117,12 +115,26 @@
                 </tbody>
             </table>
 
+            <!-- Pagination + Rows per Page -->
+            <div class="pagination-container">
+                <div class="rows-per-page">
+                    <label for="rowsPerPage">Rows per page:</label>
+                    <select id="rowsPerPage">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+
             <div class="action-buttons">
-                <!-- Example of a re-print button (commented out)-->
+                <!-- Example Re-print -->
                 <button type="submit" name="action" value="reprint" class="btn bg-black text-white mt-10 px-4 py-2 rounded-md hover:bg-green-800 transition">
                     Re-Print Ticket
                 </button>
-                
+
+                <!-- Cancel Booking -->
                 <button type="submit" name="action" value="cancel" class="btn bg-black text-white mx-10 mt-10 px-4 py-2 rounded-md hover:bg-red-800 transition">
                     Cancel Booking
                 </button>
@@ -130,7 +142,7 @@
         </form>
     </div>
 
-    <!-- Shtyle tag -->
+    <!-- Styles -->
     <style>
         /* CSS Variables for Neumorphic Black and Gray Theme */
         :root {
@@ -162,23 +174,21 @@
             margin: 20px 0;
             text-align: center;
             color: black;
+            font-size: 20px;
         }
 
-        /* Success Message */
         .success-message {
             text-align: center;
             color: var(--success-color);
             margin-bottom: 10px;
         }
 
-        /* Error Messages */
         .error-messages {
             text-align: center;
             color: var(--danger-color);
             margin-bottom: 10px;
         }
 
-        /* Filter (Search) Bar */
         .search-bar {
             width: 80%;
             margin: 20px auto;
@@ -231,7 +241,6 @@
             padding-right: 30px;
         }
 
-        /* Table */
         table {
             margin: 0 auto;
             border-collapse: collapse;
@@ -257,13 +266,11 @@
             color: #ffffff;
         }
 
-        /* Checkbox / "View" column styling if needed */
         td input[type="checkbox"] {
             transform: scale(1.2);
             cursor: pointer;
         }
 
-        /* Action buttons */
         .action-buttons {
             text-align: center;
             margin-top: 20px;
@@ -287,77 +294,242 @@
             background-color: var(--button-hover-color);
         }
 
-        /* Responsive Design */
+        .pagination-container {
+            width: 80%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .rows-per-page {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rows-per-page select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .pagination button.active {
+            background-color: #2196F3;
+            color: #ffffff;
+            /* box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); */
+        }
+
+        .pagination button:hover:not(.active) {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            background-color: #555555;
+        }
+
         @media (max-width: 768px) {
             table {
                 font-size: 14px;
             }
-
             .search-bar {
                 width: 90%;
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .search-bar .filter-group {
                 width: 100%;
                 justify-content: space-between;
             }
-
             .search-bar input,
             .search-bar select {
                 width: 100%;
             }
+            .pagination-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .rows-per-page,
+            .pagination {
+                width: 100%;
+                justify-content: flex-start;
+                margin-bottom: 10px;
+            }
         }
     </style>
 
-    <!-- Script tag -->
+    <!-- Script for Filtering + Pagination -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const dateInput = document.getElementById('dateInput');
-            const timeInput = document.getElementById('timeInput');
-            const seatNumberInput = document.getElementById('seatNumberInput');
+            // Filter elements
+            const dateInput        = document.getElementById('dateInput');
+            const timeInput        = document.getElementById('timeInput');
+            const seatNumberInput  = document.getElementById('seatNumberInput');
 
-            const table = document.getElementById('showTable');
-            const rows = table.querySelectorAll('tbody tr');
+            // Table/Rows
+            const table            = document.getElementById('showTable');
+            const allRows          = Array.from(table.querySelectorAll('tbody tr'));
 
-            function filterRows() {
-                const selectedDate = dateInput.value.trim();   // "YYYY-MM-DD" if chosen
-                const selectedTime = timeInput.value.trim();   // e.g. "6:00 AM"
-                const seatSearch = seatNumberInput.value.toLowerCase().trim();
+            // Pagination elements
+            const rowsPerPageSelect = document.getElementById('rowsPerPage');
+            const paginationDiv     = document.getElementById('pagination');
 
-                rows.forEach(row => {
-                    // Columns: 1=ID, 2=Date, 3=Time, 4=Movie, 5=SeatType, 6=SeatNo, 7=Name, 8=Phone, 9=View
+            let currentPage = 1;
+            let rowsPerPage = parseInt(rowsPerPageSelect.value);
+
+            // 1) Filter logic: returns an array of rows that match
+            function getFilteredRows() {
+                const selectedDate = dateInput.value.trim();  // "YYYY-MM-DD" if chosen
+                const selectedTime = timeInput.value.trim();  // e.g. "6:00 AM"
+                const seatSearch   = seatNumberInput.value.toLowerCase().trim();
+
+                // Return only the rows that match all filters
+                return allRows.filter(row => {
                     const dateCell = row.querySelector('td:nth-child(2)').textContent.trim();
                     const timeCell = row.querySelector('td:nth-child(3)').textContent.trim();
                     const seatCell = row.querySelector('td:nth-child(6)').textContent.toLowerCase().trim();
 
-                    let isVisible = true;
-
-                    // Filter by date if a date is selected
+                    // Check date
                     if (selectedDate && dateCell !== selectedDate) {
-                        isVisible = false;
+                        return false;
                     }
-
-                    // Filter by time if a time is selected
+                    // Check time
                     if (selectedTime && timeCell !== selectedTime) {
-                        isVisible = false;
+                        return false;
                     }
-
-                    // Filter by seat number search
+                    // Check seat number (substring match)
                     if (seatSearch && !seatCell.includes(seatSearch)) {
-                        isVisible = false;
+                        return false;
                     }
 
-                    // Hide or show the row
-                    row.style.display = isVisible ? '' : 'none';
+                    return true; // Passed all filters
                 });
             }
 
-            // Attach event listeners
-            dateInput.addEventListener('change', filterRows);
-            timeInput.addEventListener('change', filterRows);
-            seatNumberInput.addEventListener('keyup', filterRows);
+            // 2) Pagination logic: show only the slice of rows for the current page
+            function paginateRows(filteredRows) {
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+
+                // Adjust current page if out of range
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                // Hide all rows
+                allRows.forEach(row => (row.style.display = 'none'));
+
+                // Calculate slice for this page
+                const startIndex = (currentPage - 1) * rowsPerPage;
+                const endIndex   = startIndex + rowsPerPage;
+
+                // Show only those rows
+                filteredRows.slice(startIndex, endIndex).forEach(row => (row.style.display = ''));
+
+                // Update pagination controls
+                updatePagination(totalPages);
+            }
+
+            // 3) Build pagination buttons (Prev, page numbers, Next)
+            function updatePagination(totalPages) {
+                paginationDiv.innerHTML = '';
+                if (totalPages <= 1) return; // No need if only one page
+
+                // Prev button
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = 'Prev';
+                prevBtn.disabled = (currentPage === 1);
+                prevBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        applyFiltersAndPagination();
+                    }
+                });
+                paginationDiv.appendChild(prevBtn);
+
+                // Page number buttons
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage   = Math.min(totalPages, currentPage + 2);
+
+                // Adjust if near boundaries
+                if (currentPage <= 3) {
+                    endPage = Math.min(5, totalPages);
+                }
+                if (currentPage >= totalPages - 2) {
+                    startPage = Math.max(1, totalPages - 4);
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.textContent = i;
+                    if (i === currentPage) {
+                        pageBtn.classList.add('active');
+                    }
+                    pageBtn.addEventListener('click', () => {
+                        currentPage = i;
+                        applyFiltersAndPagination();
+                    });
+                    paginationDiv.appendChild(pageBtn);
+                }
+
+                // Next button
+                const nextBtn = document.createElement('button');
+                nextBtn.textContent = 'Next';
+                nextBtn.disabled = (currentPage === totalPages);
+                nextBtn.addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        applyFiltersAndPagination();
+                    }
+                });
+                paginationDiv.appendChild(nextBtn);
+            }
+
+            // 4) Master function to do both filter + pagination
+            function applyFiltersAndPagination() {
+                const filtered = getFilteredRows();
+                paginateRows(filtered);
+            }
+
+            // 5) Hook up filter events
+            dateInput.addEventListener('change', () => {
+                currentPage = 1;
+                applyFiltersAndPagination();
+            });
+            timeInput.addEventListener('change', () => {
+                currentPage = 1;
+                applyFiltersAndPagination();
+            });
+            seatNumberInput.addEventListener('keyup', () => {
+                currentPage = 1;
+                applyFiltersAndPagination();
+            });
+
+            // Rows per page event
+            rowsPerPageSelect.addEventListener('change', () => {
+                rowsPerPage = parseInt(rowsPerPageSelect.value);
+                currentPage = 1;
+                applyFiltersAndPagination();
+            });
+
+            // 6) On load, apply once
+            applyFiltersAndPagination();
         });
     </script>
 </x-app-layout>
