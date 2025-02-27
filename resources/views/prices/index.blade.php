@@ -152,8 +152,8 @@
                                 <td>{{ $price->id }}</td>
                                 <td>{{ $price->seat_type }}</td>
                                 <td>
-                                    <img src="{{ $price->seat_logo ? asset('storage/' . $price->seat_logo) : asset('images/default-poster.jpg') }}"
-                                        alt="Seat Logo" />
+                                    <img src="/seatlogo/{{ $price->seat_type }}.png" alt="Seat Logo" />
+                                </td>
                                 </td>
                                 <td>{{ $price->movie_code }}</td>
                                 <td>{{ $price->full_price }}</td>
