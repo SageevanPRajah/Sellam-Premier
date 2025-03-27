@@ -65,6 +65,7 @@
 
     @foreach ($bookings as $booking)
     <div class="ticket">
+        <p style="font-size: 10px; margin: 3px;">DEL LANKA ADVANCED TICKETBOOKING</p>
         <img src="{{ asset('icons/name.png') }}" alt="Logo">
         
         <p class="bold">
