@@ -85,8 +85,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th>Book</th>
                     <th>Show Id</th>
                     <th>Movie Name</th>
                     <th>Seat Type</th>
@@ -107,8 +106,7 @@
                         data-status="{{ strtolower($booking->status) }}"
                     >
                         <td>{{ $booking->id }}</td>
-                        <td>{{ $booking->date }}</td>
-                        <td>{{ $booking->time }}</td>
+                        <td>{{ $booking->created_at }}</td>
                         <td>{{ $booking->movie_id }}</td>
                         <td>{{ $booking->movie_name }}</td>
                         <td>{{ $booking->seat_type }}</td>

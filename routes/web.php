@@ -104,6 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/billing',[BillingController::class, 'index'])->name('billing.index');
     Route::get('/billing/create', [BillingController::class, 'create'])->name('billing.create');
     Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
+    Route::post('/billing/cancel', [BillingController::class, 'cancel'])->name('billing.cancel');
     
 
     //Route Billing Generate Tickets

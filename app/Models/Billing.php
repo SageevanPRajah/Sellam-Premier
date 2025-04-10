@@ -29,7 +29,7 @@ class Billing extends Model
 
     public function show()
     {
-        return $this->belongsTo(Show::class);
+        return $this->belongsTo(Show::class, 'movie_id');
     }
  
 }

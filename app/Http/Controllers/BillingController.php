@@ -196,16 +196,40 @@ class BillingController extends Controller
     }
 
     public function printTickets($bookingIds)
-{
-    // Split the comma-separated string into an array of IDs
-    $ids = explode(',', $bookingIds);
+    {
+        // Split the comma-separated string into an array of IDs
+        $ids = explode(',', $bookingIds);
 
-    // Retrieve bookings from the database (adjust the model and field names as needed)
-    $bookings = \App\Models\Booking::whereIn('id', $ids)->get();
+        // Retrieve bookings from the database (adjust the model and field names as needed)
+        $bookings = \App\Models\Booking::whereIn('id', $ids)->get();
 
-    // Return the ticket view with the retrieved booking data
-    return view('billings.ticket', compact('bookings'));
-}
+        return response()->view('billings.ticket', compact('bookings'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
+    }
+
+    public function cancel(Request $request)
+    {
+        $bookingIds = $request->input('bookingIds');
+        if ($bookingIds) {
+            $ids = explode(',', $bookingIds);
+            // Delete the bookings that are being canceled
+            \App\Models\Booking::whereIn('id', $ids)->delete();
+            
+            // Optionally clear session data for the booking IDs and selected seats
+            $request->session()->forget('created_booking_ids');
+            $request->session()->forget('selected_seats_count');
+        }
+        
+        // Retrieve the movie id and seat type from session to redirect back to seat selection
+        $movieId  = session('movie_id');
+        $seatType = session('seat_type', 'Gold');
+
+        // Redirect to the select seats page with the same movie id and seat type
+        return redirect()->to("/booking/create/{$movieId}?seat_type={$seatType}")
+            ->with('success', 'Booking canceled successfully.');
+    }
+
 
     
 }

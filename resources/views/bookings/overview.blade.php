@@ -288,14 +288,9 @@
                                     data.forEach(show => {
                                         // Create a container for the show item
                                         const li = document.createElement('li');
-                                        li.className = 'show-item';
+                                        li.textContent = `${show.time} - ${show.movie_name}`;
+                                        li.dataset.showId = show.id;
 
-                                        // Create a span for show information
-                                        const info = document.createElement('span');
-                                        info.textContent = ${show.time} - ${show.movie_name};
-                                        li.appendChild(info);
-
-                                        // Create the "Select Show" button on a new line
                                         const button = document.createElement('button');
                                         button.textContent = 'Select Show';
                                         button.classList.add('button');
@@ -333,12 +328,9 @@
                                 .then(data => {
                                     console.log("Seat count data received:", data);
                                     ['Gold', 'Silver', 'Platinum'].forEach(type => {
-                                        document.getElementById(${type.toLowerCase()}-booked).textContent = data[type]
-                                            ?.booked || 0;
-                                        document.getElementById(${type.toLowerCase()}-reserved).textContent = data[type]
-                                            ?.reserved || 0;
-                                        document.getElementById(${type.toLowerCase()}-available).textContent = data[type]
-                                            ?.available || 0;
+                                        document.getElementById(`${type.toLowerCase()}-booked`).textContent = data[type]?.booked || 0;
+                                        document.getElementById(`${type.toLowerCase()}-reserved`).textContent = data[type]?.reserved || 0;
+                                        document.getElementById(`${type.toLowerCase()}-available`).textContent = data[type]?.available || 0;
                                     });
                                     document.getElementById('seat-count-section').style.display = 'block';
                                 })

@@ -1,15 +1,123 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Show') }}
+            {{ __('Ticket Prices') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-white">
-                <style>
-                    /* Add your CSS here */
+            <div class=" overflow-hidden shadow-sm sm:rounded-lg p-6 text-white">
+                
+
+                <h1 class="text-center text-2xl mb-4">Ticket Prices</h1>
+                
+                <!-- Sort Dropdown -->
+                @php
+                    // Use 'Price 1' as a default if no query parameter is set
+                    $filterValue = request('priceFilter', 'Price 1');
+                @endphp
+                
+                <div class="flex justify-end mb-4">
+                    <label for="priceFilter" class="mr-2 text-white">Filter by Price Type:</label>
+                    <select id="priceFilter" class="p-2 rounded bg-gray-800 text-white">
+                        <option value="all" {{ $filterValue === 'all' ? 'selected' : '' }}>All Prices</option>
+                        <option value="Price 1" {{ $filterValue === 'Price 1' ? 'selected' : '' }}>Price 1</option>
+                        <option value="Price 2" {{ $filterValue === 'Price 2' ? 'selected' : '' }}>Price 2</option>
+                        <option value="Price 3" {{ $filterValue === 'Price 3' ? 'selected' : '' }}>Price 3</option>
+                    </select>
+                </div>
+
+                {{-- <div class="add-link">
+                    <a href="{{ route('price.create') }}">
+                        <img src="icons/icons8-add-24.png" alt="Add" class="inline-block mr-2" />
+                        Add New Price
+                    </a>
+                </div> --}}
+
+                <!-- Success Message -->
+                @if(session()->has('success'))
+                    <div class="success-message">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Error Messages -->
+                @if($errors->any())
+                    <div class="error-messages text-red-500">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Prices Table -->
+                <table id="pricesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Seat Type</th>
+                            <th>Seat Logo</th>
+                            <th>Price Code</th>
+                            <th>Full Ticket Price</th>
+                            <th>Half Ticket Price</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($prices as $price)
+                            <tr data-price="{{ $price->movie_code }}">
+                                <td>{{ $price->id }}</td>
+                                <td>{{ $price->seat_type }}</td>
+                                <td>
+                                    <img src="/seatlogo/{{ $price->seat_type }}.png" alt="Seat Logo" />
+                                </td>
+                                </td>
+                                <td>{{ $price->movie_code }}</td>
+                                <td>{{ $price->full_price }}</td>
+                                <td>{{ $price->half_price }}</td>
+                                <td>
+                                    <form method="GET" action="{{ route('price.edit', ['price' => $price]) }}">
+                                        <button type="submit" aria-label="Edit Price" class="w-12 h-8 mt-1">
+                                            <img src="icons/icons8-edit-50.png" alt="Edit"
+                                                class="inline-block w-3 mb-6" />
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const priceFilter = document.getElementById("priceFilter");
+            const rows = document.querySelectorAll("#pricesTable tbody tr");
+
+            priceFilter.addEventListener("change", function () {
+                const selectedPrice = this.value;
+
+                rows.forEach(row => {
+                    const priceType = row.getAttribute("data-price");
+                    if (selectedPrice === "all" || priceType === selectedPrice) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+
+            // Set default filter to 'Price 1' on load
+            priceFilter.dispatchEvent(new Event("change"));
+        });
+    </script>
+    <style>
+                    /* All your existing CSS styles go here */
+                    /* CSS Variables for Neumorphic Black and Gray Theme */
                     :root {
                         --background-color: #121212;
                         --primary-color: #1e1e1e;
@@ -27,184 +135,96 @@
                         --shadow-dark: #0c0c0c;
                     }
 
-                    .container {
-                        background-color: var(--primary-color);
-                        padding: 30px;
-                        border-radius: 15px;
-                        width: 90%;
-                        max-width: 800px;
-                        margin: 40px auto;
+                    /* Add your CSS styles here */
+                    body {
+                        font-size: 14px;
+                        background-color: rgb(35, 36, 36);;
                     }
 
-                    .success-message, .error-messages {
+                    h1 {
+                        margin: 20px 0;
                         text-align: center;
-                        margin-bottom: 20px;
+                        color: black;
+                        font-size:20px;
+                    }
+
+                    table {
+                        margin: 20px auto;
+                        border-collapse: collapse;
+                        width: 100%;
+                        text-align: center;
+                        background-color: rgb(35, 36, 36);;
+                        box-shadow: 0 0 10px var(--shadow-dark);
+                        border-radius: 15px;
+                        overflow: hidden;
                     }
 
-                    .success-message {
-                        color: var(--success-color);
-                        font-size: 18px;
-                    }
-
-                    .error-messages ul {
-                        color: var(--danger-color);
-                        list-style: none;
-                        padding: 0;
-                        margin: 0;
-                    }
-
-                    .error-messages ul li {
-                        margin-bottom: 5px;
-                    }
-
-                    form {
-                        display: flex;
-                        flex-direction: column;
-                    }
-
-                    .form-row {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 20px;
-                        margin-bottom: 20px;
-                    }
-
-                    .form-group {
-                        flex: 1 1 200px;
-                        margin-bottom: 20px;
-                    }
-
-                    label {
-                        display: block;
-                        font-weight: bold;
-                        margin-bottom: 8px;
+                    th,
+                    td {
+                        padding: 10px;
                         color: var(--text-color);
                     }
 
-                    input[type="text"], input[type="date"], select {
-                        padding: 12px 20px;
+                    th {
+                        background-color: var(--secondary-color);
+                        font-weight: bold;
+                        text-align: center;
+                    }
+
+                    img {
+                        max-width: 60px;
+                        border-radius: 10px;
+                    }
+
+                    .add-link {
+                        text-align: right;
+                        margin-bottom: 20px;
+                    }
+
+                    .add-link a {
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 10px 20px;
+                        background-color: var(--button-color);
+                        color: var(--text-color);
+                        text-decoration: none;
+                        border-radius: 10px;
+                        font-weight: bold;
+                        transition: background-color 0.3s;
+                    }
+
+                    .add-link a:hover {
+                        background-color: var(--button-hover-color);
+                        color: white;
+                    }
+
+                    button {
+                        background-color: var(--button-color);
+                        color: var(--text-color);
                         border: none;
-                        border-radius: 20px;
+                        padding: 10px 20px;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+
+                    button:hover {
+                        background-color: var(--button-hover-color);
+                    }
+                    
+                    /* Dropdown Styling */
+                    #priceFilter {
+                        padding: 8px 12px;
+                        border-radius: 8px;
                         background-color: var(--secondary-color);
                         color: var(--text-color);
-                        font-size: 16px;
-                        outline: none;
-                        transition: box-shadow 0.3s, background-color 0.3s;
-                    }
-
-                    input[type="text"]:focus, input[type="date"]:focus, select:focus {
-                        box-shadow: 0 0 10px var(--accent-color);
-                    }
-
-                    .submit-button {
-                        background-color: var(--accent-color);
-                        color: #fff;
-                        border: none;
-                        border-radius: 30px;
-                        padding: 12px 20px;
-                        font-size: 16px;
-                        font-weight: bold;
+                        border: 1px solid var(--border-color);
                         cursor: pointer;
-                        transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                     }
-
-                    .submit-button:hover {
-                        background-color: var(--button-hover-color);
-                        color: #000;
-                    }
-
-                    @media (max-width: 768px) {
-                        .form-row .form-group {
-                            flex: 1 1 100%;
-                        }
+            
+                    #priceFilter:focus {
+                        outline: none;
+                        box-shadow: 0 0 10px var(--info-color);
                     }
                 </style>
-
-                <h1 class="text-2xl text-center mb-4">Create a New Show</h1>
-
-                @if(session()->has('success'))
-                    <div class="success-message">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="error-messages">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form method="post" action="{{ route('show.store') }}" onsubmit="return getMoviePoster()" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="movie_name">Movie Name</label>
-                            <select name="movie_name" id="movie_name" onchange="getMoviePoster()" required>
-                                <option value="">Select Movie Name</option>
-                                @foreach (\App\Models\Movie::where('active', true)->get() as $movie)
-                                    <option value="{{ $movie->name }}" data-poster="{{ $movie->poster }}">
-                                        {{ $movie->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="movie_code">Price Type</label>
-                            <select name="movie_code" id="movie_code" required>
-                                <option value="">Select Price Type</option>
-                                <option value="Price 1">Price 1</option>
-                                <option value="Price 2">Price 2</option>
-                                <option value="Price 3">Price 3</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="date">Date</label>
-                            <input type="date" name="date" id="date" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="time">Time</label>
-                            <select name="time" id="time" required>
-                                @php
-                                    $start = strtotime('00:00');
-                                    $end = strtotime('23:59');
-                                    while ($start <= $end) {
-                                        $time = date('g:i A', $start);
-                                        echo "<option value=\"$time\">$time</option>";
-                                        $start = strtotime('+30 minutes', $start);
-                                    }
-                                @endphp
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="hidden" id="poster" name="poster" />
-
-                    <div class="form-group">
-                        <button type="submit" class="submit-button">
-                            Save Show
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function getMoviePoster() {
-            const selectedMovie = document.getElementById('movie_name').selectedOptions[0];
-            const posterPath = selectedMovie.getAttribute('data-poster');
-            document.getElementById('poster').value = posterPath;
-            return true;
-        }
-    </script>
 </x-app-layout>

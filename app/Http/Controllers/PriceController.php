@@ -2,64 +2,234 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Booking;
+use App\Models\Show;
 use App\Models\Price;
+use App\Models\Billing;
 
-class PriceController extends Controller
+
+class BillingController extends Controller
 {
-    public function index(){
-        $prices = Price::all();
-        return view('prices.index', ['prices' => $prices]);
-    }
+    public function create(Request $request)
+    {
+        // Retrieve movie_id and seat_type from the session or request
+        $movieId  = session('movie_id') ?? $request->query('movie_id');
+        $seatType = session('seat_type') ?? $request->query('seat_type');
 
-    public function create(){
-        return view('prices.create');
-    }
-
-    public function store(Request $request){
-        $data = $request->validate([
-            'seat_type' => 'required',
-            'seat_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'movie_code' => 'required',
-            'full_price' => 'required|decimal:0,2',
-            'half_price' => 'required|decimal:0,2',
-        ]);
-
-        // Handle file upload
-    if ($request->hasFile('seat_logo')) {
-        $data['seat_logo'] = $request->file('seat_logo')->store('seat_logos', 'public');
-    }
-
-        Price::create($data);
-
-        return redirect(route('price.index'))->with('success', 'Price added successfully!');
-    }
-
-    public function edit(Price $price){
-        return view('prices.edit', ['price' => $price]);
-    }
-
-    public function update(Price $price, Request $request){
-        $data = $request->validate([
-            'seat_type' => 'required',
-            'full_price' => 'required|decimal:0,2',
-            'half_price' => 'required|decimal:0,2',
-        ]);
-
-        // Check if a new poster is uploaded
-    if ($request->hasFile('seat_logo')) {
-        // Delete the old poster file, if it exists
-        if ($price->seat_logo && file_exists(storage_path('app/public/' . $price->seat_logo))) {
-            unlink(storage_path('app/public/' . $price->seat_logo));
+        if (!$movieId || !$seatType) {
+            return redirect()->route('booking.index')->withErrors('Missing booking information.');
         }
 
-        // Store the new poster and update the poster path
-        $data['seat_logo'] = $request->file('seat_logo')->store('seat_logos', 'public');
+        // Fetch the Show based on movie_id
+        $show = Show::find($movieId);
+        if (!$show) {
+            return redirect()->route('booking.index')->withErrors('Show not found.');
+        }
+
+        // Fetch the price row where movie_code and seat_type match
+        $price = Price::where('movie_code', $show->movie_code)
+            ->where('seat_type', $seatType)
+            ->first(); // Retrieve the single matching price
+
+        if (!$price) {
+            return redirect()->back()->withErrors('Price information not found for the selected movie and seat type.');
+        }
+
+        // Pass the data to the billing view
+        return view('billings.create', [
+            'show'  => $show,
+            'price' => $price, // Pass the matched price object
+        ]);
     }
 
-        $price->update($data);
+    public function store(Request $request)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'booking_id'     => 'required|exists:bookings,id',
+            'movie_id'       => 'required|exists:shows,id',
+            'movie_name'     => 'required|string',
+            'date'           => 'required',
+            'time'           => 'required',
+            'seat_type'      => 'required|string',
+            'total_tickets'  => 'required|integer|min:1',
+            'full_tickets'   => 'required|integer|min:0',
+            'half_tickets'   => 'required|integer|min:0',
+            'total_price'    => 'required|numeric|min:0',
+            'bookingIds'     => 'nullable',
+        ]);
 
-        return redirect(route('price.index'))->with('success', 'Price updated successfully!');
+        try {
+            // Store billing data
+            Billing::create([
+                'booking_id'    => $validated['booking_id'],
+                'movie_id'      => $validated['movie_id'],
+                'movie_name'    => $validated['movie_name'],
+                'date'          => $validated['date'],
+                'time'          => $validated['time'],
+                'seat_type'     => $validated['seat_type'],
+                'total_tickets' => $validated['total_tickets'],
+                'full_tickets'  => $validated['full_tickets'],
+                'half_tickets'  => $validated['half_tickets'],
+                'total_price'   => $validated['total_price'],
+            ]);
+
+               // Optionally, call generateTickets() if needed
+            // if (!empty($validated['bookingIds'])) {
+            //     try {
+            //         $this->generateTickets($validated['bookingIds']);
+            //     } catch (\Exception $printEx) {
+            //         Log::error("Ticket printing failed: " . $printEx->getMessage());
+            //     }
+            // }
+
+            // Redirect to the ticket printing view (replace booking.selectSeats if desired)
+            return redirect()->route('billing.printTickets', ['bookingIds' => $validated['bookingIds']])
+                ->with('success', 'Booking confirmed! Tickets are being printed.');
+        } catch (\Exception $e) {
+            Log::error('Billing Store Error: ', [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'validated' => $validated,
+            ]);
+            return redirect()->back()->withErrors('Failed to store billing data.')->withInput();
+        }
     }
+
+    public function index()
+    {
+        // Fetch all billing data
+        $billings = Billing::all();
+
+        return view('billings.index', [
+            'billings' => $billings,
+        ]);
+    }
+
+    public function detail($id)
+    {
+        // Fetch the billing data by ID
+        $billing = Billing::find($id);
+
+        if (!$billing) {
+            return redirect()->route('billing.index')->withErrors('Billing data not found.');
+        }
+
+        return view('billings.detail', [
+            'billing' => $billing,
+        ]);
+    }
+
+    public function edit($id)
+    {
+        // Fetch the billing data by ID
+        $billing = Billing::find($id);
+
+        if (!$billing) {
+            return redirect()->route('billing.index')->withErrors('Billing data not found.');
+        }
+
+        return view('billings.edit', [
+            'billing' => $billing,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'booking_id'     => 'required|exists:bookings,id',
+            'movie_id'       => 'required|exists:shows,id',
+            'movie_name'     => 'required|string',
+            'date'           => 'required',
+            'time'           => 'required',
+            'seat_type'      => 'required|string',
+            'total_tickets'  => 'required|integer|min:1',
+            'full_tickets'   => 'required|integer|min:0',
+            'half_tickets'   => 'required|integer|min:0',
+            'total_price'    => 'required',
+        ]);
+
+        try {
+            // Fetch the billing data by ID
+            $billing = Billing::find($id);
+
+            if (!$billing) {
+                return redirect()->route('billing.index')->withErrors('Billing data not found.');
+            }
+
+            // Update the billing data
+            $billing->update($validated);
+
+            return redirect()->route('billing.index')->with('success', 'Billing data updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Billing Update Error: ', [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'validated' => $validated,
+            ]);
+            return redirect()->back()->withErrors('Failed to update billing data.')->withInput();
+        }
+    }
+
+    public function destroy($id)
+    {
+        // Fetch the billing data by ID
+        $billing = Billing::find($id);
+
+        if (!$billing) {
+            return redirect()->route('billing.index')->withErrors('Billing data not found.');
+        }
+
+        // Delete the billing data
+        $billing->delete();
+
+        return redirect()->route('billing.index')->with('success', 'Billing data deleted successfully.');
+    }
+
+    public function printTickets($bookingIds)
+    {
+        // Split the comma-separated string into an array of IDs
+        $ids = explode(',', $bookingIds);
+
+        // Retrieve bookings from the database (adjust the model and field names as needed)
+        $bookings = \App\Models\Booking::whereIn('id', $ids)->get();
+
+        return response()->view('billings.ticket', compact('bookings'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
+    }
+
+    public function cancel(Request $request)
+    {
+        $bookingIds = $request->input('bookingIds');
+        if ($bookingIds) {
+            $ids = explode(',', $bookingIds);
+            // Delete the bookings that are being canceled
+            \App\Models\Booking::whereIn('id', $ids)->delete();
+            
+            // Optionally clear session data for the booking IDs and selected seats
+            $request->session()->forget('created_booking_ids');
+            $request->session()->forget('selected_seats_count');
+        }
+        
+        // Retrieve the movie id and seat type from session to redirect back to seat selection
+        $movieId  = session('movie_id');
+        $seatType = session('seat_type', 'Gold');
+
+        // Redirect to the select seats page with the same movie id and seat type
+        return redirect()->to("/booking/create/{$movieId}?seat_type={$seatType}")
+            ->with('success', 'Booking canceled successfully.');
+    }
+
+
+    
 }

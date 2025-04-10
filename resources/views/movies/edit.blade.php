@@ -67,53 +67,53 @@
 
                     <!-- Trailer Link -->
                     <div class="mb-4">
-                        <label for="trailer_link" class="block text-sm font-medium text-gray-300 mb-1">Trailer Link</label>
+                        <!--<label for="trailer_link" class="block text-sm font-medium text-gray-300 mb-1">Trailer Link</label>-->
                         <input 
-                            type="text" 
+                            type="hidden" 
                             name="trailer_link" 
                             id="trailer_link" 
                             class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
                             value="{{ $movie->trailer_link }}" 
-                            required 
+                            readonly
                         />
                     </div>
 
                     <!-- Duration -->
                     <div class="mb-4">
-                        <label for="duration" class="block text-sm font-medium text-gray-300 mb-1">Duration (in minutes)</label>
+                        <!--<label for="duration" class="block text-sm font-medium text-gray-300 mb-1">Duration (in minutes)</label>-->
                         <input 
-                            type="number" 
+                            type="hidden" 
                             name="duration" 
                             id="duration" 
                             class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
                             value="{{ $movie->duration }}" 
-                            required 
+                            readonly 
                         />
                     </div>
 
                     <!-- Release Date -->
                     <div class="mb-4">
-                        <label for="release_date" class="block text-sm font-medium text-gray-300 mb-1">Release Date</label>
+                        <!--<label for="release_date" class="block text-sm font-medium text-gray-300 mb-1">Release Date</label>-->
                         <input 
-                            type="date" 
+                            type="hidden" 
                             name="release_date" 
                             id="release_date" 
                             class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
                             value="{{ $movie->release_date }}" 
-                            required 
+                            readonly 
                         />
                     </div>
 
                     <!-- IMDB Link -->
                     <div class="mb-4">
-                        <label for="imdb_link" class="block text-sm font-medium text-gray-300 mb-1">IMDB Link</label>
+                        <!--<label for="imdb_link" class="block text-sm font-medium text-gray-300 mb-1">IMDB Link</label>-->
                         <input 
-                            type="text" 
+                            type="hidden" 
                             name="imdb_link" 
                             id="imdb_link" 
                             class="w-full rounded-lg border-gray-700 bg-gray-800 text-white p-3" 
                             value="{{ $movie->imdb_link }}" 
-                            required 
+                            readonly 
                         />
                     </div>
 

@@ -27,4 +27,9 @@ class Booking extends Model
         return $this->belongsTo(Movie::class);
     }
 
+    public function show()
+    {
+        return $this->belongsTo(Show::class, 'movie_id');
+    }
+
 }

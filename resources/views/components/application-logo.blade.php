@@ -1,2 +1,2 @@
 
-    <img src="{{ asset('/icons/logo.png') }}" alt="Logo" class="block h-10 w-auto ml-10">
+<img src="{{ asset('/icons/logo2.png') }}" alt="Logo" class="block h-20 w-auto ml-0">

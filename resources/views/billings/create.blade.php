@@ -103,7 +103,7 @@
             </p>
 
             <!-- Payment Button -->
-            <form action="{{ route('billing.store') }}" method="POST">
+            <form id="confirm-payment-form" action="{{ route('billing.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="booking_id" value="{{ session('created_booking_ids')[0] ?? '' }}">
                 <input type="hidden" name="movie_id" value="{{ $show->id }}">
@@ -118,9 +118,19 @@
 
                 <input type="hidden" name="bookingIds" value="{{ implode(',', session('created_booking_ids', [])) }}">
 
-                <button type="submit" 
-                        style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
-                    Confirm Payment 
+                <button type="submit" id="confirm-payment-button"
+                    style="background-color: #da2323; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                    Confirm Payment
+                </button>
+            </form>
+
+            <!-- Cancel Booking Form -->
+            <form id="cancel-booking-form" action="{{ route('billing.cancel') }}" method="POST">
+                @csrf
+                <input type="hidden" name="bookingIds" value="{{ implode(',', session('created_booking_ids', [])) }}">
+                <button type="submit" id="cancel-booking-button"
+                    style="background-color: #555; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 4px;">
+                    Cancel Booking
                 </button>
             </form>
 
@@ -128,6 +138,9 @@
     </div>
 
     <script>
+        // -------------------------------
+        // Price calculation part
+        // -------------------------------
         const price = @json($price);
         const fullTicketsInput = document.getElementById('full-tickets');
         const halfTicketsInput = document.getElementById('half-tickets');
@@ -138,46 +151,109 @@
         const totalPriceHiddenInput = document.getElementById('total-price-input');
 
         function updateHiddenInputs() {
-            fullTicketsHiddenInput.value = fullTicketsInput.value; // Set full tickets count
-            halfTicketsHiddenInput.value = halfTicketsInput.value; // Set half tickets count
-            totalPriceHiddenInput.value = parseFloat(totalPriceEl.textContent); // Set total price
+            fullTicketsHiddenInput.value = fullTicketsInput.value;
+            halfTicketsHiddenInput.value = halfTicketsInput.value;
+            totalPriceHiddenInput.value = parseFloat(totalPriceEl.textContent);
         }
 
         function calculateTotal() {
-            const totalTickets = parseInt({{ session('selected_seats_count', 0) }}); // Total tickets from session
+            const totalTickets = parseInt({{ session('selected_seats_count', 0) }});
             const halfTickets = parseInt(halfTicketsInput.value) || 0;
 
             let remainingFullTickets = totalTickets - halfTickets;
-
             if (remainingFullTickets < 0) {
-                remainingFullTickets = 0; // Ensure full tickets count is not negative
-                halfTicketsInput.value = totalTickets; // Reset half tickets to max
+                remainingFullTickets = 0;
+                halfTicketsInput.value = totalTickets; 
             }
 
-            // Reflect the full tickets count in the fullTicketsInput
             fullTicketsInput.value = remainingFullTickets;
-
             if (price) {
                 const fullPrice = parseFloat(price.full_price) || 0;
                 const halfPrice = parseFloat(price.half_price) || 0;
                 const totalPrice = (remainingFullTickets * fullPrice) + (halfTickets * halfPrice);
-
-                // Update the displayed total price
                 totalPriceEl.textContent = totalPrice.toFixed(2);
             } else {
-                console.error("Price object is not available.");
+                console.error("Price object not available.");
                 totalPriceEl.textContent = "0.00";
             }
-
-            // Update hidden input fields for form submission
             updateHiddenInputs();
         }
 
-        // Event listeners for real-time updates
         fullTicketsInput.addEventListener('input', calculateTotal);
         halfTicketsInput.addEventListener('input', calculateTotal);
-
-        // Initial calculation on page load
         calculateTotal();
+
+        // ----------------------------------------------------
+        // Navigation Interception Logic
+        // ----------------------------------------------------
+        // We'll mark true if user explicitly clicks Confirm Payment or Cancel Booking
+        let formSubmitted = false;
+
+        // If user clicks Confirm Payment, we allow normal submission
+        const confirmPaymentButton = document.getElementById('confirm-payment-button');
+        confirmPaymentButton.addEventListener('click', () => {
+            formSubmitted = true;
+        });
+
+        // If user clicks Cancel Booking, we allow normal submission
+        const cancelBookingButton = document.getElementById('cancel-booking-button');
+        cancelBookingButton.addEventListener('click', () => {
+            formSubmitted = true;
+        });
+
+        // 1. Intercept all link clicks (any <a> tags) to forcibly cancel booking first
+        document.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                // If we haven't already submitted a form:
+                if (!formSubmitted) {
+                    e.preventDefault();
+                    // Confirm with user or silently proceed?
+                    if (confirm("You are leaving the page. This will cancel your booking. Continue?")) {
+                        cancelBookingThenNavigate(a.href);
+                    }
+                }
+            });
+        });
+
+        // 2. Intercept the back/forward button or page close using beforeunload
+        window.addEventListener('beforeunload', function (e) {
+            // If the user is leaving without having submitted a form
+            if (!formSubmitted) {
+                // Show a default confirmation message
+                // NOTE: Modern browsers ignore custom messages here.
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // You can optionally try to automatically cancel booking in beforeunload,
+        // but it might not always finish in time. We'll do a "best effort" approach:
+        window.addEventListener('unload', function() {
+            if (!formSubmitted) {
+                // Fire off a quick request to cancel booking
+                navigator.sendBeacon(
+                    "{{ route('billing.cancel') }}", 
+                    new FormData(document.getElementById('cancel-booking-form'))
+                );
+            }
+        });
+
+        // Helper: Cancel booking via fetch, then go to given URL
+        function cancelBookingThenNavigate(targetUrl) {
+            const form = document.getElementById('cancel-booking-form');
+            const data = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: data
+            }).then(() => {
+                // Once canceled, redirect to the originally intended link
+                window.location.href = targetUrl;
+            }).catch((error) => {
+                console.error('Failed to cancel booking:', error);
+                // Decide how you want to handle error; maybe still navigate or block
+                window.location.href = targetUrl;
+            });
+        }
     </script>
 </x-app-layout>

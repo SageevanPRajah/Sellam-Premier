@@ -42,6 +42,7 @@ class BookingController extends Controller
                 foreach ($selectedSeats as $seatCode) {
                     $seat = Seat::where('seat_code', $seatCode)->firstOrFail();
     
+                    $status = $request->has('confirm_booking') ? true : false;
                     $booking = Booking::create([
                         'movie_id' => $show->id,
                         'movie_name' => $show->movie_name,
@@ -51,6 +52,7 @@ class BookingController extends Controller
                         'date' => $request->selected_date,
                         'name' => Auth::user()->name,
                         'time' => $request->time,
+                        'status' => $status,
                     ]);
     
                     // Add the booking ID to the array
@@ -361,7 +363,7 @@ class BookingController extends Controller
             // Combine the booking IDs into a string (if your generateTickets expects a comma‑separated list)
             $bookingIdsString = implode(',', $bookingIds);
             // Redirect to the billing generateTickets route
-            return redirect()->route('billing.generateTickets', ['bookingIds' => $bookingIdsString]);
+            return redirect()->route('billing.printTickets', ['bookingIds' => $bookingIdsString]);
         }
 
         return redirect()->back()->withErrors(['error' => 'Invalid action.']);

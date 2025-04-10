@@ -106,6 +106,13 @@
                     button.textContent = 'Select Show';
                     button.classList.add('button');
                     button.addEventListener('click', () => {
+                        
+                        if (window.seatPopup && !window.seatPopup.closed) {
+                            window.seatPopup.location.href = `/booking/create/gold/${show.id}`;
+                        } else {
+                            window.seatPopup = window.open(`/booking/create/gold/${show.id}`, 'SeatPopup');
+                        }
+                        
                         window.location.href = `/booking/create/${show.id}`;
                     });
 
@@ -116,4 +123,70 @@
             });
         });
     </script>
+
+<!----------------------------------------------------------------->
+<!------ Customer View Popup Window - nazeemthebeta@gmail.com ----->
+<!----------------------------------------------------------------->
+    <script>
+        
+        let seatPopup = null;
+        let lastShowId = null;
+
+        // Open the popup immediately with a placeholder (blank or preview page)
+        function openInitialPopup() {
+            const defaultUrl = ''; // change to a safe placeholder or leave blank
+            seatPopup = window.open(defaultUrl, 'SeatPopup');
+        }
+
+        // Dynamically update the popup with selected show ID
+        function updatePopup(showId) {
+            const url = `/booking/clone/gold/${showId}`;
+            if (seatPopup && !seatPopup.closed) {
+                seatPopup.location.href = url;
+            } else {
+                // Reopen if closed
+                seatPopup = window.open(url, 'SeatPopup');
+            }
+        }
+
+        function getCurrentShowId() {
+            const input = document.querySelector('[name="show_id"]'); // Adjust if needed
+            return input ? input.value : null;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            openInitialPopup(); // Popup on page load
+
+            // Mutation observer if show_id is dynamically added/updated
+            const observer = new MutationObserver(() => {
+                const currentShowId = getCurrentShowId();
+                if (currentShowId && currentShowId !== lastShowId) {
+                    lastShowId = currentShowId;
+                    updatePopup(currentShowId);
+                }
+            });
+
+            const target = document.getElementById('show-selection-container'); // Adjust if needed
+            if (target) {
+                observer.observe(target, { childList: true, subtree: true });
+            }
+
+            // Also handle change events from dropdowns
+            document.querySelectorAll('[name="movie_id"], [name="date"]').forEach(el => {
+                el.addEventListener('change', () => {
+                    setTimeout(() => {
+                        const currentShowId = getCurrentShowId();
+                        if (currentShowId && currentShowId !== lastShowId) {
+                            lastShowId = currentShowId;
+                            updatePopup(currentShowId);
+                        }
+                    }, 300);
+                });
+            });
+        });
+    </script>
+    
+<!---------------------------------------------------------------->
+
+
 </x-app-layout>

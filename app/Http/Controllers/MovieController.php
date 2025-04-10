@@ -9,7 +9,7 @@ use App\Models\Movie;
 class MovieController extends Controller
 {
     public function index(){
-        $movies = Movie::all();
+        $movies = Movie::orderBy('id', 'desc')->get();
         return view('movies.index', ['movies' => $movies]);
     }
 
@@ -20,23 +20,19 @@ class MovieController extends Controller
     public function store(Request $request){
         $data = $request->validate([
             'name' => 'required',
-            'poster' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'trailer_link' => 'required',
             'duration' => 'required|numeric',
             'release_date' => 'required',
             'imdb_link' => 'required'
         ]);
 
-        // Handle file upload directly to public folder
+        // Handle file upload
     if ($request->hasFile('poster')) {
-        // Create a unique filename based on time
-        $fileName = time() . '.' . $request->file('poster')->getClientOriginalExtension();
-        
-        // Move the file to public/posters
-        $request->file('poster')->move(public_path('posters'), $fileName);
-        
-        // Update the $data array to store the path or filename
-        $data['poster'] = 'posters/' . $fileName;
+        $data['poster'] = $request->file('poster')->store('posters', 'public');
+    }else {
+        // Set the default image if no file is uploaded
+        $data['poster'] = 'posters/checkSR.png';  // ✅ Ensure this is assigned to `$data['poster']`
     }
 
     // Create a new movie with the validated data, including the poster path

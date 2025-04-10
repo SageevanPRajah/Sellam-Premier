@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('poster'); // Poster image file path
+            $table->string('poster')->nullable()->change(); // Poster image file path
             $table->string('trailer_link'); 
             $table->integer('duration'); 
             $table->date('release_date'); 

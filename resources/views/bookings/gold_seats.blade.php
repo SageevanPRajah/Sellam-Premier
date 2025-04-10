@@ -1,35 +1,31 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-      x-data="{ isOpen: true }"  {{-- Alpine.js state for toggling sidebar --}}
-      x-cloak>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ isOpen: true }" {{-- Alpine.js state for toggling sidebar --}} x-cloak>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4MNol7QzPxwOWa5t4lRDs9C4vGdAN3E6bOozcKW7v1z4+pbjMZtm2VWwg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4MNol7QzPxwOWa5t4lRDs9C4vGdAN3E6bOozcKW7v1z4+pbjMZtm2VWwg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        <!-- Alpine.js -->
-        <script src="//unpkg.com/alpinejs" defer></script>
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <!-- 
-                We are NOT including the usual layouts.navigation 
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Alpine.js -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+</head>
+
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-gray-100">
+        <!--
+                We are NOT including the usual layouts.navigation
                 because we want a custom sidebar for this page.
             -->
 
@@ -56,12 +52,10 @@
                 </aside>
                 <!-- END: CUSTOM SIDEBAR -->
 
-                <!-- BEGIN: MAIN CONTENT AREA -->
-                <div class="p-6 transition-all duration-300"
-                     :class="isOpen ? 'w-17/18' : 'flex-1'"
-                     style="background-color: #f7f9f9;"
-                >
-                    <main class="w-[1200px] mx-auto">
+            <!-- BEGIN: MAIN CONTENT AREA -->
+            <div class="p-6 transition-all duration-300" :class="isOpen ? 'w-17/18' : 'flex-1'"
+                style="background-color: #f7f9f9;">
+                <main class="w-[1200px] mx-auto">
 
                         <div class="booking-container">
                             <!-- Success Message -->
@@ -107,10 +101,6 @@
                     
                             <!-- Seat Type Selection -->
                             <div class="seat-types">
-                                <a href="{{ route('booking.cloneSeats', $show->id) }}" 
-                                   class="button silver-btn {{ Route::is('booking.cloneSeats') ? 'active' : '' }}">
-                                    Silver
-                                </a>
                                 <a href="{{ route('booking.goldSeats', $show->id) }}" 
                                    class="button gold-btn {{ Route::is('booking.goldSeats') ? 'active' : '' }}">
                                     Gold
@@ -118,6 +108,10 @@
                                 <a href="{{ route('booking.platinumSeats', $show->id) }}" 
                                    class="button platinum-btn {{ Route::is('booking.platinumSeats') ? 'active' : '' }}">
                                     Platinum
+                                </a>
+                                <a href="{{ route('booking.cloneSeats', $show->id) }}" 
+                                   class="button silver-btn {{ Route::is('booking.cloneSeats') ? 'active' : '' }}">
+                                    Silver
                                 </a>
                             </div>
                     
@@ -128,319 +122,357 @@
                                     <!-- GOLD Section (hidden by default) -->
                                     <div class="seat-type-layout-section" id="gold-layout">
                                         <table>
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="14">SCREEN</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>SL</td>
-                                                    <td><button class="seat available" data-seat-code="G-SL-1">SL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SL-2">SL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SL-3">SL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SL-4">SL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-5">SR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-6">SR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-7">SR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-8">SR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-9">SR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-SR-10">SR10</button></td>
-                                                    <td>SR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>RL</td>
-                                                    <td><button class="seat available" data-seat-code="G-RL-1">RL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RL-2">RL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RL-3">RL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RL-4">RL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-5">RR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-6">RR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-7">RR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-8">RR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-9">RR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-RR-10">RR10</button></td>
-                                                    <td>RR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>QL</td>
-                                                    <td><button class="seat available" data-seat-code="G-QL-1">QL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QL-2">QL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QL-3">QL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QL-4">QL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-5">QR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-6">QR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-7">QR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-8">QR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-9">QR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-QR-10">QR10</button></td>
-                                                    <td>QR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>PL</td>
-                                                    <td><button class="seat available" data-seat-code="G-PL-1">PL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PL-2">PL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PL-3">PL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PL-4">PL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-5">PR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-6">PR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-7">PR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-8">PR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-9">PR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-PR-10">PR10</button></td>
-                                                    <td>PR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>OL</td>
-                                                    <td><button class="seat available" data-seat-code="G-OL-1">OL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OL-2">OL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OL-3">OL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OL-4">OL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-5">OR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-6">OR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-7">OR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-8">OR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-9">OR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-OR-10">OR10</button></td>
-                                                    <td>OR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>NL</td>
-                                                    <td><button class="seat available" data-seat-code="G-NL-1">NL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NL-2">NL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NL-3">NL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NL-4">NL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-5">NR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-6">NR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-7">NR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-8">NR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-9">NR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-NR-10">NR10</button></td>
-                                                    <td>NR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ML</td>
-                                                    <td><button class="seat available" data-seat-code="G-ML-1">ML1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ML-2">ML2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ML-3">ML3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ML-4">ML4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-5">MR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-6">MR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-7">MR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-8">MR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-9">MR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-MR-10">MR10</button></td>
-                                                    <td>MR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>LL</td>
-                                                    <td><button class="seat available" data-seat-code="G-LL-1">LL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LL-2">LL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LL-3">LL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LL-4">LL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-5">LR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-6">LR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-7">LR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-8">LR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-9">LR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-LR-10">LR10</button></td>
-                                                    <td>LR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>KL</td>
-                                                    <td><button class="seat available" data-seat-code="G-KL-1">KL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KL-2">KL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KL-3">KL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KL-4">KL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-5">KR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-6">KR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-7">KR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-8">KR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-9">KR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-KR-10">KR10</button></td>
-                                                    <td>KR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>JL</td>
-                                                    <td><button class="seat available" data-seat-code="G-JL-1">JL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JL-2">JL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JL-3">JL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JL-4">JL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-5">JR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-6">JR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-7">JR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-8">JR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-9">JR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-JR-10">JR10</button></td>
-                                                    <td>JR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>IL</td>
-                                                    <td><button class="seat available" data-seat-code="G-IL-1">IL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IL-2">IL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IL-3">IL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IL-4">IL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-5">IR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-6">IR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-7">IR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-8">IR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-9">IR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-IR-10">IR10</button></td>
-                                                    <td>IR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>HL</td>
-                                                    <td><button class="seat available" data-seat-code="G-HL-1">HL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HL-2">HL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HL-3">HL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HL-4">HL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-5">HR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-6">HR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-7">HR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-8">HR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-9">HR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-HR-10">HR10</button></td>
-                                                    <td>HR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>GL</td>
-                                                    <td><button class="seat available" data-seat-code="G-GL-1">GL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GL-2">GL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GL-3">GL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GL-4">GL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-5">GR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-6">GR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-7">GR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-8">GR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-9">GR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-GR-10">GR10</button></td>
-                                                    <td>GR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>FL</td>
-                                                    <td><button class="seat available" data-seat-code="G-FL-1">FL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FL-2">FL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FL-3">FL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FL-4">FL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-5">FR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-6">FR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-7">FR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-8">FR8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-9">FR9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-FR-10">FR10</button></td>
-                                                    <td>FR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>EL</td>
-                                                    <td><button class="seat available" data-seat-code="G-EL-1">EL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-EL-2">EL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-EL-3">EL3</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-EL-4">EL4</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-5">ER5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-6">ER6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-7">ER7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-8">ER8</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-9">ER9</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-ER-10">ER10</button></td>
-                                                    <td>ER</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>DL</td>
-                                                    <td><button class="seat available" data-seat-code="G-DL-1">DL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DL-2">DL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DL-3">DL3</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-DR-4">DR4</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DR-5">DR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DR-6">DR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DR-7">DR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-DR-8">DR8</button></td>
-                                                    <td>DR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>CL</td>
-                                                    <td><button class="seat available" data-seat-code="G-CL-1">CL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CL-2">CL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CL-3">CL3</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-CR-4">CR4</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CR-5">CR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CR-6">CR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CR-7">CR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-CR-8">CR8</button></td>
-                                                    <td>CR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BL</td>
-                                                    <td><button class="seat available" data-seat-code="G-BL-1">BL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BL-2">BL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BL-3">BL3</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-BR-4">BR4</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BR-5">BR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BR-6">BR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BR-7">BR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-BR-8">BR8</button></td>
-                                                    <td>BR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>AL</td>
-                                                    <td><button class="seat available" data-seat-code="G-AL-1">AL1</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AL-2">AL2</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AL-3">AL3</button></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><button class="seat available" data-seat-code="G-AR-4">AR4</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AR-5">AR5</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AR-6">AR6</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AR-7">AR7</button></td>
-                                                    <td><button class="seat available" data-seat-code="G-AR-8">AR8</button></td>
-                                                    <td>AR</td>
-                                                </tr>
-                    
-                                            </tbody>
-                                        </table>
+        <thead>
+            <tr>
+                <th colspan="14">Gold Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 1) SL row (6 seats left, 4 seats right) -->
+            <tr>
+                <td>SL</td>
+                <td><button class="seat available" data-seat-code="G-SL-6">SL6</button></td>
+                <td><button class="seat available" data-seat-code="G-SL-5">SL5</button></td>
+                <td><button class="seat available" data-seat-code="G-SL-4">SL4</button></td>
+                <td><button class="seat available" data-seat-code="G-SL-3">SL3</button></td>
+                <td><button class="seat available" data-seat-code="G-SL-2">SL2</button></td>
+                <td><button class="seat available" data-seat-code="G-SL-1">SL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-SR-1">SR1</button></td>
+                <td><button class="seat available" data-seat-code="G-SR-2">SR2</button></td>
+                <td><button class="seat available" data-seat-code="G-SR-3">SR3</button></td>
+                <td><button class="seat available" data-seat-code="G-SR-4">SR4</button></td>
+                <td>SR</td>
+            </tr>
+
+            <!-- 2) RL row -->
+            <tr>
+                <td>RL</td>
+                <td><button class="seat available" data-seat-code="G-RL-6">RL6</button></td>
+                <td><button class="seat available" data-seat-code="G-RL-5">RL5</button></td>
+                <td><button class="seat available" data-seat-code="G-RL-4">RL4</button></td>
+                <td><button class="seat available" data-seat-code="G-RL-3">RL3</button></td>
+                <td><button class="seat available" data-seat-code="G-RL-2">RL2</button></td>
+                <td><button class="seat available" data-seat-code="G-RL-1">RL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-RR-1">RR1</button></td>
+                <td><button class="seat available" data-seat-code="G-RR-2">RR2</button></td>
+                <td><button class="seat available" data-seat-code="G-RR-3">RR3</button></td>
+                <td><button class="seat available" data-seat-code="G-RR-4">RR4</button></td>
+                <td>RR</td>
+            </tr>
+
+            <!-- 3) QL row -->
+            <tr>
+                <td>QL</td>
+                <td><button class="seat available" data-seat-code="G-QL-6">QL6</button></td>
+                <td><button class="seat available" data-seat-code="G-QL-5">QL5</button></td>
+                <td><button class="seat available" data-seat-code="G-QL-4">QL4</button></td>
+                <td><button class="seat available" data-seat-code="G-QL-3">QL3</button></td>
+                <td><button class="seat available" data-seat-code="G-QL-2">QL2</button></td>
+                <td><button class="seat available" data-seat-code="G-QL-1">QL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-QR-1">QR1</button></td>
+                <td><button class="seat available" data-seat-code="G-QR-2">QR2</button></td>
+                <td><button class="seat available" data-seat-code="G-QR-3">QR3</button></td>
+                <td><button class="seat available" data-seat-code="G-QR-4">QR4</button></td>
+                <td>QR</td>
+            </tr>
+
+            <!-- 4) PL row -->
+            <tr>
+                <td>PL</td>
+                <td><button class="seat available" data-seat-code="G-PL-6">PL6</button></td>
+                <td><button class="seat available" data-seat-code="G-PL-5">PL5</button></td>
+                <td><button class="seat available" data-seat-code="G-PL-4">PL4</button></td>
+                <td><button class="seat available" data-seat-code="G-PL-3">PL3</button></td>
+                <td><button class="seat available" data-seat-code="G-PL-2">PL2</button></td>
+                <td><button class="seat available" data-seat-code="G-PL-1">PL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-PR-1">PR1</button></td>
+                <td><button class="seat available" data-seat-code="G-PR-2">PR2</button></td>
+                <td><button class="seat available" data-seat-code="G-PR-3">PR3</button></td>
+                <td><button class="seat available" data-seat-code="G-PR-4">PR4</button></td>
+                <td>PR</td>
+            </tr>
+
+            <!-- 5) OL row -->
+            <tr>
+                <td>OL</td>
+                <td><button class="seat available" data-seat-code="G-OL-6">OL6</button></td>
+                <td><button class="seat available" data-seat-code="G-OL-5">OL5</button></td>
+                <td><button class="seat available" data-seat-code="G-OL-4">OL4</button></td>
+                <td><button class="seat available" data-seat-code="G-OL-3">OL3</button></td>
+                <td><button class="seat available" data-seat-code="G-OL-2">OL2</button></td>
+                <td><button class="seat available" data-seat-code="G-OL-1">OL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-OR-1">OR1</button></td>
+                <td><button class="seat available" data-seat-code="G-OR-2">OR2</button></td>
+                <td><button class="seat available" data-seat-code="G-OR-3">OR3</button></td>
+                <td><button class="seat available" data-seat-code="G-OR-4">OR4</button></td>
+                <td>OR</td>
+            </tr>
+
+            <!-- 6) NL row -->
+            <tr>
+                <td>NL</td>
+                <td><button class="seat available" data-seat-code="G-NL-6">NL6</button></td>
+                <td><button class="seat available" data-seat-code="G-NL-5">NL5</button></td>
+                <td><button class="seat available" data-seat-code="G-NL-4">NL4</button></td>
+                <td><button class="seat available" data-seat-code="G-NL-3">NL3</button></td>
+                <td><button class="seat available" data-seat-code="G-NL-2">NL2</button></td>
+                <td><button class="seat available" data-seat-code="G-NL-1">NL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-NR-1">NR1</button></td>
+                <td><button class="seat available" data-seat-code="G-NR-2">NR2</button></td>
+                <td><button class="seat available" data-seat-code="G-NR-3">NR3</button></td>
+                <td><button class="seat available" data-seat-code="G-NR-4">NR4</button></td>
+                <td>NR</td>
+            </tr>
+
+            <!-- 7) ML row -->
+            <tr>
+                <td>ML</td>
+                <td><button class="seat available" data-seat-code="G-ML-6">ML6</button></td>
+                <td><button class="seat available" data-seat-code="G-ML-5">ML5</button></td>
+                <td><button class="seat available" data-seat-code="G-ML-4">ML4</button></td>
+                <td><button class="seat available" data-seat-code="G-ML-3">ML3</button></td>
+                <td><button class="seat available" data-seat-code="G-ML-2">ML2</button></td>
+                <td><button class="seat available" data-seat-code="G-ML-1">ML1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-MR-1">MR1</button></td>
+                <td><button class="seat available" data-seat-code="G-MR-2">MR2</button></td>
+                <td><button class="seat available" data-seat-code="G-MR-3">MR3</button></td>
+                <td><button class="seat available" data-seat-code="G-MR-4">MR4</button></td>
+                <td>MR</td>
+            </tr>
+
+            <!-- 8) LL row -->
+            <tr>
+                <td>LL</td>
+                <td><button class="seat available" data-seat-code="G-LL-6">LL6</button></td>
+                <td><button class="seat available" data-seat-code="G-LL-5">LL5</button></td>
+                <td><button class="seat available" data-seat-code="G-LL-4">LL4</button></td>
+                <td><button class="seat available" data-seat-code="G-LL-3">LL3</button></td>
+                <td><button class="seat available" data-seat-code="G-LL-2">LL2</button></td>
+                <td><button class="seat available" data-seat-code="G-LL-1">LL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-LR-1">LR1</button></td>
+                <td><button class="seat available" data-seat-code="G-LR-2">LR2</button></td>
+                <td><button class="seat available" data-seat-code="G-LR-3">LR3</button></td>
+                <td><button class="seat available" data-seat-code="G-LR-4">LR4</button></td>
+                <td>LR</td>
+            </tr>
+
+            <!-- 9) KL row -->
+            <tr>
+                <td>KL</td>
+                <td><button class="seat available" data-seat-code="G-KL-6">KL6</button></td>
+                <td><button class="seat available" data-seat-code="G-KL-5">KL5</button></td>
+                <td><button class="seat available" data-seat-code="G-KL-4">KL4</button></td>
+                <td><button class="seat available" data-seat-code="G-KL-3">KL3</button></td>
+                <td><button class="seat available" data-seat-code="G-KL-2">KL2</button></td>
+                <td><button class="seat available" data-seat-code="G-KL-1">KL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-KR-1">KR1</button></td>
+                <td><button class="seat available" data-seat-code="G-KR-2">KR2</button></td>
+                <td><button class="seat available" data-seat-code="G-KR-3">KR3</button></td>
+                <td><button class="seat available" data-seat-code="G-KR-4">KR4</button></td>
+                <td>KR</td>
+            </tr>
+
+            <!-- 10) JL row -->
+            <tr>
+                <td>JL</td>
+                <td><button class="seat available" data-seat-code="G-JL-6">JL6</button></td>
+                <td><button class="seat available" data-seat-code="G-JL-5">JL5</button></td>
+                <td><button class="seat available" data-seat-code="G-JL-4">JL4</button></td>
+                <td><button class="seat available" data-seat-code="G-JL-3">JL3</button></td>
+                <td><button class="seat available" data-seat-code="G-JL-2">JL2</button></td>
+                <td><button class="seat available" data-seat-code="G-JL-1">JL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-JR-1">JR1</button></td>
+                <td><button class="seat available" data-seat-code="G-JR-2">JR2</button></td>
+                <td><button class="seat available" data-seat-code="G-JR-3">JR3</button></td>
+                <td><button class="seat available" data-seat-code="G-JR-4">JR4</button></td>
+                <td>JR</td>
+            </tr>
+
+            <!-- 11) IL row -->
+            <tr>
+                <td>IL</td>
+                <td><button class="seat available" data-seat-code="G-IL-6">IL6</button></td>
+                <td><button class="seat available" data-seat-code="G-IL-5">IL5</button></td>
+                <td><button class="seat available" data-seat-code="G-IL-4">IL4</button></td>
+                <td><button class="seat available" data-seat-code="G-IL-3">IL3</button></td>
+                <td><button class="seat available" data-seat-code="G-IL-2">IL2</button></td>
+                <td><button class="seat available" data-seat-code="G-IL-1">IL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-IR-1">IR1</button></td>
+                <td><button class="seat available" data-seat-code="G-IR-2">IR2</button></td>
+                <td><button class="seat available" data-seat-code="G-IR-3">IR3</button></td>
+                <td><button class="seat available" data-seat-code="G-IR-4">IR4</button></td>
+                <td>IR</td>
+            </tr>
+
+            <!-- 12) HL row -->
+            <tr>
+                <td>HL</td>
+                <td><button class="seat available" data-seat-code="G-HL-6">HL6</button></td>
+                <td><button class="seat available" data-seat-code="G-HL-5">HL5</button></td>
+                <td><button class="seat available" data-seat-code="G-HL-4">HL4</button></td>
+                <td><button class="seat available" data-seat-code="G-HL-3">HL3</button></td>
+                <td><button class="seat available" data-seat-code="G-HL-2">HL2</button></td>
+                <td><button class="seat available" data-seat-code="G-HL-1">HL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-HR-1">HR1</button></td>
+                <td><button class="seat available" data-seat-code="G-HR-2">HR2</button></td>
+                <td><button class="seat available" data-seat-code="G-HR-3">HR3</button></td>
+                <td><button class="seat available" data-seat-code="G-HR-4">HR4</button></td>
+                <td>HR</td>
+            </tr>
+
+            <!-- 13) GL row -->
+            <tr>
+                <td>GL</td>
+                <td><button class="seat available" data-seat-code="G-GL-6">GL6</button></td>
+                <td><button class="seat available" data-seat-code="G-GL-5">GL5</button></td>
+                <td><button class="seat available" data-seat-code="G-GL-4">GL4</button></td>
+                <td><button class="seat available" data-seat-code="G-GL-3">GL3</button></td>
+                <td><button class="seat available" data-seat-code="G-GL-2">GL2</button></td>
+                <td><button class="seat available" data-seat-code="G-GL-1">GL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-GR-1">GR1</button></td>
+                <td><button class="seat available" data-seat-code="G-GR-2">GR2</button></td>
+                <td><button class="seat available" data-seat-code="G-GR-3">GR3</button></td>
+                <td><button class="seat available" data-seat-code="G-GR-4">GR4</button></td>
+                <td>GR</td>
+            </tr>
+
+            <!-- 14) FL row -->
+            <tr>
+                <td>FL</td>
+                <td><button class="seat available" data-seat-code="G-FL-6">FL6</button></td>
+                <td><button class="seat available" data-seat-code="G-FL-5">FL5</button></td>
+                <td><button class="seat available" data-seat-code="G-FL-4">FL4</button></td>
+                <td><button class="seat available" data-seat-code="G-FL-3">FL3</button></td>
+                <td><button class="seat available" data-seat-code="G-FL-2">FL2</button></td>
+                <td><button class="seat available" data-seat-code="G-FL-1">FL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-FR-1">FR1</button></td>
+                <td><button class="seat available" data-seat-code="G-FR-2">FR2</button></td>
+                <td><button class="seat available" data-seat-code="G-FR-3">FR3</button></td>
+                <td><button class="seat available" data-seat-code="G-FR-4">FR4</button></td>
+                <td>FR</td>
+            </tr>
+
+            <!-- 15) EL row -->
+            <tr>
+                <td>EL</td>
+                <td><button class="seat available" data-seat-code="G-EL-6">EL6</button></td>
+                <td><button class="seat available" data-seat-code="G-EL-5">EL5</button></td>
+                <td><button class="seat available" data-seat-code="G-EL-4">EL4</button></td>
+                <td><button class="seat available" data-seat-code="G-EL-3">EL3</button></td>
+                <td><button class="seat available" data-seat-code="G-EL-2">EL2</button></td>
+                <td><button class="seat available" data-seat-code="G-EL-1">EL1</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-ER-1">ER1</button></td>
+                <td><button class="seat available" data-seat-code="G-ER-2">ER2</button></td>
+                <td><button class="seat available" data-seat-code="G-ER-3">ER3</button></td>
+                <td><button class="seat available" data-seat-code="G-ER-4">ER4</button></td>
+                <td>ER</td>
+            </tr>
+
+            <!-- Now the last 4 lines: push right-side seats further to the right. -->
+
+            <!-- 16) DL row (5 seats left, 3 seats far-right) -->
+            <tr>
+                <td>DL</td>
+                <td><button class="seat available" data-seat-code="G-DL-5">DL5</button></td>
+                <td><button class="seat available" data-seat-code="G-DL-4">DL4</button></td>
+                <td><button class="seat available" data-seat-code="G-DL-3">DL3</button></td>
+                <td><button class="seat available" data-seat-code="G-DL-2">DL2</button></td>
+                <td><button class="seat available" data-seat-code="G-DL-1">DL1</button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-DR-1">DR1</button></td>
+                <td><button class="seat available" data-seat-code="G-DR-2">DR2</button></td>
+                <td><button class="seat available" data-seat-code="G-DR-3">DR3</button></td>
+                <td>DR</td>
+            </tr>
+
+            <!-- 17) CL row -->
+            <tr>
+                <td>CL</td>
+                <td><button class="seat available" data-seat-code="G-CL-5">CL5</button></td>
+                <td><button class="seat available" data-seat-code="G-CL-4">CL4</button></td>
+                <td><button class="seat available" data-seat-code="G-CL-3">CL3</button></td>
+                <td><button class="seat available" data-seat-code="G-CL-2">CL2</button></td>
+                <td><button class="seat available" data-seat-code="G-CL-1">CL1</button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-CR-1">CR1</button></td>
+                <td><button class="seat available" data-seat-code="G-CR-2">CR2</button></td>
+                <td><button class="seat available" data-seat-code="G-CR-3">CR3</button></td>
+                <td>CR</td>
+            </tr>
+
+            <!-- 18) BL row -->
+            <tr>
+                <td>BL</td>
+                <td><button class="seat available" data-seat-code="G-BL-5">BL5</button></td>
+                <td><button class="seat available" data-seat-code="G-BL-4">BL4</button></td>
+                <td><button class="seat available" data-seat-code="G-BL-3">BL3</button></td>
+                <td><button class="seat available" data-seat-code="G-BL-2">BL2</button></td>
+                <td><button class="seat available" data-seat-code="G-BL-1">BL1</button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-BR-1">BR1</button></td>
+                <td><button class="seat available" data-seat-code="G-BR-2">BR2</button></td>
+                <td><button class="seat available" data-seat-code="G-BR-3">BR3</button></td>
+                <td>BR</td>
+            </tr>
+
+            <!-- 19) AL row -->
+            <tr>
+                <td>AL</td>
+                <td><button class="seat available" data-seat-code="G-AL-5">AL5</button></td>
+                <td><button class="seat available" data-seat-code="G-AL-4">AL4</button></td>
+                <td><button class="seat available" data-seat-code="G-AL-3">AL3</button></td>
+                <td><button class="seat available" data-seat-code="G-AL-2">AL2</button></td>
+                <td><button class="seat available" data-seat-code="G-AL-1">AL1</button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button class="seat available" data-seat-code="G-AR-1">AR1</button></td>
+                <td><button class="seat available" data-seat-code="G-AR-2">AR2</button></td>
+                <td><button class="seat available" data-seat-code="G-AR-3">AR3</button></td>
+                <td>AR</td>
+            </tr>
+        </tbody>
+    </table>
                                     </div>
                     
                     
@@ -468,64 +500,64 @@
                                             <button type="submit" name="reserve_seats" class="button reserve-btn">Reserve Seats</button>
                                             <button type="submit" name="confirm_booking" id="confirm-booking" class="button confirm-btn">Confirm Booking</button>
                                         </div> --}}
-                            </form>
-                        </div>
-                    </main>
-                </div>
-                <!-- END: MAIN CONTENT AREA -->
+                        </form>
+                    </div>
+                </main>
             </div>
+            <!-- END: MAIN CONTENT AREA -->
         </div>
+    </div>
 
-        <!-- JavaScript for seat selection -->
-        <script>
-            let selectedSeats = []; 
-            const bookedSeats = @json($bookedSeats); // from the controller
+    <!-- JavaScript for seat selection -->
+    <script>
+        let selectedSeats = [];
+        const bookedSeats = @json($bookedSeats); // from the controller
 
-            document.addEventListener('DOMContentLoaded', () => {
-                // Mark booked seats
-                document.querySelectorAll('.seat').forEach(seat => {
-                    const seatCode = seat.getAttribute('data-seat-code');
-                    if (bookedSeats.hasOwnProperty(seatCode)) {
-                        if (bookedSeats[seatCode]) {
-                            seat.classList.add('booked');
-                            seat.disabled = true;
-                        } else {
-                            seat.classList.add('reserved');
-                            seat.disabled = true;
-                        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mark booked seats
+            document.querySelectorAll('.seat').forEach(seat => {
+                const seatCode = seat.getAttribute('data-seat-code');
+                if (bookedSeats.hasOwnProperty(seatCode)) {
+                    if (bookedSeats[seatCode]) {
+                        seat.classList.add('booked');
+                        seat.disabled = true;
+                    } else {
+                        seat.classList.add('reserved');
+                        seat.disabled = true;
                     }
-
-                    // Enable click if not booked/reserved
-                    if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
-                        seat.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            toggleSeatSelection(seatCode, seat);
-                        });
-                    }
-                });
-            });
-
-            function toggleSeatSelection(seatCode, seatButton) {
-                if (!seatCode) return;
-                if (selectedSeats.includes(seatCode)) {
-                    selectedSeats = selectedSeats.filter(s => s !== seatCode);
-                    seatButton.classList.remove('selected');
-                } else {
-                    selectedSeats.push(seatCode);
-                    seatButton.classList.add('selected');
                 }
-                document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
+
+                // Enable click if not booked/reserved
+                if (!seat.classList.contains('booked') && !seat.classList.contains('reserved')) {
+                    seat.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleSeatSelection(seatCode, seat);
+                    });
+                }
+            });
+        });
+
+        function toggleSeatSelection(seatCode, seatButton) {
+            if (!seatCode) return;
+            if (selectedSeats.includes(seatCode)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatCode);
+                seatButton.classList.remove('selected');
+            } else {
+                selectedSeats.push(seatCode);
+                seatButton.classList.add('selected');
             }
+            document.getElementById('selected-seats').value = JSON.stringify(selectedSeats);
+        }
 
-            // Optional auto reload every 10 seconds if you want
-            setTimeout(function() {
-                location.reload();
-            }, 10000);
-        </script>
+        // Optional auto reload every 10 seconds if you want
+        setTimeout(function() {
+            location.reload();
+        }, 10000);
+    </script>
 
-        <!-- Custom styles for seats, etc. (copy from your original platinum_seats.blade) -->
-        <style>
-            /* Make the page take full screen (reset default body margin/padding) */
+    <!-- Custom styles for seats, etc. (copy from your original platinum_seats.blade) -->
+    <style>
+        /* Make the page take full screen (reset default body margin/padding) */
         html,
         body {
             margin: 0;
@@ -547,37 +579,47 @@
         /* Top Section: Buttons & Movie Info */
         .top-section {
             display: flex;
-            flex-wrap: wrap;/* Ensures proper wrapping on smaller screens */
-            justify-content: left;/* Centers the buttons horizontally */
-            align-items: left;/* Centers vertically */
-            gap: 25px;/* Adds spacing between buttons */
-            margin: 0 auto 20px 100px;/* Centers horizontally */
+            flex-wrap: wrap;
+            /* Ensures proper wrapping on smaller screens */
+            justify-content: left;
+            /* Centers the buttons horizontally */
+            align-items: left;
+            /* Centers vertically */
+            gap: 25px;
+            /* Adds spacing between buttons */
+            margin: 0 auto 20px 100px;
+            /* Centers horizontally */
         }
 
         /* Seat Type Buttons Container */
         .seat-types {
             display: flex;
             flex: 1;
-            justify-content: center;/* Centers the buttons horizontally */
-            align-items: center;/* Centers vertically */
-            gap: 15px;/* Adds spacing between buttons */
-            max-width: 500px;/* Adjust as needed */
-            margin: 0 10px 20px 65px;/* Centers horizontally */
+            justify-content: center;
+            /* Centers the buttons horizontally */
+            align-items: center;
+            /* Centers vertically */
+            gap: 15px;
+            /* Adds spacing between buttons */
+            max-width: 500px;
+            /* Adjust as needed */
+            margin: 0 10px 20px 65px;
+            /* Centers horizontally */
 
         }
 
-        /* Align Silver button left, Gold center, Platinum right */
-        .seat-types .silver-btn {
+       /* Align Silver button left, Gold center, Platinum right */
+        .seat-types .gold-btn {
             margin-right: auto;
             /* push left */
         }
 
-        .seat-types .gold-btn {
+        .seat-types .platinum-btn {
             margin: 0 auto;
             /* center */
         }
 
-        .seat-types .platinum-btn {
+        .seat-types .silver-btn {
             margin-left: auto;
             /* push right */
         }
@@ -717,7 +759,8 @@
             border: 1px solid #0056b3;
         }
 
-            /* etc. */
-        </style>
-    </body>
+        /* etc. */
+    </style>
+</body>
+
 </html>

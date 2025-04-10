@@ -38,9 +38,9 @@
                     <h1 class="text-2xl font-bold mb-2">{{ $movie->name }} ({{ date('Y', strtotime($movie->release_date)) }})</h1>
                     
                     <!-- Release Date -->
-                    <div class="release-date text-gray-400 text-sm mb-4">
-                        Release Date: {{ date('F d, Y', strtotime($movie->release_date)) }}
-                    </div>
+                    <!--<div class="release-date text-gray-400 text-sm mb-4">-->
+                    <!--    Release Date: {{ date('F d, Y', strtotime($movie->release_date)) }}-->
+                    <!--</div>-->
 
                     <!-- Trailer and IMDB Links -->
                     <div class="form-group flex justify-center space-x-4 mb-4">

@@ -40,69 +40,59 @@
                         />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="poster" class="block font-medium text-gray-700">Poster</label>
+                        <!--<label for="poster" class="block font-medium text-gray-700">Poster</label>-->
                         <input 
-                            type="file" 
+                            type="hidden"  
                             name="poster" 
                             id="poster" 
                             accept="image/*" 
-                            required 
+                            default-value="pGAqfxjMCwurJZE7Am2pwTXyzPVuzWv5DVugqdPB.png"
                             class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="trailer_link" class="block font-medium text-gray-700">Trailer Link</label>
+                        <!--<label for="trailer_link" class="block font-medium text-gray-700">Trailer Link</label>-->
                         <input 
-                            type="text" 
+                            type="hidden" 
                             name="trailer_link" 
                             id="trailer_link" 
-                            placeholder="Enter Trailer Link" 
-                            required 
-                            class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            value="null"
                         />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="duration" class="block font-medium text-gray-700">Duration</label>
+                        <!--<label for="duration" class="block font-medium text-gray-700">Duration</label>-->
                         <div class="flex space-x-4">
                             <input 
-                                type="number" 
+                                type="hidden" 
                                 id="hours" 
-                                placeholder="Hours" 
-                                min="0" 
-                                required 
-                                class="w-1/2 mt-1 block rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                name="hours"
+                                value="2"
                             />
                             <input 
-                                type="number" 
+                                type="hidden" 
                                 id="minutes" 
-                                placeholder="Minutes" 
-                                min="0" 
-                                max="59" 
-                                required 
-                                class="w-1/2 mt-1 block rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                name="minutes"
+                                value="30"
                             />
                         </div>
                         <input type="hidden" name="duration" id="duration" />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="release_date" class="block font-medium text-gray-700">Release Date</label>
+                        <!--<label for="release_date" class="block font-medium text-gray-700">Release Date</label>-->
                         <input 
-                            type="date" 
+                            type="hidden" 
                             name="release_date" 
                             id="release_date" 
-                            required 
-                            class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            value="2000-01-01"
                         />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="imdb_link" class="block font-medium text-gray-700">IMDB Link</label>
+                        <!--<label for="imdb_link" class="block font-medium text-gray-700">IMDB Link</label>-->
                         <input 
-                            type="text" 
+                            type="hidden" 
                             name="imdb_link" 
                             id="imdb_link" 
-                            placeholder="Enter IMDB Link" 
-                            required 
-                            class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            value="null"
                         />
                     </div>
                     <div class="form-group">

@@ -8,7 +8,109 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class=" overflow-hidden shadow-sm sm:rounded-lg p-6 text-white">
-                <style>
+                
+
+                <h1 class="text-center text-2xl mb-4">Ticket Prices</h1>
+                
+                <!-- Sort Dropdown -->
+                <div class="flex justify-end mb-4">
+                    <label for="priceFilter" class="mr-2 text-white">Filter by Price Type:</label>
+                    <select id="priceFilter" class="p-2 rounded bg-gray-800 text-white">
+                        <option value="all">All Prices</option>
+                        <option value="Price 1" selected>Price 1</option>
+                        <option value="Price 2">Price 2</option>
+                        <option value="Price 3">Price 3</option>
+                    </select>
+                </div>
+
+                {{-- <div class="add-link">
+                    <a href="{{ route('price.create') }}">
+                        <img src="icons/icons8-add-24.png" alt="Add" class="inline-block mr-2" />
+                        Add New Price
+                    </a>
+                </div> --}}
+
+                <!-- Success Message -->
+                @if(session()->has('success'))
+                    <div class="success-message">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Error Messages -->
+                @if($errors->any())
+                    <div class="error-messages text-red-500">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Prices Table -->
+                <table id="pricesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Seat Type</th>
+                            <th>Seat Logo</th>
+                            <th>Price Code</th>
+                            <th>Full Ticket Price</th>
+                            <th>Half Ticket Price</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($prices as $price)
+                            <tr data-price="{{ $price->movie_code }}">
+                                <td>{{ $price->id }}</td>
+                                <td>{{ $price->seat_type }}</td>
+                                <td>
+                                    <img src="/seatlogo/{{ $price->seat_type }}.png" alt="Seat Logo" />
+                                </td>
+                                </td>
+                                <td>{{ $price->movie_code }}</td>
+                                <td>{{ $price->full_price }}</td>
+                                <td>{{ $price->half_price }}</td>
+                                <td>
+                                    <form method="GET" action="{{ route('price.edit', ['price' => $price]) }}">
+                                        <button type="submit" aria-label="Edit Price" class="w-12 h-8 mt-1">
+                                            <img src="icons/icons8-edit-50.png" alt="Edit"
+                                                class="inline-block w-3 mb-6" />
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const priceFilter = document.getElementById("priceFilter");
+            const rows = document.querySelectorAll("#pricesTable tbody tr");
+
+            priceFilter.addEventListener("change", function () {
+                const selectedPrice = this.value;
+
+                rows.forEach(row => {
+                    const priceType = row.getAttribute("data-price");
+                    if (selectedPrice === "all" || priceType === selectedPrice) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+
+            // Set default filter to 'Price 1' on load
+            priceFilter.dispatchEvent(new Event("change"));
+        });
+    </script>
+    <style>
                     /* All your existing CSS styles go here */
                     /* CSS Variables for Neumorphic Black and Gray Theme */
                     :root {
@@ -38,8 +140,8 @@
                         margin: 20px 0;
                         text-align: center;
                         color: black;
-                        font-size: 20px;
-                    }
+                        font-size:20px;
+                    }
 
                     table {
                         margin: 20px auto;
@@ -104,73 +206,20 @@
                     button:hover {
                         background-color: var(--button-hover-color);
                     }
+                    
+                    /* Dropdown Styling */
+                    #priceFilter {
+                        padding: 8px 12px;
+                        border-radius: 8px;
+                        background-color: var(--secondary-color);
+                        color: var(--text-color);
+                        border: 1px solid var(--border-color);
+                        cursor: pointer;
+                    }
+            
+                    #priceFilter:focus {
+                        outline: none;
+                        box-shadow: 0 0 10px var(--info-color);
+                    }
                 </style>
-
-                <h1 class="text-center text-2xl mb-4">Ticket Prices</h1>
-
-                {{-- <div class="add-link">
-                    <a href="{{ route('price.create') }}">
-                        <img src="icons/icons8-add-24.png" alt="Add" class="inline-block mr-2" />
-                        Add New Price
-                    </a>
-                </div> --}}
-
-                <!-- Success Message -->
-                @if(session()->has('success'))
-                    <div class="success-message">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <!-- Error Messages -->
-                @if($errors->any())
-                    <div class="error-messages text-red-500">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <!-- Prices Table -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Seat Type</th>
-                            <th>Seat Logo</th>
-                            <th>Price Code</th>
-                            <th>Full Ticket Price</th>
-                            <th>Half Ticket Price</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($prices as $price)
-                            <tr>
-                                <td>{{ $price->id }}</td>
-                                <td>{{ $price->seat_type }}</td>
-                                <td>
-                                    <img src="/seatlogo/{{ $price->seat_type }}.png" alt="Seat Logo" />
-                                </td>
-                                </td>
-                                <td>{{ $price->movie_code }}</td>
-                                <td>{{ $price->full_price }}</td>
-                                <td>{{ $price->half_price }}</td>
-                                <td>
-                                    <form method="GET" action="{{ route('price.edit', ['price' => $price]) }}">
-                                        <button type="submit" aria-label="Edit Price" class="w-12 h-8 mt-1">
-                                            <img src="icons/icons8-edit-50.png" alt="Edit"
-                                                class="inline-block w-3 mb-6" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 </x-app-layout>

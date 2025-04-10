@@ -24,41 +24,6 @@
         </div>
     @endif
 
-    <!-- Slider Controls Container -->
-    <div class="slider-controls">
-        <!-- Prev Button -->
-        <button id="prev" class="slider-control-btn" aria-label="Previous">
-            <!-- Custom SVG for the 'Previous' icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="18" height="18" fill="currentColor">
-                <path d="M16 4l-8 8 8 8z" />
-            </svg>
-        </button>
-
-        <!-- Slider Container -->
-        <div class="slider-container">
-            <!-- Slider Wrapper -->
-            <div class="slider-wrapper">
-                @foreach($movies as $movie)
-                    <div class="slider-item">
-                        <img 
-                            src="{{ $movie->poster ? url('storage/posters/' . basename($movie->poster)) : asset('images/default-poster.jpg') }}" 
-                            alt="Poster">
-                        <a href="{{ route('movie.inspect', ['movie' => $movie]) }}">More...</a>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
-
-        <!-- Next Button -->
-        <button id="next" class="slider-control-btn" aria-label="Next">
-            <!-- Custom SVG for the 'Next' icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="18" height="18" fill="currentColor">
-                <path d="M8 4l8 8-8 8z" />
-            </svg>
-        </button>
-    </div>
-
     <!-- Add New Movie Button -->
     <div class="add-link">
         <a href="{{ route('movie.create') }}">
@@ -95,11 +60,6 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Poster</th>
-                <th>Trailer Link</th>
-                <th>Duration</th>
-                <th>Release Date</th>
-                <th>IMDB Link</th>
                 <th>Status</th>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -108,27 +68,12 @@
         </thead>
         <tbody>
             @foreach($movies as $movie)
-                <!-- Added data-release attribute with release date in Y-m-d format -->
-                <tr data-status="{{ $movie->active ? 'active' : 'inactive' }}" data-release="{{ \Carbon\Carbon::parse($movie->release_date)->format('Y-m-d') }}">
+                <tr 
+                    data-status="{{ $movie->active ? 'active' : 'inactive' }}" 
+                    data-release="{{ \Carbon\Carbon::parse($movie->release_date)->format('Y-m-d') }}"
+                >
                     <td>{{ $movie->id }}</td>
                     <td class="movie-name">{{ $movie->name }}</td>
-                    <td>
-                        <img 
-                            src="{{ $movie->poster ? url('storage/posters/' . basename($movie->poster)) : asset('images/default-poster.jpg') }}" 
-                            alt="Poster" 
-                            style="max-width: 100px; height: auto; border-radius: 10px;" 
-                        />
-                    </td>
-
-                    <td>
-                        <a href="{{ $movie->trailer_link }}" target="_blank">Watch Trailer</a>
-                    </td>
-                    <td>{{ $movie->duration }} minutes</td>
-                    <!-- Display the formatted release date -->
-                    <td>{{ \Carbon\Carbon::parse($movie->release_date)->format('F d, Y') }}</td>
-                    <td>
-                        <a href="{{ $movie->imdb_link }}" target="_blank">IMDB Link</a>
-                    </td>
                     <td>
                         @if($movie->active == 1)
                             <span class="status-badge status-active">Active</span>
@@ -149,14 +94,16 @@
                             @csrf
                             @method('DELETE')
                             <button type="button" class="action-button btn-delete delete-button" aria-label="Delete Movie">
-                                <img src="icons/icons8-delete-24.png" alt="Delete" style="width: 17px; height: 17px; margin-right: 5px;" /> Delete
+                                <img src="icons/icons8-delete-24.png" alt="Delete" style="width: 17px; height: 17px; margin-right: 5px;" />
+                                Delete
                             </button>
                         </form>
                     </td>
                     <td>
                         <form method="GET" action="{{ route('movie.detail', ['movie' => $movie]) }}">
                             <button type="submit" class="action-button btn-view" aria-label="View Movie">
-                                <img src="icons/icons8-eye-32.png" alt="View" style="width: 17px; height: 17px; margin-right: 5px;" /> View
+                                <img src="icons/icons8-eye-32.png" alt="View" style="width: 17px; height: 17px; margin-right: 5px;" /> 
+                                View
                             </button>
                         </form>
                     </td>
@@ -167,7 +114,6 @@
 
     <!-- Pagination and Rows per Page -->
     <div class="pagination-container">
-        <!-- Rows Per Page -->
         <div class="rows-per-page">
             <label for="rowsPerPage">Rows per page:</label>
             <select id="rowsPerPage" aria-label="Select number of rows per page">
@@ -176,10 +122,7 @@
                 <option value="15">15</option>
             </select>
         </div>
-        <!-- Pagination Controls -->
-        <div class="pagination" id="pagination">
-            <!-- Pagination buttons will be dynamically generated -->
-        </div>
+        <div class="pagination" id="pagination"></div>
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -232,104 +175,16 @@
             font-size: 20px;
         }
 
-        /* Success Message */
         .success-message {
             text-align: center;
             color: var(--success-color);
             margin-bottom: 10px;
         }
 
-        /* Slider Controls Container */
-        .slider-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 80%;
-            margin: 0 auto 20px auto;
-        }
-
-        /* Slider Container */
-        .slider-container {
-            width: 100%;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            background-color: var(--primary-color);
-            box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light);
-            text-align: center;
-        }
-
-        .slider-wrapper {
-            display: flex;
-            transition: transform 0.5s ease;
-            margin: 0;
-            padding: 0;
-            justify-content: center;
-        }
-
-        .slider-item {
-            flex: 1 1 auto;
-            width: 180px;
-            margin: 10px 5px;
-            text-align: center;
-            background-color: var(--primary-color);
-            border-radius: 15px;
-            box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
-            padding: 10px;
-            height: 220px;
-        }
-
-        .slider-item img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .slider-item a {
-            display: block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #2196F3;
-            font-weight: bold;
-        }
-
-        .slider-item a:hover {
-            text-decoration: underline;
-        }
-
-        /* Slider Control Buttons */
-        .slider-control-btn {
-            background-color: var(--button-color);
-            border-radius: 50%;
-            color: var(--text-color);
-            border: none;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: box-shadow 0.3s, background-color 0.3s;
-            margin: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .slider-control-btn:hover {
-            box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
-        }
-
-        .slider-control-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Add New Movie Button */
         .add-link {
             text-align: center;
             margin: 20px 0;
         }
-
         .add-link a {
             display: inline-flex;
             align-items: center;
@@ -343,12 +198,10 @@
             font-weight: bold;
             margin-left: 57%;
         }
-
         .add-link a:hover {
             background-color: #333;
             color: #fff;
         }
-
         .add-link a img {
             margin-right: 10px;
             filter: brightness(0) invert(1);
@@ -364,13 +217,11 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-
         .search-bar .filter-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .search-bar input,
         .search-bar select,
         .search-bar input[type="date"] {
@@ -383,21 +234,14 @@
             outline: none;
             transition: box-shadow 0.3s;
         }
-
         .search-bar input::placeholder {
             color: #aaa;
         }
-
-        a:-webkit-any-link {
-            color: gray;
-        }
-
         .search-bar input:focus,
         .search-bar select:focus,
         .search-bar input[type="date"]:focus {
             box-shadow: 0 0 10px #2196F3;
         }
-
         .search-bar select {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e0e0e0' d='M6 8.4L2.4 4.8l1.2-1.2L6 6l2.4-2.4 1.2 1.2z'/%3E%3C/svg%3E");
@@ -406,6 +250,10 @@
             background-size: 12px;
             cursor: pointer;
             padding-right: 30px;
+        }
+        .search-bar label {
+            font-size: 14px;
+            color: black;
         }
 
         /* Table */
@@ -420,13 +268,10 @@
             border-radius: 15px;
             overflow: hidden;
         }
-
-        th,
-        td {
+        th, td {
             padding: 10px;
             color: var(--text-color);
         }
-
         th {
             background-color: rgb(35, 36, 36);
             font-weight: bold;
@@ -434,7 +279,6 @@
             color: #ffffff;
         }
 
-        /* Status Badge */
         .status-badge {
             display: flex;
             align-items: center;
@@ -446,7 +290,6 @@
             color: #ffffff;
             position: relative;
         }
-
         .status-badge::before {
             content: '';
             display: inline-block;
@@ -455,16 +298,14 @@
             border-radius: 50%;
             margin-right: 8px;
         }
-
         .status-active::before {
             background-color: rgb(6, 248, 14);
         }
-
         .status-inactive::before {
             background-color: rgb(255, 0, 0);
         }
 
-        /* Buttons in table (Neumorphic Gray and Black) */
+        /* Buttons */
         .action-button {
             width: 100px;
             padding: 7px 0;
@@ -480,31 +321,25 @@
             color: #ffffff;
             margin: 0 auto;
         }
-
         .btn-edit {
             background-color: rgb(81, 88, 94);
         }
-
         .btn-delete {
             background-color: #343a40;
         }
-
         .btn-view {
             background-color: #495057;
         }
-
         .btn-edit:hover,
         .btn-delete:hover,
         .btn-view:hover {
             color: black;
         }
-
         .btn-edit:hover img,
         .btn-delete:hover img,
         .btn-view:hover img {
             filter: brightness(0) invert(0);
         }
-
         .btn-edit img,
         .btn-delete img,
         .btn-view img {
@@ -512,7 +347,7 @@
             filter: brightness(0) invert(1);
         }
 
-        /* Modal Styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -524,7 +359,6 @@
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.7);
         }
-
         .modal-content {
             background-color: #ffffff;
             margin: 10% auto;
@@ -535,7 +369,6 @@
             text-align: center;
             color: rgb(41, 43, 44);
         }
-
         .close-button {
             color: #ffffff;
             float: right;
@@ -543,19 +376,16 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .close-button:hover,
         .close-button:focus {
             color: #FF5555;
             text-decoration: none;
         }
-
         .modal-actions {
             margin-top: 20px;
             display: flex;
             justify-content: space-around;
         }
-
         .modal-actions button {
             width: 100px;
             padding: 10px 0;
@@ -566,20 +396,17 @@
             color: #ffffff;
             transition: box-shadow 0.3s, background-color 0.3s;
         }
-
         #confirmDelete {
             background-color: #FF5555;
         }
-
         #cancelDelete {
             background-color: #6c757d;
         }
-
         #confirmDelete:hover,
         #cancelDelete:hover {
         }
 
-        /* Pagination and Rows per Page */
+        /* Pagination & Rows per Page */
         .pagination-container {
             width: 80%;
             margin: 20px auto;
@@ -588,18 +415,11 @@
             align-items: center;
             flex-wrap: wrap;
         }
-
         .rows-per-page {
             display: flex;
             align-items: center;
             gap: 5px;
         }
-
-        .search-bar label {
-            font-size: 14px;
-            color: black;
-        }
-
         .rows-per-page select {
             padding: 8px 12px;
             border: none;
@@ -611,17 +431,14 @@
             outline: none;
             transition: box-shadow 0.3s;
         }
-
         .rows-per-page select:focus {
             box-shadow: 0 0 10px #2196F3;
         }
-
         .pagination {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .pagination button {
             padding: 8px 12px;
             border: none;
@@ -631,58 +448,40 @@
             cursor: pointer;
             transition: box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
-
         .pagination button.active {
             background-color: #2196F3;
             color: #ffffff;
             box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
         }
-
         .pagination button:hover:not(.active) {
             box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
             background-color: #555555;
         }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .slider-container {
-                width: 100%;
-            }
-
-            .slider-item {
-                width: 120px;
-            }
-
             table {
                 font-size: 14px;
             }
-
             .add-link {
                 margin-left: 0;
                 text-align: center;
             }
-
             .search-bar {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .search-bar .filter-group {
                 width: 100%;
                 justify-content: space-between;
             }
-
             .search-bar input,
             .search-bar select,
             .search-bar input[type="date"] {
                 width: 100%;
             }
-
             .pagination-container {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .rows-per-page,
             .pagination {
                 width: 100%;
@@ -692,107 +491,39 @@
         }
     </style>
 
-    <!-- Slider and Filter Script -->
+    <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Slider Functionality
-            const sliderWrapper = document.querySelector('.slider-wrapper');
-            const sliderItems = document.querySelectorAll('.slider-item');
-            const nextButton = document.getElementById('next');
-            const prevButton = document.getElementById('prev');
+            /* =================== Filtering + Pagination =================== */
+            const searchInput       = document.getElementById('searchInput');
+            const statusFilter      = document.getElementById('statusFilter');
+            const startDateInput    = document.getElementById('startDate');
+            const endDateInput      = document.getElementById('endDate');
+            const table             = document.getElementById('movieTable');
+            const tbody             = table.querySelector('tbody');
+            const rows              = Array.from(tbody.querySelectorAll('tr'));
 
-            if (sliderItems.length === 0) return; // Prevent errors if no items
-
-            // Define the number of visible items
-            const visibleItems = 5;
-
-            // Calculate the width of each slider item including margins
-            const itemStyle = window.getComputedStyle(sliderItems[0]);
-            const itemWidth = sliderItems[0].offsetWidth 
-                + parseInt(itemStyle.marginLeft) 
-                + parseInt(itemStyle.marginRight);
-
-            // Calculate the maximum scroll position
-            const maxPosition = (sliderItems.length - visibleItems) * itemWidth;
-            let currentPosition = 0;
-
-            // Hide next/prev buttons if not needed
-            if (sliderItems.length <= visibleItems) {
-                nextButton.disabled = true;
-                prevButton.disabled = true;
-                nextButton.style.display = 'none';
-                prevButton.style.display = 'none';
-            }
-
-            function updateSlider() {
-                sliderWrapper.style.transform = `translateX(-${currentPosition}px)`;
-                // Enable/disable Prev button
-                prevButton.disabled = (currentPosition === 0);
-                // Enable/disable Next button
-                nextButton.disabled = (currentPosition >= maxPosition);
-            }
-
-            nextButton.addEventListener('click', () => {
-                if (currentPosition < maxPosition) {
-                    currentPosition += itemWidth;
-                    if (currentPosition > maxPosition) {
-                        currentPosition = maxPosition;
-                    }
-                    updateSlider();
-                }
-            });
-
-            prevButton.addEventListener('click', () => {
-                if (currentPosition > 0) {
-                    currentPosition -= itemWidth;
-                    if (currentPosition < 0) {
-                        currentPosition = 0;
-                    }
-                    updateSlider();
-                }
-            });
-
-            // Initialize the slider position
-            updateSlider();
-
-            // Filter Functionality
-            const searchInput = document.getElementById('searchInput');
-            const statusFilter = document.getElementById('statusFilter');
-            const startDateInput = document.getElementById('startDate');
-            const endDateInput = document.getElementById('endDate');
-            const table = document.getElementById('movieTable');
-            const tbody = table.getElementsByTagName('tbody')[0];
-            const rows = Array.from(tbody.getElementsByTagName('tr'));
-
-            // Pagination Elements
             const rowsPerPageSelect = document.getElementById('rowsPerPage');
-            const paginationContainer = document.getElementById('pagination');
+            const paginationDiv     = document.getElementById('pagination');
+            let currentPage         = 1;
+            let rowsPerPage         = parseInt(rowsPerPageSelect.value);
 
-            let currentPage = 1;
-            let rowsPerPage = parseInt(rowsPerPageSelect.value);
-
-            // Function to filter movies based on search, status, and date range
             function filterMovies() {
-                const searchTerm = searchInput.value.trim().toLowerCase();
+                const searchTerm     = searchInput.value.trim().toLowerCase();
                 const selectedStatus = statusFilter.value;
-                const startDate = startDateInput.value;
-                const endDate = endDateInput.value;
+                const startDate      = startDateInput.value;
+                const endDate        = endDateInput.value;
 
-                // Filter rows based on criteria
-                const filteredRows = rows.filter(row => {
-                    const nameCell = row.querySelector('.movie-name');
-                    const nameText = nameCell.textContent.trim().toLowerCase();
-
-                    // Retrieve status from data attribute
-                    const status = row.getAttribute('data-status');
-
-                    // Retrieve release date from data attribute (in YYYY-MM-DD)
+                return rows.filter(row => {
+                    const nameCell    = row.querySelector('.movie-name');
+                    const nameText    = nameCell.textContent.trim().toLowerCase();
+                    const status      = row.getAttribute('data-status');
                     const releaseDate = row.getAttribute('data-release');
 
-                    // Check search term
+                    // Search filter
                     const matchesSearch = nameText.includes(searchTerm);
 
-                    // Check status
+                    // Status filter
                     let matchesStatus = false;
                     if (selectedStatus === 'all') {
                         matchesStatus = true;
@@ -802,7 +533,7 @@
                         matchesStatus = true;
                     }
 
-                    // Check date range using string comparisons (YYYY-MM-DD)
+                    // Date range (YYYY-MM-DD string compare)
                     let matchesDate = true;
                     if (startDate && releaseDate < startDate) {
                         matchesDate = false;
@@ -813,56 +544,40 @@
 
                     return matchesSearch && matchesStatus && matchesDate;
                 });
-
-                return filteredRows;
             }
 
-            // Function to paginate rows
             function paginateRows(filteredRows) {
                 const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
-
-                if (currentPage > totalPages) {
-                    currentPage = totalPages;
-                }
-                if (currentPage < 1) {
-                    currentPage = 1;
-                }
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
 
                 const startIndex = (currentPage - 1) * rowsPerPage;
-                const endIndex = startIndex + rowsPerPage;
+                const endIndex   = startIndex + rowsPerPage;
 
-                // Hide all rows
-                rows.forEach(row => {
-                    row.style.display = 'none';
-                });
-
-                // Show filtered and paginated rows
-                filteredRows.slice(startIndex, endIndex).forEach(row => {
-                    row.style.display = '';
-                });
+                rows.forEach(row => (row.style.display = 'none'));
+                filteredRows.slice(startIndex, endIndex).forEach(row => (row.style.display = ''));
 
                 updatePaginationControls(totalPages);
             }
 
-            // Function to update pagination controls
             function updatePaginationControls(totalPages) {
-                paginationContainer.innerHTML = '';
-
+                paginationDiv.innerHTML = '';
                 if (totalPages <= 1) return;
 
+                // Prev
                 const prevBtn = document.createElement('button');
                 prevBtn.textContent = 'Prev';
-                prevBtn.disabled = currentPage === 1;
+                prevBtn.disabled = (currentPage === 1);
                 prevBtn.addEventListener('click', () => {
                     if (currentPage > 1) {
                         currentPage--;
                         applyFiltersAndPagination();
                     }
                 });
-                paginationContainer.appendChild(prevBtn);
+                paginationDiv.appendChild(prevBtn);
 
                 let startPage = Math.max(1, currentPage - 2);
-                let endPage = Math.min(totalPages, currentPage + 2);
+                let endPage   = Math.min(totalPages, currentPage + 2);
 
                 if (currentPage <= 3) {
                     endPage = Math.min(5, totalPages);
@@ -874,35 +589,33 @@
                 for (let i = startPage; i <= endPage; i++) {
                     const pageBtn = document.createElement('button');
                     pageBtn.textContent = i;
-                    if (i === currentPage) {
-                        pageBtn.classList.add('active');
-                    }
+                    if (i === currentPage) pageBtn.classList.add('active');
                     pageBtn.addEventListener('click', () => {
                         currentPage = i;
                         applyFiltersAndPagination();
                     });
-                    paginationContainer.appendChild(pageBtn);
+                    paginationDiv.appendChild(pageBtn);
                 }
 
+                // Next
                 const nextBtn = document.createElement('button');
                 nextBtn.textContent = 'Next';
-                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.disabled = (currentPage === totalPages);
                 nextBtn.addEventListener('click', () => {
                     if (currentPage < totalPages) {
                         currentPage++;
                         applyFiltersAndPagination();
                     }
                 });
-                paginationContainer.appendChild(nextBtn);
+                paginationDiv.appendChild(nextBtn);
             }
 
-            // Function to apply filters and pagination
             function applyFiltersAndPagination() {
                 const filteredRows = filterMovies();
                 paginateRows(filteredRows);
             }
 
-            // Event listeners for filters
+            // Filter event listeners
             searchInput.addEventListener('input', () => {
                 currentPage = 1;
                 applyFiltersAndPagination();
@@ -919,8 +632,6 @@
                 currentPage = 1;
                 applyFiltersAndPagination();
             });
-
-            // Event listener for rows per page
             rowsPerPageSelect.addEventListener('change', () => {
                 rowsPerPage = parseInt(rowsPerPageSelect.value);
                 currentPage = 1;
@@ -930,13 +641,12 @@
             // Initial load
             applyFiltersAndPagination();
 
-            // Modal Elements
-            const deleteModal = document.getElementById('deleteModal');
-            const closeButton = document.querySelector('.close-button');
-            const cancelDeleteButton = document.getElementById('cancelDelete');
+            /* =================== Delete Confirmation Modal =================== */
+            const deleteModal         = document.getElementById('deleteModal');
+            const closeButton         = document.querySelector('.close-button');
+            const cancelDeleteButton  = document.getElementById('cancelDelete');
             const confirmDeleteButton = document.getElementById('confirmDelete');
-
-            let formToSubmit = null;
+            let formToSubmit          = null;
 
             function openModal(form) {
                 deleteModal.style.display = 'block';
@@ -952,7 +662,8 @@
             const deleteButtons = document.querySelectorAll('.delete-button');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const form = e.target.closest('form');
+                    e.preventDefault();
+                    const form = button.closest('form');
                     openModal(form);
                 });
             });
@@ -973,7 +684,7 @@
             });
 
             window.addEventListener('click', (event) => {
-                if (event.target == deleteModal) {
+                if (event.target === deleteModal) {
                     closeModal();
                 }
             });
